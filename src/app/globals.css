@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: #fcf9f2;
+    --foreground: #2d2a24;
+    --card: #ffffff;
+    --card-foreground: #2d2a24;
+    --primary: #eab308;
+    --primary-foreground: #ffffff;
+    --secondary: #f5efe6;
+    --secondary-foreground: #6b6358;
+    --muted: #f5efe6;
+    --muted-foreground: #8a7f72;
+    --accent: #f472b6;
+    --accent-foreground: #ffffff;
+    --destructive: #ef4444;
+    --border: #e8dfd2;
+    --input: #f5efe6;
+    --ring: #eab308;
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: #1a1815;
+    --foreground: #f5f0e8;
+    --card: #24211d;
+    --card-foreground: #f5f0e8;
+    --primary: #eab308;
+    --primary-foreground: #1a1815;
+    --secondary: #2d2a24;
+    --secondary-foreground: #c4b5a0;
+    --muted: #2d2a24;
+    --muted-foreground: #8a7f72;
+    --accent: #f472b6;
+    --accent-foreground: #1a1815;
+    --destructive: #ef4444;
+    --border: #3d3832;
+    --input: #2d2a24;
+    --ring: #eab308;
+  }
+
+  * {
+    @apply border-[#e8dfd2] dark:border-[#3d3832];
+  }
+
+  body {
+    @apply bg-[#fcf9f2] dark:bg-[#1a1815] text-[#2d2a24] dark:text-[#f5f0e8] antialiased;
+    font-family: 'Georgia', 'Times New Roman', serif;
+  }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #d4c5b0; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #c4b5a0; }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-white/80 dark:bg-[#24211d]/80 backdrop-blur-xl border border-[#e8dfd2] dark:border-[#3d3832] rounded-xl;
+  }
+
+  .glow-button {
+    @apply relative overflow-hidden rounded-xl font-semibold transition-all duration-300;
+    box-shadow: 0 0 20px rgba(234, 179, 8, 0.2);
+  }
+  .glow-button:hover {
+    box-shadow: 0 0 40px rgba(234, 179, 8, 0.4), 0 0 60px rgba(244, 114, 182, 0.15);
+    transform: translateY(-2px);
+  }
+
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-[#eab308] via-[#f59e0b] to-[#f472b6];
+  }
+
+  .aspect-9-16 { aspect-ratio: 9/16; }
+  .aspect-1-1 { aspect-ratio: 1/1; }
+  .aspect-16-9 { aspect-ratio: 16/9; }
+}
+
+@layer utilities {
+  .text-balance { text-wrap: balance; }
+}
