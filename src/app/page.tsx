@@ -309,15 +309,49 @@ export default function LandingPage() {
       </section>
 
       {/* FOOTER */}
-      <footer className="border-t border-white/5 py-10 px-4">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-md bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
-              <Zap className="w-3 h-3 text-white" />
+      <footer className="border-t border-[#e8dfd2] dark:border-[#3d3832] py-12 px-4">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-4 gap-8">
+            {/* Brand */}
+            <div>
+              <img src="/logo.svg" alt="OnePost AI" className="h-8 w-auto mb-4" />
+              <p className="text-sm text-[#8a7f72] dark:text-[#8a7f72] leading-relaxed">
+                Post like a pro. Without being one.
+              </p>
             </div>
-            <span className="text-sm font-medium text-zinc-400">OnePost AI</span>
+            {/* Links */}
+            <div>
+              <h4 className="text-sm font-semibold text-[#2d2a24] dark:text-[#f5f0e8] mb-3">Platform</h4>
+              <div className="space-y-2 text-sm text-[#6b6358] dark:text-[#c4b5a0]">
+                <p>Features</p>
+                <p>Pricing</p>
+                <p>FAQ</p>
+                <p>Support</p>
+              </div>
+            </div>
+            {/* Connect */}
+            <div>
+              <h4 className="text-sm font-semibold text-[#2d2a24] dark:text-[#f5f0e8] mb-3">Connect</h4>
+              <div className="space-y-2 text-sm text-[#6b6358] dark:text-[#c4b5a0]">
+                <p>@aureahaven — TikTok</p>
+                <p>@aureahaven — Instagram</p>
+                <p>Aurea Haven — LinkedIn</p>
+                <p>@aureahaven — Twitter/X</p>
+              </div>
+            </div>
+            {/* Auto Exec */}
+            <div>
+              <h4 className="text-sm font-semibold text-[#2d2a24] dark:text-[#f5f0e8] mb-3">Also by Aurea</h4>
+              <div className="space-y-2 text-sm text-[#6b6358] dark:text-[#c4b5a0]">
+                <a href="https://autoexec.app" target="_blank" rel="noopener noreferrer" className="block hover:text-[#eab308] transition-colors">
+                  Auto Exec — Dropshipping Automation
+                </a>
+              </div>
+            </div>
           </div>
-          <p className="text-xs text-zinc-600">&copy; {new Date().getFullYear()} OnePost AI. For creators who want to eat too.</p>
+          <div className="mt-10 pt-6 border-t border-[#e8dfd2] dark:border-[#3d3832] text-center text-xs text-[#8a7f72] dark:text-[#8a7f72]">
+            &copy; {new Date().getFullYear()} OnePost AI by Aurea Haven. All rights reserved.
+          </div>
         </div>
       </footer>
     </div>
