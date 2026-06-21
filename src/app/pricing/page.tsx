@@ -46,7 +46,7 @@ export default function PricingPage() {
                 "Schedule & auto-publish to all platforms",
                 "TikTok, Instagram, YouTube, LinkedIn",
                 "Priority email & chat support",
-                "14-day free trial, no credit card",
+                "3-day free trial, no credit card",
               ].map((item, i) => (
                 <li key={i} className="flex items-start gap-3 text-sm text-zinc-300">
                   <Check className="w-4 h-4 text-green-500 mt-0.5 shrink-0" />

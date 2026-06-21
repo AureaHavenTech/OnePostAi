@@ -131,7 +131,7 @@ export default function LandingPage() {
           <div className="mt-12 flex items-center justify-center gap-8 text-sm text-zinc-600 flex-wrap">
             <span className="flex items-center gap-1.5"><Check className="w-4 h-4 text-green-500" /> No editing skills needed</span>
             <span className="flex items-center gap-1.5"><Check className="w-4 h-4 text-green-500" /> No camera required</span>
-            <span className="flex items-center gap-1.5"><Check className="w-4 h-4 text-green-500" /> 14-day free trial</span>
+            <span className="flex items-center gap-1.5"><Check className="w-4 h-4 text-green-500" /> 3-day free trial</span>
           </div>
         </div>
       </section>
@@ -269,7 +269,7 @@ export default function LandingPage() {
 
               <Link href="/login?signup=true" className="block mt-8">
                 <Button variant="glow" size="lg" className="w-full text-base">
-                  Start Your 14-Day Free Trial
+                  Start Your 3-Day Free Trial
                   <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
               </Link>
