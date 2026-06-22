@@ -1,100 +1,123 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { CreditCard, Bell, Link2, User, Save } from "lucide-react";
+import { Check, ExternalLink, Unlink, Smartphone, Globe } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+const platforms = [
+  { id: "tiktok", name: "TikTok", icon: "♬", color: "text-pink-400", bg: "bg-pink-500/10", border: "border-pink-500/20" },
+  { id: "instagram", name: "Instagram", icon: "📸", color: "text-orange-400", bg: "bg-orange-500/10", border: "border-orange-500/20" },
+  { id: "facebook", name: "Facebook", icon: "👍", color: "text-blue-400", bg: "bg-blue-500/10", border: "border-blue-500/20" },
+  { id: "youtube", name: "YouTube", icon: "▶", color: "text-red-400", bg: "bg-red-500/10", border: "border-red-500/20" },
+  { id: "linkedin", name: "LinkedIn", icon: "💼", color: "text-blue-300", bg: "bg-blue-300/10", border: "border-blue-300/20" },
+  { id: "snapchat", name: "Snapchat", icon: "👻", color: "text-yellow-400", bg: "bg-yellow-500/10", border: "border-yellow-500/20" },
+  { id: "pinterest", name: "Pinterest", icon: "📌", color: "text-red-500", bg: "bg-red-500/10", border: "border-red-500/20" },
+];
 
 export default function SettingsPage() {
+  const [connected, setConnected] = useState<string[]>(["tiktok", "instagram"]);
+
+  const handleConnect = (id: string) => {
+    // In production: window.location.href = `https://${id}.com/oauth/authorize?...`
+    // For demo: toggle connected state
+    if (connected.includes(id)) {
+      setConnected(prev => prev.filter(p => p !== id));
+    } else {
+      // Simulate OAuth popup
+      alert(`This would open ${id}'s authorization page in a new window.\n\nYou'd log in, approve access, and the app gets a token to post on your behalf.\n\nOne-time setup, just like connecting any app to your social accounts.`);
+      setConnected(prev => [...prev, id]);
+    }
+  };
+
   return (
-    <div className="space-y-8 max-w-2xl">
+    <div className="space-y-8 max-w-2xl mx-auto p-4">
       <div>
-        <h1 className="text-2xl font-bold text-zinc-100">Settings</h1>
-        <p className="text-zinc-500 mt-1 text-sm">
-          Manage your account and integrations.
+        <h1 className="text-2xl font-bold text-[#2d2a24] dark:text-[#f5f0e8]">Account Connections</h1>
+        <p className="text-sm text-[#8a7f72] dark:text-[#8a7f72] mt-1">
+          Connect your social accounts once. OnePost AI posts everywhere with one click.
         </p>
       </div>
 
-      {/* Profile */}
-      <div className="glass-card p-6 space-y-4">
-        <h3 className="text-sm font-medium text-zinc-400 flex items-center gap-2">
-          <User className="w-4 h-4" />
-          Profile
-        </h3>
-        <div className="space-y-3">
-          <div>
-            <label className="text-xs text-zinc-500 mb-1 block">Email</label>
-            <Input value="demo@onepost.ai" className="bg-zinc-900/60" />
-          </div>
-          <div>
-            <label className="text-xs text-zinc-500 mb-1 block">Display Name</label>
-            <Input placeholder="Your name" className="bg-zinc-900/60" />
-          </div>
-        </div>
-      </div>
+      <div className="space-y-3">
+        {platforms.map((p) => {
+          const isConnected = connected.includes(p.id);
+          return (
+            <div
+              key={p.id}
+              className={cn(
+                "flex items-center justify-between p-4 rounded-xl border transition-all",
+                isConnected
+                  ? `${p.bg} ${p.border}`
+                  : "bg-white/50 dark:bg-[#24211d]/50 border-[#e8dfd2] dark:border-[#3d3832]"
+              )}
+            >
+              <div className="flex items-center gap-3">
+                <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center", p.bg)}>
+                  <span className={cn("text-lg", p.color)}>{p.icon}</span>
+                </div>
+                <div>
+                  <p className="font-medium text-sm text-[#2d2a24] dark:text-[#f5f0e8]">{p.name}</p>
+                  <p className="text-xs text-[#8a7f72]">
+                    {isConnected ? "Connected — can post on your behalf" : "Not connected"}
+                  </p>
+                </div>
+              </div>
 
-      {/* API Integrations */}
-      <div className="glass-card p-6 space-y-4">
-        <h3 className="text-sm font-medium text-zinc-400 flex items-center gap-2">
-          <Link2 className="w-4 h-4" />
-          Social API Connections
-        </h3>
-        <div className="space-y-3">
-          {[
-            { name: "Instagram / Facebook", connected: false, color: "text-pink-400" },
-            { name: "TikTok", connected: false, color: "text-purple-400" },
-            { name: "YouTube", connected: false, color: "text-red-400" },
-            { name: "LinkedIn", connected: false, color: "text-blue-400" },
-          ].map((platform) => (
-            <div key={platform.name} className="flex items-center justify-between p-3 rounded-lg bg-zinc-900/50 border border-white/5">
-              <span className={`text-sm font-medium ${platform.color}`}>{platform.name}</span>
-              <Button variant="outline" size="sm">
-                {platform.connected ? "Connected" : "Connect"}
+              <Button
+                variant={isConnected ? "outline" : "glow"}
+                size="sm"
+                onClick={() => handleConnect(p.id)}
+              >
+                {isConnected ? (
+                  <><Check className="w-3.5 h-3.5 mr-1.5 text-green-500" /> Connected</>
+                ) : (
+                  <><ExternalLink className="w-3.5 h-3.5 mr-1.5" /> Connect</>
+                )}
               </Button>
             </div>
-          ))}
+          );
+        })}
+      </div>
+
+      <div className="glass-card p-6 space-y-3">
+        <h3 className="font-semibold text-[#2d2a24] dark:text-[#f5f0e8] flex items-center gap-2">
+          <Globe className="w-4 h-4 text-[#eab308]" />
+          How it works
+        </h3>
+        <div className="space-y-2 text-sm text-[#8a7f72]">
+          <p>1. Click "Connect" on any platform → it opens that platform's login</p>
+          <p>2. You log in and approve access (just like signing in with Google)</p>
+          <p>3. OnePost AI gets a token and stores it securely</p>
+          <p>4. From then on, one post = published everywhere automatically</p>
+          <p className="text-xs mt-2">🔒 You can disconnect anytime. Your tokens are encrypted.</p>
         </div>
       </div>
 
-      {/* Subscription */}
-      <div className="glass-card p-6 space-y-4">
-        <h3 className="text-sm font-medium text-zinc-400 flex items-center gap-2">
-          <CreditCard className="w-4 h-4" />
-          Subscription
+      {/* Connected accounts summary */}
+      <div className="glass-card p-6">
+        <h3 className="font-semibold text-[#2d2a24] dark:text-[#f5f0e8] mb-3">
+          Your connected accounts
         </h3>
-        <div className="flex items-center justify-between p-3 rounded-lg bg-green-500/5 border border-green-500/20">
-          <div>
-            <p className="text-sm font-medium text-zinc-200">Pro Plan — Active</p>
-            <p className="text-xs text-zinc-500 mt-0.5">$29/month — Next billing: Jan 15, 2026</p>
+        {connected.length === 0 ? (
+          <p className="text-sm text-[#8a7f72]">No accounts connected yet. Connect above to get started.</p>
+        ) : (
+          <div className="flex flex-wrap gap-2">
+            {connected.map(id => {
+              const p = platforms.find(p => p.id === id);
+              return (
+                <div key={id} className={cn("flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium", p?.bg, p?.color, p?.border)}>
+                  <span>{p?.icon}</span>
+                  {p?.name}
+                </div>
+              );
+            })}
           </div>
-          <Button variant="outline" size="sm">Manage</Button>
-        </div>
+        )}
+        <p className="text-xs text-[#8a7f72] mt-3">
+          🚀 One post → {connected.length} platforms simultaneously
+        </p>
       </div>
-
-      {/* Notifications */}
-      <div className="glass-card p-6 space-y-4">
-        <h3 className="text-sm font-medium text-zinc-400 flex items-center gap-2">
-          <Bell className="w-4 h-4" />
-          Notifications
-        </h3>
-        <div className="space-y-3">
-          {[
-            "Campaign published successfully",
-            "AI generation complete",
-            "Scheduled post failed",
-          ].map((item) => (
-            <label key={item} className="flex items-center justify-between">
-              <span className="text-sm text-zinc-300">{item}</span>
-              <input type="checkbox" defaultChecked className="rounded border-zinc-700 bg-zinc-900 text-indigo-500 focus:ring-indigo-500" />
-            </label>
-          ))}
-        </div>
-      </div>
-
-      <Button variant="glow">
-        <Save className="w-4 h-4 mr-2" />
-        Save Changes
-      </Button>
     </div>
   );
 }
