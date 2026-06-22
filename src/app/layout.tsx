@@ -1,11 +1,14 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
+
+export const viewport: Viewport = {
+  themeColor: "#0a0a0f",
+};
 
 export const metadata: Metadata = {
   title: "One Post AI — Intelligent Content Creation & Publishing",
   description: "Create, schedule, and publish content across all platforms with AI-powered assistance.",
   manifest: "/manifest.json",
-  themeColor: "#0a0a0f",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
