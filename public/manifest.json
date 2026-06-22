@@ -4,8 +4,8 @@
   "description": "Create, schedule, and publish content across all platforms with AI-powered assistance.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0a0a0f",
-  "theme_color": "#0a0a0f",
+  "background_color": "#12121a",
+  "theme_color": "#12121a",
   "orientation": "portrait",
   "icons": [
     {

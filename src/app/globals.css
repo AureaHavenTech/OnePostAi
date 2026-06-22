@@ -4,19 +4,19 @@
 
 :root {
   --background: #0a0a0f;
-  --foreground: #e8e8ed;
-  --primary: #a78bfa;
-  --primary-hover: #8b6fe0;
+  --foreground: #f5f0eb;
+  --primary: #ec4899;
+  --primary-hover: #db2777;
   --secondary: #1e1e2a;
-  --accent: #f59e0b;
-  --muted: #6b6b80;
+  --accent: #c9a84c;
+  --muted: #8a8a9a;
   --border: #2a2a3a;
   --card: #12121a;
   --card-hover: #1a1a28;
   --success: #34d399;
   --error: #f87171;
-  --gradient-start: #a78bfa;
-  --gradient-end: #7c3aed;
+  --gradient-start: #ec4899;
+  --gradient-end: #c9a84c;
 }
 
 * {
