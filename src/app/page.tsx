@@ -84,7 +84,7 @@ export default function LandingPage() {
               { title: 'AI Writing Assistant', desc: 'Generate engaging content with AI. From blog posts to social media captions, write faster with smart suggestions.', icon: '✍️' },
               { title: 'Multi-Platform Publishing', desc: 'Publish to all your platforms simultaneously. Schedule posts and let One Post AI handle the distribution.', icon: '🚀' },
               { title: 'Smart Scheduling', desc: 'Find the best times to post. Our AI analyzes engagement patterns to optimize your publishing schedule.', icon: '📅' },
-              { title: 'AutoExec Integration', desc: 'Seamlessly works with AutoExec AI. Delegate content tasks and let AI handle the heavy lifting.', icon: '🤖' },
+              { title: 'Axel AI Integration', desc: 'Seamlessly works with AutoExec AI. Delegate content tasks and let AI handle the heavy lifting.', icon: '🤖' },
               { title: 'Analytics Dashboard', desc: 'Track performance across all platforms. Understand what works and double down on your best content.', icon: '📊' },
               { title: 'Content Library', desc: 'Store, organize, and reuse your best content. Build a library of proven posts and templates.', icon: '📚' },
             ].map((f, i) => (
@@ -157,7 +157,7 @@ export default function LandingPage() {
             <span className="text-sm font-semibold">One Post AI</span>
           </div>
           <div className="flex items-center gap-6 text-sm text-[#6b6b80]">
-            <span>Works alongside <a href="https://autoexec.ai" className="text-purple-400 hover:text-purple-300">AutoExec AI</a></span>
+            <span>Works alongside <a href="https://autoexec-nine.vercel.app" class="text-amber-400 hover:text-amber-300">Axel AI</a> AI</a></span>
             <span>© 2026 One Post AI</span>
           </div>
         </div>

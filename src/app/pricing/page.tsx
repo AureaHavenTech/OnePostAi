@@ -60,13 +60,13 @@ export default function PricingPage() {
           </div>
 
           <div className="mt-16 card p-8 text-center">
-            <h3 className="text-xl font-bold mb-4">Works with AutoExec AI</h3>
+            <h3 className="text-xl font-bold mb-4">Works with Axel AI</h3>
             <p className="text-[#6b6b80] mb-6 max-w-2xl mx-auto">
-              One Post AI integrates seamlessly with AutoExec — your AI executive assistant. 
+              One Post AI integrates seamlessly with Axel AI — your AI executive assistant. 
               Delegate content creation tasks and let AI handle the entire workflow.
             </p>
-            <a href="https://autoexec.ai" className="text-purple-400 hover:text-purple-300 font-medium">
-              Learn about AutoExec integration →
+            <a href="https://autoexec-nine.vercel.app" className="text-purple-400 hover:text-purple-300 font-medium">
+              Learn about Axel AI integration →
             </a>
           </div>
         </div>
