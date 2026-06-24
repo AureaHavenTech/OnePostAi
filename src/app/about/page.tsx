@@ -1,73 +1,97 @@
 "use client";
 
-import React from "react";
+import React, { useState, useRef } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ExternalLink, Heart, Quote } from "lucide-react";
+import { ArrowLeft, Heart, ExternalLink, Upload, User } from "lucide-react";
 
 export default function AboutPage() {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [photo, setPhoto] = useState<string | null>(null);
+
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => setPhoto(reader.result as string);
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-[#fcf9f2] dark:bg-[#1a1815] py-16 px-4">
+    <div className="min-h-screen bg-[#fcf9f5] dark:bg-[#141416] py-16 px-4">
       <div className="max-w-3xl mx-auto">
         <Link href="/"><Button variant="ghost" size="sm" className="mb-8"><ArrowLeft className="w-4 h-4 mr-2" />Back to Home</Button></Link>
 
-        {/* Hero section with photo */}
-        <div className="glass-card overflow-hidden">
+        <div className="bg-white dark:bg-[#1c1c1e] border border-[#e0d5d8] dark:border-[#3d3537] rounded-2xl overflow-hidden shadow-sm">
           <div className="p-8 sm:p-12 text-center">
-            {/* Profile photo — replace the placeholder with actual image */}
-            <div className="w-28 h-28 mx-auto rounded-full bg-gradient-to-br from-[#eab308] to-[#f472b6] flex items-center justify-center text-4xl font-bold text-white mb-6 shadow-lg shadow-[#eab308]/20">
-              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            {/* Profile photo with upload */}
+            <div className="relative w-28 h-28 mx-auto mb-6 group">
+              <div className={`w-full h-full rounded-full bg-gradient-to-br from-[#d44a6a] to-[#eab308] flex items-center justify-center overflow-hidden shadow-lg shadow-[#d44a6a]/20 ${photo ? '' : ''}`}>
+                {photo ? (
+                  <img src={photo} alt="Profile" className="w-full h-full object-cover" />
+                ) : (
+                  <User className="w-12 h-12 text-white" />
+                )}
+              </div>
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-[#d44a6a] text-white flex items-center justify-center shadow-md hover:bg-[#c23a5a] transition-all opacity-90 hover:opacity-100"
+              >
+                <Upload className="w-4 h-4" />
+              </button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handlePhotoUpload}
+              />
             </div>
 
-            <h1 className="text-3xl sm:text-4xl font-bold text-[#2d2a24] dark:text-[#f5f0e8]">
+            <h1 className="text-3xl sm:text-4xl font-bold text-[#1c1c1e] dark:text-[#f5f0f1]">
               Hi, I'm the creator behind OnePost AI
             </h1>
 
-            <div className="mt-6 max-w-xl mx-auto text-left space-y-4 text-[#6b6358] dark:text-[#c4b5a0]">
-              <p className="leading-relaxed">
-                I built this app because I <em>am</em> the target customer. I'm a 39-year-old creator 
-                trying to break into tech UGC content. And honestly? It's been overwhelming as hell.
+            <div className="mt-6 max-w-xl mx-auto text-left space-y-4 text-[#6b5a5e] dark:text-[#c4b5b8] text-sm leading-relaxed">
+              <p>
+                I built this app because I <em>am</em> the target customer. A creator trying to break 
+                into tech UGC content — but overwhelmed by editing apps, camera anxiety, and the 
+                time sink of multi-platform posting.
               </p>
               
-              <p className="leading-relaxed">
-                I'm a brand ambassador for Mellow Sleep. I have products I'm supposed to be promoting. 
-                I have affiliate links that should be earning me commission. But I wasn't posting because 
-                the thought of editing videos, figuring out CapCut, saving in the right format, writing 
-                captions, finding hashtags, scheduling — it was <strong className="text-[#2d2a24] dark:text-[#f5f0e8]">too much</strong>.
+              <p>
+                I have affiliate links that should be earning commission. I have products to promote. 
+                But I wasn't posting because editing videos, writing captions, finding hashtags, 
+                scheduling — it was too much.
               </p>
 
-              <div className="border-l-4 border-[#eab308] pl-4 py-2 my-6 bg-[#eab308]/5 rounded-r-lg">
-                <p className="italic text-[#2d2a24] dark:text-[#f5f0e8] text-sm">
+              <div className="border-l-4 border-[#d44a6a] pl-4 py-2 my-4 bg-[#d44a6a]/5 rounded-r-lg">
+                <p className="italic text-[#1c1c1e] dark:text-[#f5f0f1] text-sm">
                   "I don't want to be on camera all day. I don't want to spend hours editing. 
                   I want my content out there, working for me, while I focus on growing my business."
                 </p>
               </div>
 
-              <p className="leading-relaxed">
-                So I created OnePost AI — an app that does all the grunt work. Upload a raw video, 
+              <p>
+                So I created OnePost AI — an app that does all the grunt work. Upload raw video, 
                 paste a product URL, or just type what you want. It researches trending products, 
                 creates Shopify pages, generates AI avatar videos, writes viral captions, and 
                 posts to every platform. No editing, no filming, no stress.
               </p>
 
-              <p className="leading-relaxed">
-                My goal is to help creators like me — the ones with full lives who don't have time 
-                to learn 10 different apps — get professional content out there and start earning 
-                the retainers we deserve. $3k, $10k, $30k a month. It's possible when you have 
-                a system that does the work for you.
+              <p>
+                My goal is to help creators like me get professional content out there and start 
+                earning the retainers we deserve. $3k, $10k, $30k a month. It's possible when you 
+                have a system that does the work for you.
               </p>
             </div>
 
-            <div className="mt-8 pt-6 border-t border-[#e8dfd2] dark:border-[#3d3832]">
-              <p className="text-sm text-[#8a7f72] dark:text-[#8a7f72]">
-                Built with <Heart className="w-3.5 h-3.5 inline text-[#f472b6]" /> for creators who want to eat too.
+            <div className="mt-8 pt-6 border-t border-[#e0d5d8] dark:border-[#3d3537]">
+              <p className="text-sm text-[#8a797d]">
+                Built with <Heart className="w-3.5 h-3.5 inline text-[#d44a6a]" /> for creators who want to eat too.
               </p>
-              <a href="https://autoexec.app" target="_blank" rel="noopener noreferrer" className="inline-block mt-4">
-                <Button variant="outline" size="sm">
-                  <ExternalLink className="w-4 h-4 mr-1.5" />
-                  Also check out Auto Exec — my dropshipping automation app
-                </Button>
-              </a>
+              <p className="text-xs text-[#8a797d] mt-2">@funkycoldmedemaa — TikTok, Instagram, Twitter/X</p>
             </div>
           </div>
         </div>

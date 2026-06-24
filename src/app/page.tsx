@@ -297,7 +297,7 @@ export default function LandingPage() {
               and customer management. Together they're a complete business system.
             </p>
             <div className="mt-6 flex items-center justify-center gap-4">
-              <a href="https://autoexec.app" target="_blank" rel="noopener noreferrer">
+              <a href="https://github.com/AureaHavenTech/AutoExec" target="_blank" rel="noopener noreferrer">
                 <Button variant="glow" size="lg">
                   <ExternalLink className="w-4 h-4 mr-2" />
                   Visit Auto Exec
@@ -343,7 +343,7 @@ export default function LandingPage() {
             <div>
               <h4 className="text-sm font-semibold text-[#2d2a24] dark:text-[#f5f0e8] mb-3">Also by Aurea</h4>
               <div className="space-y-2 text-sm text-[#6b6358] dark:text-[#c4b5a0]">
-                <a href="https://autoexec.app" target="_blank" rel="noopener noreferrer" className="block hover:text-[#eab308] transition-colors">
+                <a href="https://github.com/AureaHavenTech/AutoExec" target="_blank" rel="noopener noreferrer" className="block hover:text-[#eab308] transition-colors">
                   Auto Exec — Dropshipping Automation
                 </a>
               </div>
