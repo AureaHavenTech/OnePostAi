@@ -17,14 +17,14 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen" style={{ backgroundColor: '#12121a', color: '#e8e0d4' }}>
       {/* Nav */}
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-[#0a0a0f]/80 backdrop-blur-xl border-b border-[#2a2a3a]' : 'bg-transparent'}`}>
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-[#12121a]/80 backdrop-blur-xl border-b border-[#2a2a3a]' : 'bg-transparent'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#a78bfa] to-[#7c3aed] flex items-center justify-center text-white font-bold text-sm">1P</div>
-              <span className="font-bold text-lg">One Post AI</span>
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#c9a96e] to-[#b8944a] flex items-center justify-center text-white font-bold text-sm">1P</div>
+              <span className="font-bold text-lg" style={{ color: '#e8e0d4', fontFamily: "'Playfair Display', Georgia, serif" }}>One Post AI</span>
             </div>
             <div className="hidden md:flex items-center gap-8">
               <a href="#features" className="nav-link">Features</a>
@@ -47,19 +47,21 @@ export default function LandingPage() {
 
       {/* Hero */}
       <section className="relative pt-32 pb-20 px-4 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-purple-900/20 via-transparent to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#c9a96e]/8 via-transparent to-transparent pointer-events-none" />
         <div className="max-w-4xl mx-auto text-center relative">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-sm mb-8">
-            <span className="w-2 h-2 rounded-full bg-purple-400 animate-pulse" />
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#c9a96e]/10 border border-[#c9a96e]/20 text-[#c9a96e] text-sm mb-8">
+            <span className="w-2 h-2 rounded-full bg-[#c9a96e] animate-pulse" />
             AI-Powered Content Creation
           </div>
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-            Create Content That
-            <span className="gradient-text"> Stands Out</span>
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+            Your Content
+            <br />
+            <span className="gradient-text"> Ace of Spades</span>
           </h1>
-          <p className="text-xl text-[#6b6b80] mb-10 max-w-2xl mx-auto leading-relaxed">
-            One Post AI helps you write, edit, schedule, and publish content across all platforms. 
-            Powered by AI, designed for creators who value their time.
+          <p className="text-xl text-[#a09080] mb-10 max-w-2xl mx-auto leading-relaxed">
+            One Post AI lets you create, schedule, and publish content across every platform from one place.
+            AI picks viral hashtags, optimizes posting times, and gives you cross-platform analytics. 
+            The ultimate ace up your sleeve.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button onClick={() => router.push('/auth/signup')} className="btn-primary text-lg px-8 py-4">
@@ -76,22 +78,22 @@ export default function LandingPage() {
       <section id="features" className="py-20 px-4">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="section-title mb-4">Everything You Need</h2>
-            <p className="text-[#6b6b80] text-lg">Powerful features to streamline your content workflow</p>
+            <h2 className="text-4xl font-bold mb-4" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Everything You Need</h2>
+            <p className="text-[#a09080] text-lg">Powerful features to streamline your content workflow</p>
           </div>
           <div className="grid md:grid-cols-3 gap-6">
             {[
               { title: 'AI Writing Assistant', desc: 'Generate engaging content with AI. From blog posts to social media captions, write faster with smart suggestions.', icon: '✍️' },
-              { title: 'Multi-Platform Publishing', desc: 'Publish to all your platforms simultaneously. Schedule posts and let One Post AI handle the distribution.', icon: '🚀' },
-              { title: 'Smart Scheduling', desc: 'Find the best times to post. Our AI analyzes engagement patterns to optimize your publishing schedule.', icon: '📅' },
-              { title: 'Axel AI Integration', desc: 'Your 24/7 AI personal assistant. Axel AI researches, writes, builds, emails, and executes any task you describe — so you don\'t have to.', icon: '🤖' },
-              { title: 'Analytics Dashboard', desc: 'Track performance across all platforms. Understand what works and double down on your best content.', icon: '📊' },
+              { title: 'Multi-Platform Publishing', desc: 'Post across ALL social media from one place — Instagram, TikTok, Twitter, YouTube, LinkedIn, and more. One click, everywhere.', icon: '🚀' },
+              { title: 'Viral Hashtag Engine', desc: 'AI automatically picks trending, high-converting hashtags for your content. No more guessing — just better reach.', icon: '🏷️' },
+              { title: 'Smart Scheduling', desc: 'Find the best times to post. Our AI analyzes engagement patterns to schedule your content at optimal moments.', icon: '📅' },
+              { title: 'Cross-Platform Analytics', desc: 'Track performance across all platforms in one dashboard. Understand what works and double down on your best content.', icon: '📊' },
               { title: 'Content Library', desc: 'Store, organize, and reuse your best content. Build a library of proven posts and templates.', icon: '📚' },
             ].map((f, i) => (
               <div key={i} className="card p-8 animate-fade-in" style={{ animationDelay: `${i * 100}ms` }}>
                 <div className="text-3xl mb-4">{f.icon}</div>
-                <h3 className="text-lg font-semibold mb-3">{f.title}</h3>
-                <p className="text-[#6b6b80] text-sm leading-relaxed">{f.desc}</p>
+                <h3 className="text-lg font-semibold mb-3" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>{f.title}</h3>
+                <p className="text-[#a09080] text-sm leading-relaxed">{f.desc}</p>
               </div>
             ))}
           </div>
@@ -99,30 +101,30 @@ export default function LandingPage() {
       </section>
 
       {/* Pricing */}
-      <section id="pricing" className="py-20 px-4 bg-[#0d0d15]">
+      <section id="pricing" className="py-20 px-4" style={{ backgroundColor: '#0d0d15' }}>
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="section-title mb-4">Simple Pricing</h2>
-            <p className="text-[#6b6b80] text-lg">Choose the plan that fits your content needs</p>
+            <h2 className="text-4xl font-bold mb-4" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Simple Pricing</h2>
+            <p className="text-[#a09080] text-lg">Choose the plan that fits your content needs</p>
           </div>
           <div className="grid md:grid-cols-3 gap-6">
             {PRICING_TIERS.map((tier, i) => (
-              <div key={i} className={`card p-8 flex flex-col ${tier.highlighted ? 'border-purple-500/40 animate-glow relative' : ''}`}>
+              <div key={i} className={`card p-8 flex flex-col ${tier.highlighted ? 'border-[#c9a96e]/40 animate-glow relative' : ''}`}>
                 {tier.highlighted && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-[#a78bfa] to-[#7c3aed] text-xs font-semibold text-white">
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-[#c9a96e] to-[#b8944a] text-xs font-semibold text-white">
                     Most Popular
                   </div>
                 )}
-                <h3 className="text-xl font-bold mb-2">{tier.name}</h3>
-                <p className="text-[#6b6b80] text-sm mb-6">{tier.description}</p>
+                <h3 className="text-xl font-bold mb-2" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>{tier.name}</h3>
+                <p className="text-[#a09080] text-sm mb-6">{tier.description}</p>
                 <div className="mb-6">
-                  <span className="text-4xl font-bold">${tier.price}</span>
-                  <span className="text-[#6b6b80]">{tier.period}</span>
+                  <span className="text-4xl font-bold" style={{ color: '#e8e0d4' }}>${tier.price}</span>
+                  <span className="text-[#a09080]">{tier.period}</span>
                 </div>
                 <ul className="space-y-3 mb-8 flex-1">
                   {tier.features.map((f, j) => (
-                    <li key={j} className="flex items-start gap-3 text-sm">
-                      <svg className="w-5 h-5 text-purple-400 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <li key={j} className="flex items-start gap-3 text-sm" style={{ color: '#d4cdc0' }}>
+                      <svg className="w-5 h-5 text-[#c9a96e] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                       {f}
@@ -141,8 +143,8 @@ export default function LandingPage() {
       {/* CTA */}
       <section className="py-20 px-4">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-4xl font-bold mb-6">Ready to Transform Your Content Workflow?</h2>
-          <p className="text-[#6b6b80] text-lg mb-8">Join creators who are publishing better content in less time. Start your 30-day free trial today.</p>
+          <h2 className="text-4xl font-bold mb-6" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Ready to Transform Your Content Workflow?</h2>
+          <p className="text-[#a09080] text-lg mb-8">Join creators who are publishing better content in less time. Start your 30-day free trial today.</p>
           <button onClick={() => router.push('/auth/signup')} className="btn-primary text-lg px-10 py-4">
             Get Started Free
           </button>
@@ -153,11 +155,14 @@ export default function LandingPage() {
       <footer className="py-12 px-4 border-t border-[#2a2a3a]">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-md bg-gradient-to-br from-[#a78bfa] to-[#7c3aed] flex items-center justify-center text-white font-bold text-xs">1P</div>
-            <span className="text-sm font-semibold">One Post AI</span>
+            <div className="w-6 h-6 rounded-md bg-gradient-to-br from-[#c9a96e] to-[#b8944a] flex items-center justify-center text-white font-bold text-xs">1P</div>
+            <span className="text-sm font-semibold" style={{ color: '#e8e0d4' }}>One Post AI</span>
           </div>
-          <div className="flex items-center gap-6 text-sm text-[#6b6b80]">
-            <span>Works alongside <a href="https://autoexec-nine.vercel.app" className="text-amber-400 hover:text-amber-300">Axel AI</a></span>
+          <div className="flex items-center gap-6 text-sm text-[#a09080]">
+            <span>Works alongside <a href="https://autoexec-nine.vercel.app" className="text-[#c9a96e] hover:text-[#d4b87a]">Axel AI</a></span>
+            <span>·</span>
+            <a href="https://aurahaven.shop" target="_blank" className="text-[#c9a96e] hover:text-[#d4b87a]">Shop Aura Haven</a>
+            <span>·</span>
             <span>© 2026 One Post AI</span>
           </div>
         </div>

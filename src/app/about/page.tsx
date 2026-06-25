@@ -15,14 +15,14 @@ export default function AboutPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#0a0a0f] to-[#1a1a2e] text-white">
+    <div className="min-h-screen" style={{ background: 'linear-gradient(135deg, #12121a, #1a1a2e)', color: '#e8e0d4' }}>
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0f]/80 backdrop-blur-xl border-b border-[#2a2a3a] px-6 py-4 flex items-center justify-between">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-[#12121a]/80 backdrop-blur-xl border-b border-[#2a2a3a] px-6 py-4 flex items-center justify-between">
         <Link href="/" className="flex items-center space-x-2">
-          <div className="h-9 w-9 bg-gradient-to-br from-[#a78bfa] to-[#7c3aed] rounded-lg flex items-center justify-center">
+          <div className="h-9 w-9 bg-gradient-to-br from-[#c9a96e] to-[#b8944a] rounded-lg flex items-center justify-center">
             <PenLine className="h-5 w-5 text-white" />
           </div>
-          <span className="text-xl font-bold tracking-tight text-white">One Post AI</span>
+          <span className="text-xl font-bold tracking-tight text-white" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>One Post AI</span>
         </Link>
         <nav className="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-300">
           <Link href="/about" className="text-white">About</Link>
@@ -41,9 +41,9 @@ export default function AboutPage() {
           <Badge variant="info" className="mb-6 px-4 py-1 text-xs uppercase tracking-wider font-semibold">
             <Heart className="h-3.5 w-3.5 mr-1.5 text-brand-400" /> Built from Real Life
           </Badge>
-          <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight mb-6 leading-tight">
+          <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight mb-6 leading-tight" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
             Built by a Mom Who <br />
-            <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#c9a96e] to-[#e8e0d4] bg-clip-text text-transparent">
               Didn&apos;t Have Time
             </span>
           </h1>
@@ -58,7 +58,7 @@ export default function AboutPage() {
           <div className="grid md:grid-cols-5 gap-10 items-start">
             <div className="md:col-span-2">
               <div className="relative flex flex-col items-center">
-                <div className="relative w-64 h-64 rounded-full border-4 border-purple-500/30 overflow-hidden shadow-2xl shadow-purple-500/10 transition-all duration-300">
+                <div className="relative w-64 h-64 rounded-full border-4 border-[#c9a96e]/30 overflow-hidden shadow-2xl shadow-[#c9a96e]/10 transition-all duration-300">
                   <img
                     src="/ceo-photo.png"
                     alt="Lindsey - Founder & CEO"
@@ -73,7 +73,7 @@ export default function AboutPage() {
 
             <div className="md:col-span-3 space-y-6">
               <div className="relative">
-                <Quote className="h-10 w-10 text-purple-500/20 absolute -top-2 -left-3" />
+                <Quote className="h-10 w-10 text-[#c9a96e]/20 absolute -top-2 -left-3" />
                 <p className="text-xl md:text-2xl text-white font-semibold leading-relaxed pl-6">
                   Hi, I&apos;m Lindsey.
                 </p>
@@ -114,7 +114,7 @@ export default function AboutPage() {
                 <p className="text-white font-medium text-xl">
                   From one busy human trying to make her mark to another — I&apos;m so glad you&apos;re here.
                 </p>
-                <p className="text-purple-400 font-semibold pt-2">
+                <p className="text-[#c9a96e] font-semibold pt-2">
                   — Lindsey, Founder
                 </p>
               </div>
@@ -131,12 +131,12 @@ export default function AboutPage() {
 
         {/* Follow the Founder */}
         <section className="mb-16 text-center">
-          <div className="inline-block bg-gradient-to-r from-purple-500/10 to-pink-500/5 border border-purple-500/20 rounded-2xl p-8 md:p-10 px-12">
-            <h2 className="text-2xl font-bold text-white mb-2">Follow the Founder</h2>
+          <div className="inline-block bg-gradient-to-r from-[#c9a96e]/10 to-[#e8e0d4]/5 border border-[#c9a96e]/20 rounded-2xl p-8 md:p-10 px-12">
+            <h2 className="text-2xl font-bold text-white mb-2" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Follow the Founder</h2>
             <p className="text-slate-400 text-sm mb-6">Stay connected with Lindsey and the journey</p>
             <div className="flex flex-wrap justify-center gap-4">
               {socialLinks.map((link) => (
-                <a key={link.label} href={link.url} target="_blank" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-800/50 hover:bg-slate-800 border border-slate-700/50 hover:border-purple-500/30 text-slate-300 hover:text-white transition-all duration-200 text-sm font-medium">
+                <a key={link.label} href={link.url} target="_blank" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-800/50 hover:bg-slate-800 border border-slate-700/50 hover:border-[#c9a96e]/30 text-slate-300 hover:text-white transition-all duration-200 text-sm font-medium">
                   <span>{link.icon}</span> {link.label}
                 </a>
               ))}
@@ -147,8 +147,8 @@ export default function AboutPage() {
 
         {/* Why It Matters */}
         <section className="mb-24">
-          <div className="bg-gradient-to-r from-purple-500/5 to-pink-500/5 border border-purple-500/10 rounded-2xl p-10 md:p-14">
-            <h2 className="text-3xl font-bold mb-8 text-center">Why One Post AI Exists</h2>
+          <div className="bg-gradient-to-r from-[#c9a96e]/5 to-[#e8e0d4]/5 border border-[#c9a96e]/10 rounded-2xl p-10 md:p-14">
+            <h2 className="text-3xl font-bold mb-8 text-center" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Why One Post AI Exists</h2>
             <div className="grid md:grid-cols-3 gap-8">
               {[
                 {
@@ -170,7 +170,7 @@ export default function AboutPage() {
                 const Icon = item.icon;
                 return (
                   <div key={i} className="text-center">
-                    <Icon className="h-10 w-10 text-purple-400 mx-auto mb-4" />
+                    <Icon className="h-10 w-10 text-[#c9a96e] mx-auto mb-4" />
                     <h3 className="text-lg font-bold mb-3">{item.title}</h3>
                     <p className="text-sm text-slate-400 leading-relaxed">{item.desc}</p>
                   </div>
@@ -182,8 +182,8 @@ export default function AboutPage() {
 
         {/* CTA */}
         <div className="text-center bg-slate-900/30 border border-slate-900 rounded-2xl p-12">
-          <Sparkles className="h-10 w-10 text-purple-400 mx-auto mb-4" />
-          <h2 className="text-3xl font-bold mb-4">Ready to show up consistently?</h2>
+          <Sparkles className="h-10 w-10 text-[#c9a96e] mx-auto mb-4" />
+          <h2 className="text-3xl font-bold mb-4" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Ready to show up consistently?</h2>
           <p className="text-slate-400 mb-8 max-w-lg mx-auto">
             Join creators who use One Post AI to grow their brand without burning out.
           </p>
@@ -200,8 +200,8 @@ export default function AboutPage() {
       <footer className="border-t border-[#2a2a3a] py-12 px-6 text-slate-500 text-sm">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between">
           <div className="flex items-center space-x-2 mb-4 md:mb-0">
-            <PenLine className="h-4 w-4 text-purple-400" />
-            <span className="font-bold text-white">One Post AI</span>
+            <PenLine className="h-4 w-4 text-[#c9a96e]" />
+            <span className="font-bold text-white" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>One Post AI</span>
           </div>
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-slate-400 mb-4 md:mb-0">
             <Link href="/about" className="hover:text-white transition-colors">About</Link>
@@ -209,6 +209,8 @@ export default function AboutPage() {
             <Link href="/faq" className="hover:text-white transition-colors">FAQ</Link>
             <Link href="/pricing" className="hover:text-white transition-colors">Pricing</Link>
             <Link href="/dashboard" className="hover:text-white transition-colors">Dashboard</Link>
+            <a href="https://aurahaven.shop" target="_blank" className="hover:text-white transition-colors">Aura Haven</a>
+            <a href="https://autoexec-nine.vercel.app" target="_blank" className="hover:text-white transition-colors">Axel AI</a>
           </div>
           <div className="text-center md:text-right">
             <div className="flex items-center justify-center md:justify-end gap-2 text-emerald-400 text-xs mb-1">
