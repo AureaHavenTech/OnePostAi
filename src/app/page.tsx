@@ -23,8 +23,7 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#c9a96e] to-[#b8944a] flex items-center justify-center text-white font-bold text-sm">1P</div>
-              <span className="font-bold text-lg" style={{ color: '#e8e0d4', fontFamily: "'Playfair Display', Georgia, serif" }}>One Post AI</span>
+              <img src="/logo.svg" alt="One Post AI Logo" className="h-9 w-auto" />
             </div>
             <div className="hidden md:flex items-center gap-8">
               <a href="#features" className="nav-link">Features</a>
@@ -54,14 +53,14 @@ export default function LandingPage() {
             AI-Powered Content Creation
           </div>
           <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-            Your Content
+            Content That
             <br />
-            <span className="gradient-text"> Ace of Spades</span>
+            <span className="gradient-text"> Moves</span>
           </h1>
           <p className="text-xl text-[#a09080] mb-10 max-w-2xl mx-auto leading-relaxed">
-            One Post AI lets you create, schedule, and publish content across every platform from one place.
-            AI picks viral hashtags, optimizes posting times, and gives you cross-platform analytics. 
-            The ultimate ace up your sleeve.
+            The creator's diamond. One Post AI lets you create, schedule, and publish content across 
+            every platform from one place. AI picks viral hashtags, optimizes posting times, and gives 
+            you cross-platform analytics. This is the tool that takes away all the grunt work.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button onClick={() => router.push('/auth/signup')} className="btn-primary text-lg px-8 py-4">
