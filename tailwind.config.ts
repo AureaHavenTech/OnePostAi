@@ -10,6 +10,13 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        cream: "#faf7f2",
+        gold: { DEFAULT: "#c9a84c", light: "#e8c97a" },
+        rose: "#d4a0a0",
+        blush: "#e8c4c4",
+        charcoal: "#2d2824",
+        dark: "#1a1614",
+        "warm-white": "#f5f0ea",
         pink: {
           50: '#fdf2f4',
           100: '#fce7eb',
@@ -22,14 +29,9 @@ const config: Config = {
           800: '#872740',
           900: '#72243a',
         },
-        gold: {
-          400: '#facc15',
-          500: '#eab308',
-          600: '#ca8a04',
-        },
         gray: {
-          50: '#fcf9f5',
-          100: '#f5f0f1',
+          50: '#faf7f2',
+          100: '#f5f0ea',
           200: '#e0d5d8',
           300: '#c4b5b8',
           400: '#8a797d',
@@ -38,7 +40,7 @@ const config: Config = {
           700: '#44383c',
           800: '#2a2426',
           900: '#1c1c1e',
-          950: '#141416',
+          950: '#12100e',
         },
       },
       borderRadius: {
@@ -47,12 +49,22 @@ const config: Config = {
         sm: "calc(var(--radius) - 4px)",
       },
       animation: {
-        "glow": "glow 2s ease-in-out infinite alternate",
+        glow: "glow 2s ease-in-out infinite alternate",
+        "fade-in": "fadeIn 0.5s ease-out",
+        "slide-up": "slideUp 0.6s ease-out",
       },
       keyframes: {
         glow: {
-          "0%": { boxShadow: "0 0 20px rgba(212, 74, 106, 0.25)" },
-          "100%": { boxShadow: "0 0 40px rgba(212, 74, 106, 0.4), 0 0 60px rgba(234, 179, 8, 0.15)" },
+          "0%": { boxShadow: "0 0 20px rgba(201, 168, 76, 0.2)" },
+          "100%": { boxShadow: "0 0 40px rgba(201, 168, 76, 0.35), 0 0 60px rgba(212, 160, 160, 0.15)" },
+        },
+        fadeIn: {
+          "0%": { opacity: "0", transform: "translateY(10px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        slideUp: {
+          "0%": { opacity: "0", transform: "translateY(30px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
         },
       },
     },

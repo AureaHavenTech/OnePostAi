@@ -1,25 +1,13 @@
 {
   "name": "OnePost AI",
-  "short_name": "OnePost AI",
-  "description": "Post like a pro without being one. Auto-edit, AI generate, and auto-publish content across all platforms.",
+  "short_name": "OnePost",
+  "description": "AI content agency in a box — post everywhere, no editing needed",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#fcf9f2",
-  "theme_color": "#eab308",
-  "orientation": "portrait-primary",
+  "background_color": "#faf7f2",
+  "theme_color": "#c9a84c",
   "icons": [
-    {
-      "src": "/icon-192.svg",
-      "sizes": "192x192",
-      "type": "image/svg+xml"
-    },
-    {
-      "src": "/icon-512.svg",
-      "sizes": "512x512",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
-    }
-  ],
-  "categories": ["social", "productivity", "business"],
-  "lang": "en-US"
+    { "src": "/icon-192.svg", "sizes": "192x192", "type": "image/svg+xml" },
+    { "src": "/icon-512.svg", "sizes": "512x512", "type": "image/svg+xml" }
+  ]
 }

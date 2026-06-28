@@ -1,67 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
   <defs>
-    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#fcf9f2"/>
-      <stop offset="100%" style="stop-color:#f8f0e0"/>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#c9a84c"/>
+      <stop offset="50%" stop-color="#e8c97a"/>
+      <stop offset="100%" stop-color="#c9a84c"/>
     </linearGradient>
-    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#eab308"/>
-      <stop offset="100%" style="stop-color:#d97706"/>
-    </linearGradient>
-    <linearGradient id="pinkGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#f472b6"/>
-      <stop offset="100%" style="stop-color:#ec4899"/>
-    </linearGradient>
-    <filter id="shadow" x="-10%" y="-10%" width="130%" height="130%">
-      <feDropShadow dx="0" dy="4" stdDeviation="16" flood-color="#2d2a24" flood-opacity="0.08"/>
-    </filter>
   </defs>
-
-  <!-- Background rounded rect -->
-  <rect x="0" y="0" width="512" height="512" rx="108" ry="108" fill="url(#bgGrad)" filter="url(#shadow)"/>
-
-  <!-- Decorative rings -->
-  <circle cx="256" cy="256" r="185" fill="none" stroke="#eab308" stroke-width="3" opacity="0.1"/>
-  <circle cx="256" cy="256" r="165" fill="none" stroke="#f472b6" stroke-width="1.5" opacity="0.08"/>
-
-  <!-- Butterfly Icon Centered -->
-  <g transform="translate(256, 244)">
-    <!-- Left wing top -->
-    <path d="M0 0 C-34,-70 -104,-86 -114,-32 C-118,10 -74,32 -48,38 C-30,42 -14,38 0,32 Z"
-          fill="url(#goldGrad)" opacity="0.9"/>
-    <!-- Left wing bottom -->
-    <path d="M0 32 C-24,38 -54,60 -70,96 C-76,112 -58,118 -42,108 C-22,92 -8,60 0,38 Z"
-          fill="url(#pinkGrad)" opacity="0.85"/>
-    <!-- Right wing top -->
-    <path d="M0 0 C34,-70 104,-86 114,-32 C118,10 74,32 48,38 C30,42 14,38 0,32 Z"
-          fill="url(#goldGrad)" opacity="0.9"/>
-    <!-- Right wing bottom -->
-    <path d="M0 32 C24,38 54,60 70,96 C76,112 58,118 42,108 C22,92 8,60 0,38 Z"
-          fill="url(#pinkGrad)" opacity="0.85"/>
-    <!-- Body -->
-    <ellipse cx="0" cy="32" rx="8" ry="38" fill="#2d2a24" opacity="0.7"/>
-    <!-- Body highlight -->
-    <ellipse cx="0" cy="24" rx="3" ry="16" fill="#eab308" opacity="0.3"/>
-    <!-- Antennae -->
-    <path d="M-5,-6 C-16,-32 -32,-48 -44,-60" fill="none" stroke="#eab308" stroke-width="4" stroke-linecap="round" opacity="0.5"/>
-    <path d="M5,-6 C16,-32 32,-48 44,-60" fill="none" stroke="#eab308" stroke-width="4" stroke-linecap="round" opacity="0.5"/>
-    <!-- Antennae tips -->
-    <circle cx="-44" cy="-60" r="5" fill="#f472b6" opacity="0.6"/>
-    <circle cx="44" cy="-60" r="5" fill="#f472b6" opacity="0.6"/>
-  </g>
-
-  <!-- Sparkle accents -->
-  <g transform="translate(256, 256)">
-    <!-- Top sparkle -->
-    <text x="0" y="-138" font-size="36" fill="#eab308" opacity="0.3" text-anchor="middle">✦</text>
-    <!-- Right sparkle -->
-    <text x="130" y="6" font-size="24" fill="#f472b6" opacity="0.25" text-anchor="middle">✦</text>
-    <!-- Bottom left sparkle -->
-    <text x="-110" y="110" font-size="20" fill="#eab308" opacity="0.2" text-anchor="middle">✦</text>
-    <!-- Top right small -->
-    <text x="90" y="-90" font-size="16" fill="#f472b6" opacity="0.2" text-anchor="middle">✦</text>
-  </g>
-
-  <!-- Brand initials -->
-  <text x="256" y="460" font-family="Georgia, serif" font-size="44" font-weight="700" fill="#2d2a24" opacity="0.35" text-anchor="middle" letter-spacing="3">OP</text>
+  <rect width="512" height="512" rx="112" fill="#faf7f2"/>
+  <circle cx="256" cy="256" r="230" fill="none" stroke="url(#g)" stroke-width="3"/>
+  <circle cx="256" cy="256" r="190" fill="none" stroke="url(#g)" stroke-width="2" stroke-dasharray="10 10"/>
+  <path d="M172 305 C172 218, 218 174, 256 174 C294 174, 340 218, 340 305 C340 366, 310 392, 256 392 C202 392, 172 366, 172 305Z" fill="none" stroke="url(#g)" stroke-width="8"/>
+  <path d="M208 290 C208 235, 235 210, 256 210 C277 210, 304 235, 304 290 C304 334, 280 350, 256 350 C232 350, 208 334, 208 290Z" fill="none" stroke="url(#g)" stroke-width="3" stroke-dasharray="5 7" opacity="0.6"/>
+  <circle cx="302" cy="183" r="8" fill="url(#g)"/>
+  <circle cx="210" cy="329" r="5" fill="#d4a0a0" opacity="0.8"/>
+  <path d="M330 155 L330 145 M325 150 L335 150" stroke="url(#g)" stroke-width="4" stroke-linecap="round" opacity="0.5"/>
 </svg>

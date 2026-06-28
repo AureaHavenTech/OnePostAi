@@ -4,17 +4,18 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/30 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
-        default: "bg-indigo-500 text-white hover:bg-indigo-400 shadow-lg shadow-indigo-500/25",
+        default: "bg-dark text-cream hover:bg-charcoal shadow-lg shadow-dark/10",
         destructive: "bg-red-500 text-white hover:bg-red-400",
-        outline: "border border-white/10 bg-transparent hover:bg-white/5 text-foreground",
-        secondary: "bg-zinc-800 text-zinc-100 hover:bg-zinc-700",
-        ghost: "hover:bg-white/5 text-zinc-400 hover:text-zinc-200",
-        link: "text-indigo-400 underline-offset-4 hover:underline",
-        glow: "bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:from-indigo-400 hover:to-purple-500",
+        outline: "border border-gold/20 bg-transparent hover:bg-gold/5 text-gray-500 hover:text-dark",
+        secondary: "bg-warm-white text-dark hover:bg-cream border border-gray-200",
+        ghost: "hover:bg-gold/5 text-gray-400 hover:text-dark",
+        link: "text-gold underline-offset-4 hover:underline",
+        glow: "bg-gradient-to-r from-gold to-gold-light text-dark font-semibold shadow-lg shadow-gold/25 hover:shadow-gold/40 hover:from-gold-light hover:to-gold",
+        rose: "bg-gradient-to-r from-rose to-blush text-dark font-semibold shadow-lg shadow-rose/25 hover:shadow-rose/40",
       },
       size: {
         default: "h-10 px-5 py-2",

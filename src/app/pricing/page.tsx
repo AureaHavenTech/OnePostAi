@@ -3,66 +3,70 @@
 import React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Check, ArrowLeft, ArrowRight } from "lucide-react";
+import { Check, ArrowLeft, ArrowRight, Sparkles } from "lucide-react";
 
 export default function PricingPage() {
   return (
-    <div className="min-h-screen bg-background py-20 px-4">
+    <div className="min-h-screen bg-cream py-16 px-4">
       <div className="max-w-4xl mx-auto">
-        <div className="mb-8">
+        <div className="mb-6">
           <Link href="/">
             <Button variant="ghost" size="sm">
-              <ArrowLeft className="w-4 h-4 mr-2" />
+              <ArrowLeft className="w-4 h-4 mr-1.5" />
               Back to Home
             </Button>
           </Link>
         </div>
 
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-zinc-100 mb-4">
-            Simple, <span className="gradient-text">transparent</span> pricing
+        <div className="text-center mb-10">
+          <h1 className="text-3xl sm:text-4xl font-bold text-dark mb-3">
+            One price. <span className="gradient-gold">Everything.</span>
           </h1>
-          <p className="text-zinc-500">One plan. Everything you need. No hidden fees.</p>
+          <p className="text-sm text-gray-400">No tiers. No per-post fees. Just results.</p>
         </div>
 
-        <div className="max-w-md mx-auto">
-          <div className="glass-card p-8 border-indigo-500/20 relative">
-            <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-indigo-500 text-white text-xs font-medium">
+        <div className="max-w-sm mx-auto">
+          <div className="card-luxury p-6 sm:p-8 relative border-gold/20">
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-gold to-gold-light text-dark text-[10px] font-semibold shadow-lg shadow-gold/20">
               Best Value
             </div>
             <div className="text-center">
+              <p className="text-[10px] uppercase tracking-widest text-gray-400 mb-2">Flat Rate</p>
               <div className="flex items-baseline justify-center gap-1">
-                <span className="text-5xl font-bold text-zinc-100">$29</span>
-                <span className="text-zinc-500">/month</span>
+                <span className="text-5xl font-bold text-dark">$29</span>
+                <span className="text-sm text-gray-400">/month</span>
               </div>
-              <p className="text-zinc-500 mt-2">Flat rate. Unlimited everything.</p>
+              <p className="text-xs text-gray-400 mt-1">Unlimited content. Unlimited platforms.</p>
             </div>
 
-            <ul className="mt-8 space-y-4">
+            <ul className="mt-6 space-y-2.5">
               {[
-                "Unlimited video uploads (up to 500MB)",
-                "AI-generated captions & hashtags via GPT-4o",
-                "Auto-resize to 9:16, 1:1, 16:9 formats",
-                "Schedule & auto-publish to all platforms",
-                "TikTok, Instagram, YouTube, LinkedIn",
-                "Priority email & chat support",
-                "3-day free trial, no credit card",
+                "Unlimited content creation",
+                "AI avatar videos (no camera needed)",
+                "Auto-edit raw footage",
+                "Shopify page creator",
+                "Ad creator (Meta, TikTok, IG)",
+                "Content calendar & auto-scheduling",
+                "Market research & trend analysis",
+                "Portfolio builder ($3k-$30k retainers)",
+                "Post to 7 platforms at once",
+                "Priority support",
               ].map((item, i) => (
-                <li key={i} className="flex items-start gap-3 text-sm text-zinc-300">
-                  <Check className="w-4 h-4 text-green-500 mt-0.5 shrink-0" />
+                <li key={i} className="flex items-start gap-2 text-xs text-gray-500">
+                  <Check className="w-3.5 h-3.5 text-gold shrink-0 mt-0.5" />
                   <span>{item}</span>
                 </li>
               ))}
             </ul>
 
-            <Link href="/login?signup=true">
-              <Button variant="glow" size="lg" className="w-full mt-8 text-base">
-                Start Free Trial
-                <ArrowRight className="ml-2 w-4 h-4" />
+            <Link href="/login">
+              <Button variant="glow" size="lg" className="w-full mt-6">
+                Start 3-Day Free Trial
+                <ArrowRight className="ml-1.5 w-4 h-4" />
               </Button>
             </Link>
 
-            <p className="text-center text-xs text-zinc-600 mt-4">
+            <p className="text-center text-[10px] text-gray-400 mt-3">
               No credit card required • Cancel anytime
             </p>
           </div>

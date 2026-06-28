@@ -1,136 +1,183 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { User, Upload, Save, Settings, CreditCard, Bell, Link2, DollarSign, Users, TrendingUp, ShoppingCart, Star } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  User, Upload, Camera, Copy, Check, Share2,
+  TrendingUp, Users, DollarSign, BarChart3,
+  Gift, Link as LinkIcon, ExternalLink, Crown,
+  Sparkles, Heart, Settings, LogOut
+} from "lucide-react";
+import Link from "next/link";
 
-export default function OwnerDashboardPage() {
-  const [activeTab, setActiveTab] = useState("overview");
+export default function OwnerDashboard() {
+  const [photo, setPhoto] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const tabs = [
-    { id: "overview", label: "Overview", icon: TrendingUp },
-    { id: "analytics", label: "Analytics", icon: Users },
-    { id: "affiliates", label: "Affiliates", icon: Star },
-    { id: "settings", label: "Settings", icon: Settings },
-  ];
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => setPhoto(reader.result as string);
+    reader.readAsDataURL(file);
+  };
+
+  const referralLink = "https://onepostai.com?ref=founder";
+
+  const copyLink = () => {
+    navigator.clipboard.writeText(referralLink);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
-    <div className="space-y-6 max-w-5xl mx-auto p-4">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-[#2d2a24] dark:text-[#f5f0e8]">Owner Dashboard</h1>
-          <p className="text-sm text-[#8a7f72] mt-1">Welcome back, Aurea. Your business is running.</p>
+    <div className="min-h-screen bg-cream p-4 sm:p-6">
+      <div className="max-w-4xl mx-auto">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-xl font-bold text-dark">Founder Dashboard</h1>
+            <p className="text-xs text-gray-400 mt-0.5">OnePost AI — Owner Access</p>
+          </div>
+          <div className="flex items-center gap-2">
+            <Link href="/dashboard/settings">
+              <Button variant="ghost" size="sm"><Settings className="w-4 h-4" /></Button>
+            </Link>
+            <Button variant="ghost" size="sm"><LogOut className="w-4 h-4" /></Button>
+          </div>
         </div>
-        <span className="px-3 py-1 rounded-full bg-[#eab308]/10 border border-[#eab308]/20 text-[#eab308] text-xs font-medium">
-          CEO / Founder
-        </span>
-      </div>
 
-      {/* Quick Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        {[
-          { label: "Total Revenue", value: "$0.00", icon: DollarSign, color: "text-green-500" },
-          { label: "Active Users", value: "0", icon: Users, color: "text-blue-500" },
-          { label: "Affiliates", value: "0", icon: Star, color: "text-purple-500" },
-          { label: "Orders", value: "0", icon: ShoppingCart, color: "text-orange-500" },
-        ].map((stat) => (
-          <div key={stat.label} className="glass-card p-4">
-            <div className="flex items-center justify-between">
-              <p className="text-xs text-[#8a7f72]">{stat.label}</p>
-              <stat.icon className={`w-4 h-4 ${stat.color}`} />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* LEFT COL — Profile */}
+          <div className="lg:col-span-1 space-y-4">
+            {/* Profile Card */}
+            <div className="card-luxury p-6 text-center">
+              {/* Photo upload */}
+              <div className="relative w-24 h-24 mx-auto mb-4 group">
+                <div className={`w-full h-full rounded-full bg-gradient-to-br from-gold to-rose flex items-center justify-center overflow-hidden shadow-xl shadow-gold/20 ${photo ? '' : ''}`}>
+                  {photo ? (
+                    <img src={photo} alt="Profile" className="w-full h-full object-cover" />
+                  ) : (
+                    <Camera className="w-8 h-8 text-cream" />
+                  )}
+                </div>
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="absolute -bottom-1 -right-1 w-9 h-9 rounded-full bg-dark text-cream flex items-center justify-center shadow-lg hover:bg-charcoal transition-all border-2 border-cream"
+                >
+                  <Upload className="w-4 h-4" />
+                </button>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/png,image/jpeg,image/jpg,image/webp"
+                  className="hidden"
+                  onChange={handlePhotoUpload}
+                />
+              </div>
+              <p className="text-sm font-semibold text-dark">@funkycoldmedemaa</p>
+              <p className="text-[10px] text-gray-400">Founder & Creator</p>
+
+              <div className="mt-4 pt-4 border-t border-gold/10">
+                <p className="text-[10px] text-gray-400 uppercase tracking-wider mb-2">Your Referral Link</p>
+                <div className="flex items-center gap-1 bg-warm-white rounded-lg p-1.5">
+                  <div className="flex-1 truncate text-[10px] text-gray-500 px-1">{referralLink}</div>
+                  <button onClick={copyLink} className="p-1.5 rounded-md hover:bg-gold/10 text-gold">
+                    {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                  </button>
+                </div>
+              </div>
             </div>
-            <p className="text-2xl font-bold text-[#2d2a24] dark:text-[#f5f0e8] mt-1">{stat.value}</p>
-          </div>
-        ))}
-      </div>
 
-      {/* Tab Nav */}
-      <div className="flex gap-2 border-b border-[#e8dfd2] dark:border-[#3d3832] pb-2">
-        {tabs.map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm transition-all ${
-              activeTab === tab.id
-                ? "bg-[#eab308]/10 text-[#eab308] border border-[#eab308]/20"
-                : "text-[#8a7f72] hover:text-[#2d2a24]"
-            }`}
-          >
-            <tab.icon className="w-4 h-4" />
-            {tab.label}
-          </button>
-        ))}
-      </div>
+            {/* Quick Stats */}
+            <div className="card-luxury p-4 space-y-3">
+              <p className="text-[10px] uppercase tracking-wider text-gray-400 font-medium">Quick Stats</p>
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-gray-500">Affiliates</span>
+                <span className="text-sm font-semibold text-dark">12</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-gray-500">Commission Earned</span>
+                <span className="text-sm font-semibold text-gold">$0</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-gray-500">Content Published</span>
+                <span className="text-sm font-semibold text-dark">0</span>
+              </div>
+            </div>
+          </div>
 
-      {/* Profile Upload */}
-      <div className="glass-card p-6 space-y-4">
-        <h3 className="font-semibold text-[#2d2a24] dark:text-[#f5f0e8]">Profile</h3>
-        <div className="flex items-center gap-4">
-          <div className="w-20 h-20 rounded-full bg-[#eab308]/20 flex items-center justify-center text-2xl font-bold text-[#eab308]">
-            <User className="w-8 h-8" />
-          </div>
-          <div>
-            <Button variant="outline" size="sm">
-              <Upload className="w-4 h-4 mr-1.5" />
-              Upload Photo
-            </Button>
-            <p className="text-xs text-[#8a7f72] mt-1">JPG or PNG, max 2MB</p>
-          </div>
-        </div>
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <label className="text-xs text-[#8a7f72]">Display Name</label>
-            <Input value="Aurea Haven" className="mt-1" />
-          </div>
-          <div>
-            <label className="text-xs text-[#8a7f72]">Email</label>
-            <Input value="aurea@onepost.ai" className="mt-1" />
-          </div>
-        </div>
-      </div>
+          {/* RIGHT COL */}
+          <div className="lg:col-span-2 space-y-4">
+            {/* Stats Cards */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {[
+                { icon: TrendingUp, label: "Posts Created", value: "0", color: "text-gold" },
+                { icon: Users, label: "Active Users", value: "0", color: "text-gold" },
+                { icon: DollarSign, label: "Revenue", value: "$0", color: "text-gold" },
+                { icon: BarChart3, label: "Conversion", value: "0%", color: "text-gold" },
+              ].map((s) => (
+                <div key={s.label} className="card-luxury p-4 text-center">
+                  <s.icon className={`w-4 h-4 ${s.color} mx-auto mb-1`} />
+                  <p className="text-lg font-bold text-dark">{s.value}</p>
+                  <p className="text-[10px] text-gray-400">{s.label}</p>
+                </div>
+              ))}
+            </div>
 
-      {/* Affiliate Program */}
-      <div className="glass-card p-6 space-y-4">
-        <h3 className="font-semibold text-[#2d2a24] dark:text-[#f5f0e8]">Affiliate Program</h3>
-        <p className="text-sm text-[#8a7f72]">Content creators earn 10% lifetime commission on every referral.</p>
-        <div className="p-4 rounded-lg bg-[#eab308]/5 border border-[#eab308]/20">
-          <p className="text-sm font-medium text-[#2d2a24] dark:text-[#f5f0e8]">Your Referral Link</p>
-          <div className="flex gap-2 mt-2">
-            <Input value="https://onepost.ai/ref/AUREA10" readOnly className="text-xs" />
-            <Button variant="outline" size="sm">Copy</Button>
+            {/* Affiliate Program */}
+            <div className="card-luxury p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-8 h-8 rounded-lg bg-gold/10 flex items-center justify-center">
+                  <Gift className="w-4 h-4 text-gold" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-semibold text-dark">Ambassador Program</h3>
+                  <p className="text-[10px] text-gray-400">10% lifetime commission</p>
+                </div>
+              </div>
+              <p className="text-xs text-gray-500 leading-relaxed mb-4">
+                Give your referral link to creators. When they sign up for OnePost AI, 
+                you earn 10% of their subscription — every month, for life. 
+                Promote both OnePost AI and Axel AI to double your earnings.
+              </p>
+              <div className="flex gap-2">
+                <Button variant="glow" size="sm" onClick={copyLink}>
+                  {copied ? <Check className="w-3.5 h-3.5 mr-1" /> : <Copy className="w-3.5 h-3.5 mr-1" />}
+                  {copied ? "Copied!" : "Copy Referral Link"}
+                </Button>
+                <Link href="/dashboard/affiliates">
+                  <Button variant="outline" size="sm">
+                    View Affiliates
+                  </Button>
+                </Link>
+              </div>
+            </div>
+
+            {/* Quick Actions */}
+            <div className="card-luxury p-6">
+              <h3 className="text-sm font-semibold text-dark mb-3">Founder Tools</h3>
+              <div className="grid grid-cols-2 gap-2">
+                {[
+                  { label: "Create Campaign", icon: Sparkles },
+                  { label: "AI Avatar Studio", icon: Camera },
+                  { label: "Trend Research", icon: TrendingUp },
+                  { label: "Affiliate Settings", icon: Users },
+                ].map((a) => (
+                  <Link key={a.label} href="/dashboard">
+                    <div className="flex items-center gap-2 p-2.5 rounded-xl hover:bg-warm-white transition-colors border border-transparent hover:border-gold/10">
+                      <a.icon className="w-3.5 h-3.5 text-gold" />
+                      <span className="text-xs text-gray-500">{a.label}</span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
-        <div className="text-xs text-[#8a7f72] space-y-1">
-          <p>🔗 Share this link with family, friends, and followers</p>
-          <p>💰 You earn 10% of every subscription they buy</p>
-          <p>🏆 Top affiliates get featured on our homepage</p>
-        </div>
-      </div>
-
-      {/* Discount Codes */}
-      <div className="glass-card p-6 space-y-4">
-        <h3 className="font-semibold text-[#2d2a24] dark:text-[#f5f0e8]">Discount Codes</h3>
-        <div className="flex gap-2">
-          <Input placeholder="Create a discount code..." />
-          <Button variant="glow" size="sm">Generate</Button>
-        </div>
-        <div className="text-xs text-[#8a7f72]">
-          <p>Family & friends codes: 100% off, unlimited use</p>
-          <p>Promo codes: 20-50% off, limited time</p>
-        </div>
-      </div>
-
-      {/* Invoices */}
-      <div className="glass-card p-6 space-y-4">
-        <h3 className="font-semibold text-[#2d2a24] dark:text-[#f5f0e8]">Invoices & Tax Organization</h3>
-        <div className="space-y-2 text-sm text-[#8a7f72]">
-          <p>📄 All invoices auto-stored for tax season</p>
-          <p>📊 Monthly earnings reports</p>
-          <p>💳 Stripe payouts: linked to Auto Exec</p>
-          <p>📈 Revenue analytics coming soon</p>
-        </div>
-        <Button variant="outline" size="sm">View Invoice History</Button>
       </div>
     </div>
   );

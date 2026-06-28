@@ -1,356 +1,426 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { ArrowRight, Check, Sparkles, Wand2, Brain, Clock, Globe, Zap, Menu, X, Film, MessageSquareText, CalendarDays, Lightbulb, UserCheck, ExternalLink } from "lucide-react";
-import { useState } from "react";
+import Image from "next/image";
+import {
+  Sparkles, Wand2, Brain, Globe, Zap, Film,
+  Menu, X, Check, ArrowRight, ChevronDown,
+  Star, Instagram, Music2, Youtube, Linkedin, 
+  ShoppingBag, MessageSquareText, CalendarDays, TrendingUp,
+  BadgeCheck, Crown, ExternalLink, Users, Play,
+  Camera, Upload, Hash
+} from "lucide-react";
 
-export default function LandingPage() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+const features = [
+  {
+    icon: Wand2,
+    title: "Mission Control",
+    description: "Type what you want — I'll make it happen. Research trends, create content, and post everywhere with one command.",
+  },
+  {
+    icon: Camera,
+    title: "AI Avatar Videos",
+    description: "Upload 5 photos — I build your digital twin. You never need to be on camera again.",
+  },
+  {
+    icon: Film,
+    title: "Auto-Edit Raw Clips",
+    description: "Upload raw footage. I cut, add effects, text, and music — ready to post in minutes.",
+  },
+  {
+    icon: TrendingUp,
+    title: "Market Research",
+    description: "Scan any niche for trending products by margin, demand, and viral potential. Data-driven decisions.",
+  },
+  {
+    icon: ShoppingBag,
+    title: "Shopify Page Creator",
+    description: "Complete product pages with SEO titles, conversion copy, images, and smart pricing. Ready to sell.",
+  },
+  {
+    icon: BadgeCheck,
+    title: "Ad Creator",
+    description: "Auto-generate Meta, TikTok, and Instagram ads with viral hooks and creative that converts.",
+  },
+  {
+    icon: CalendarDays,
+    title: "Content Calendar",
+    description: "Schedule 21+ posts across 7 platforms. Set it and forget it — the app runs on autopilot.",
+  },
+  {
+    icon: Crown,
+    title: "Portfolio Builder",
+    description: "Build a pro portfolio that commands $3k-$30k monthly retainers. Show results, not effort.",
+  },
+  {
+    icon: Globe,
+    title: "Post Everywhere",
+    description: "TikTok, Instagram, Facebook, YouTube, LinkedIn, Snapchat, Pinterest — one connection, auto-publish.",
+  },
+];
 
-  const features = [
-    {
-      icon: Wand2,
-      title: "Raw Video → Polished Content",
-      description: "Drop a raw clip and AI edits it into platform-optimized videos with cuts, transitions, effects, and text overlays. No editing skills needed.",
-      gradient: "from-indigo-500 to-purple-500",
-    },
-    {
-      icon: Film,
-      title: "AI Creates from Scratch",
-      description: "No footage? No problem. Give it a brand name or topic and AI generates UGC-style videos with stock footage, voiceover, and captions.",
-      gradient: "from-purple-500 to-pink-500",
-    },
-    {
-      icon: Lightbulb,
-      title: "Content Idea Engine",
-      description: "Stuck? The ideation engine reads trends in your niche and suggests 10 viral-ready post ideas so you never run out of content.",
-      gradient: "from-pink-500 to-rose-500",
-    },
-    {
-      icon: Globe,
-      title: "Auto-Publish to All Platforms",
-      description: "Smart posting knows where content performs best — Reels, TikToks, Shorts, Spotlights. It picks the right format and publishes everywhere at once.",
-      gradient: "from-amber-500 to-orange-500",
-    },
-    {
-      icon: CalendarDays,
-      title: "Set It & Forget It",
-      description: "Schedule 20+ posts across days. Take the weekend off. The app runs your content calendar on autopilot with affiliate links built in.",
-      gradient: "from-green-500 to-emerald-500",
-    },
-    {
-      icon: UserCheck,
-      title: "No Camera Required",
-      description: "AI avatars, text-to-video, screen captures with voiceover. Create pro UGC content without ever turning your camera on.",
-      gradient: "from-blue-500 to-cyan-500",
-    },
-  ];
+const platforms = [
+  { name: "TikTok", icon: Music2 },
+  { name: "Instagram", icon: Instagram },
+  { name: "Facebook", icon: Globe },
+  { name: "YouTube", icon: Youtube },
+  { name: "LinkedIn", icon: Linkedin },
+  { name: "Snapchat", icon: Zap },
+  { name: "Pinterest", icon: Hash },
+];
+
+export default function Home() {
+  const [navOpen, setNavOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* NAVBAR */}
-      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/5 bg-background/80 backdrop-blur-xl">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-cream text-dark">
+      {/* NAVIGATION */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-cream/80 backdrop-blur-xl border-b border-gold/10">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-2">
-              <img src="/logo.svg" alt="OnePost AI" className="h-8 w-auto" />
-            </div>
-            <div className="hidden md:flex items-center gap-8">
-              <Link href="#features" className="text-sm text-zinc-400 hover:text-zinc-200 transition-colors">Features</Link>
-              <Link href="#pricing" className="text-sm text-zinc-400 hover:text-zinc-200 transition-colors">Pricing</Link>
-              <Link href="/faq" className="text-sm text-zinc-400 hover:text-zinc-200 transition-colors">FAQ</Link>
-              <Link href="/about" className="text-sm text-zinc-400 hover:text-zinc-200 transition-colors">About</Link>
-              <Link href="/support" className="text-sm text-zinc-400 hover:text-zinc-200 transition-colors">Support</Link>
+            {/* Logo */}
+            <Link href="/" className="flex items-center gap-2.5 group">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-gold to-gold-light flex items-center justify-center shadow-lg shadow-gold/20 group-hover:shadow-gold/30 transition-all">
+                <span className="text-xs font-bold text-dark">O</span>
+              </div>
+              <span className="font-semibold text-sm tracking-tight">
+                <span className="text-dark">OnePost</span>
+                <span className="text-gold"> AI</span>
+              </span>
+            </Link>
+
+            {/* Desktop nav */}
+            <nav className="hidden md:flex items-center gap-8">
+              <Link href="/pricing" className="text-xs text-gray-500 hover:text-dark transition-colors">Pricing</Link>
+              <Link href="/about" className="text-xs text-gray-500 hover:text-dark transition-colors">About</Link>
+              <Link href="/faq" className="text-xs text-gray-500 hover:text-dark transition-colors">FAQ</Link>
               <Link href="/login">
-                <Button variant="outline" size="sm">Sign In</Button>
+                <button className="px-5 py-2 rounded-xl text-xs font-medium bg-dark text-cream hover:bg-charcoal transition-all">
+                  Get Started
+                </button>
               </Link>
-              <Link href="/login?signup=true">
-                <Button variant="glow" size="sm">
-                  Start Free Trial
-                  <ArrowRight className="ml-1.5 w-3.5 h-3.5" />
-                </Button>
-              </Link>
-            </div>
-            <button className="md:hidden p-2 text-zinc-400 hover:text-zinc-200" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </nav>
+
+            {/* Mobile menu button */}
+            <button className="md:hidden p-2" onClick={() => setNavOpen(!navOpen)}>
+              {navOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
-        </div>
-        {mobileMenuOpen && (
-          <div className="md:hidden border-t border-white/5 bg-zinc-900/95 backdrop-blur-xl">
-            <div className="px-4 py-4 space-y-3">
-              <Link href="#features" className="block text-sm text-zinc-400 py-2">Features</Link>
-              <Link href="#pricing" className="block text-sm text-zinc-400 py-2">Pricing</Link>
-              <div className="flex gap-3 pt-2">
-                <Link href="/login" className="flex-1"><Button variant="outline" className="w-full">Sign In</Button></Link>
-                <Link href="/login?signup=true" className="flex-1"><Button variant="glow" className="w-full">Start Free</Button></Link>
+
+          {/* Mobile menu */}
+          {navOpen && (
+            <div className="md:hidden pb-4 border-t border-gold/10 pt-4">
+              <div className="flex flex-col gap-3">
+                <Link href="/pricing" className="text-sm text-gray-500 hover:text-dark py-1">Pricing</Link>
+                <Link href="/about" className="text-sm text-gray-500 hover:text-dark py-1">About</Link>
+                <Link href="/faq" className="text-sm text-gray-500 hover:text-dark py-1">FAQ</Link>
+                <Link href="/login">
+                  <button className="w-full px-5 py-2.5 rounded-xl text-sm font-medium bg-dark text-cream">
+                    Get Started
+                  </button>
+                </Link>
               </div>
             </div>
-          </div>
-        )}
-      </nav>
+          )}
+        </div>
+      </header>
 
-      {/* HERO */}
-      <section className="relative pt-32 pb-20 px-4 overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-gradient-to-b from-indigo-500/10 via-purple-500/5 to-transparent rounded-full blur-3xl" />
-        <div className="absolute top-40 right-0 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
-        <div className="absolute top-60 left-0 w-80 h-80 bg-indigo-500/5 rounded-full blur-3xl" />
-
-        <div className="max-w-4xl mx-auto text-center relative">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-xs font-medium mb-8">
-            <Sparkles className="w-3.5 h-3.5" />
-            Zero editing. Zero camera. Zero stress.
+      {/* HERO SECTION */}
+      <section className="min-h-screen flex items-center justify-center pt-16 pb-12 px-4">
+        <div className="max-w-5xl mx-auto text-center">
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-gold/20 bg-gold/5 text-xs text-gold mb-8">
+            <Sparkles className="w-3 h-3" />
+            AI content agency. One subscription.
           </div>
 
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-balance leading-[1.1]">
-            <span className="gradient-text">Post like a pro.</span>
+          {/* Headline */}
+          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.05] text-dark">
+            Your content empire
             <br />
-            <span className="text-zinc-100">Without being one.</span>
+            <span className="gradient-gold">runs itself.</span>
           </h1>
 
-          <p className="mt-6 text-lg sm:text-xl text-zinc-400 max-w-2xl mx-auto text-balance leading-relaxed">
-            You shouldn't need a film degree, expensive editing software, or hours of your day 
-            to post great content. Drop a raw video, a link, or just an idea — OnePost AI edits, 
-            formats, captions, and publishes pro-level content across every platform. On autopilot.
+          <p className="mt-6 text-base sm:text-lg text-gray-500 max-w-2xl mx-auto leading-relaxed">
+            Type what you want — "Find 10 viral beauty products, create Shopify pages, and post everywhere" 
+            — and it's done. AI avatar videos, trending research, auto-editing, ad creation. 
+            <span className="text-dark font-medium"> No editing. No filming. No grunt work.</span>
           </p>
 
-          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/login?signup=true">
-              <Button variant="glow" size="xl" className="text-base">
-                Stop Struggling. Start Posting.
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
+          {/* CTA */}
+          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
+            <Link href="/login">
+              <button className="px-8 py-3.5 rounded-xl text-sm font-semibold bg-dark text-cream hover:bg-charcoal transition-all shadow-lg shadow-dark/10 hover:shadow-dark/20 inline-flex items-center gap-2">
+                Start Your 3-Day Trial
+                <ArrowRight className="w-4 h-4" />
+              </button>
             </Link>
-            <Link href="#features">
-              <Button variant="outline" size="xl" className="text-base">See How It Works</Button>
+            <Link href="/about">
+              <button className="px-8 py-3.5 rounded-xl text-sm font-medium text-gray-500 border border-gray-200 hover:border-gray-300 hover:text-dark transition-all inline-flex items-center gap-2">
+                <Play className="w-4 h-4" />
+                See How It Works
+              </button>
             </Link>
           </div>
 
-          <div className="mt-12 flex items-center justify-center gap-8 text-sm text-zinc-600 flex-wrap">
-            <span className="flex items-center gap-1.5"><Check className="w-4 h-4 text-green-500" /> No editing skills needed</span>
-            <span className="flex items-center gap-1.5"><Check className="w-4 h-4 text-green-500" /> No camera required</span>
-            <span className="flex items-center gap-1.5"><Check className="w-4 h-4 text-green-500" /> 3-day free trial</span>
-          </div>
-        </div>
-      </section>
-
-      {/* HOW IT WORKS */}
-      <section className="py-20 px-4 border-t border-white/5">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-zinc-100">Three ways to create</h2>
-            <p className="mt-4 text-zinc-500 max-w-xl mx-auto">However content happens — upload, generate, or ideate — the app handles the rest.</p>
+          {/* Trust indicator */}
+          <div className="mt-6 flex items-center justify-center gap-4 text-xs text-gray-400">
+            <span className="flex items-center gap-1"><Check className="w-3 h-3 text-green-500" /> 3-day free trial</span>
+            <span className="w-1 h-1 rounded-full bg-gray-300" />
+            <span className="flex items-center gap-1"><Check className="w-3 h-3 text-green-500" /> No credit card required</span>
+            <span className="w-1 h-1 rounded-full bg-gray-300" />
+            <span className="flex items-center gap-1"><Check className="w-3 h-3 text-green-500" /> Cancel anytime</span>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
-            {/* Way 1 */}
-            <div className="glass-card p-8 text-center hover:border-indigo-500/20 transition-all duration-300">
-              <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center mb-5">
-                <Wand2 className="w-7 h-7 text-indigo-400" />
-              </div>
-              <h3 className="text-lg font-semibold text-zinc-100 mb-3">1. Upload Raw Content</h3>
-              <p className="text-zinc-400 text-sm leading-relaxed">
-                Drop a video you shot on your phone or a single image. AI auto-edits it with cuts, transitions, effects, and text — turning it into polished platform-ready content.
-              </p>
-            </div>
-
-            {/* Way 2 */}
-            <div className="glass-card p-8 text-center hover:border-purple-500/20 transition-all duration-300">
-              <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center mb-5">
-                <Film className="w-7 h-7 text-purple-400" />
-              </div>
-              <h3 className="text-lg font-semibold text-zinc-100 mb-3">2. AI Generate From Scratch</h3>
-              <p className="text-zinc-400 text-sm leading-relaxed">
-                No footage? Give it a brand name, product link, or topic. AI creates UGC-style videos with stock footage, voiceover, captions, and your affiliate link baked in.
-              </p>
-            </div>
-
-            {/* Way 3 */}
-            <div className="glass-card p-8 text-center hover:border-pink-500/20 transition-all duration-300">
-              <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-pink-500/20 to-rose-500/20 flex items-center justify-center mb-5">
-                <Lightbulb className="w-7 h-7 text-pink-400" />
-              </div>
-              <h3 className="text-lg font-semibold text-zinc-100 mb-3">3. Just Need Ideas?</h3>
-              <p className="text-zinc-400 text-sm leading-relaxed">
-                The ideation engine scans trending topics in your niche and hands you 10 ready-to-post ideas with hooks, descriptions, and hashtags. Pick one, hit publish.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* FEATURES GRID */}
-      <section id="features" className="py-20 px-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-zinc-100">
-              Everything you need,{" "}
-              <span className="gradient-text">nothing you don't</span>
-            </h2>
-            <p className="mt-4 text-zinc-500 max-w-xl mx-auto">
-              Built for creators who want pro results without the pro workflow.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            {features.map((feature, index) => (
-              <div key={index} className="group relative glass-card p-8 hover:border-white/10 transition-all duration-300 hover:-translate-y-1">
-                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${feature.gradient} bg-opacity-10 flex items-center justify-center mb-5`}>
-                  <feature.icon className="w-6 h-6 text-white" />
-                </div>
-                <h3 className="text-xl font-semibold text-zinc-100 mb-3">{feature.title}</h3>
-                <p className="text-zinc-400 text-sm leading-relaxed">{feature.description}</p>
+          {/* Platform bar */}
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-4 sm:gap-6">
+            {platforms.map((p) => (
+              <div key={p.name} className="flex items-center gap-1.5 text-[10px] text-gray-400 uppercase tracking-wider">
+                <p.icon className="w-3.5 h-3.5" />
+                {p.name}
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* FOR THE 39-YEAR-OLD CREATOR */}
-      <section className="py-20 px-4 border-t border-white/5">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="glass-card p-12 border-indigo-500/20">
-            <h2 className="text-3xl font-bold text-zinc-100 mb-4">
-              This app is for <span className="gradient-text">you</span>
+      {/* HOW IT WORKS */}
+      <section className="py-20 px-4">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-14">
+            <h2 className="section-title text-dark">
+              Content creation on<br /><span className="gradient-gold">autopilot</span>
             </h2>
-            <p className="text-zinc-400 text-lg max-w-2xl mx-auto leading-relaxed">
-              Not the 20-year-olds with ring lights and editing rigs. <strong className="text-zinc-200">You.</strong><br /><br />
-              The one with a full life, a real business, and zero time to figure out CapCut.<br />
-              The one who knows their stuff but doesn't want to be on camera all day.<br />
-              The one who wants to post 5 times a day without spending 5 hours doing it.<br /><br />
-              <span className="text-indigo-300 font-semibold">Post like a pro. Without being one. That's the point.</span>
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* PRICING */}
-      <section id="pricing" className="py-20 px-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-zinc-100">
-              One price. <span className="gradient-text">Everything.</span>
-            </h2>
-            <p className="mt-4 text-zinc-500">No tiers, no upsells, no surprises.</p>
+            <p className="mt-3 text-sm text-gray-400 max-w-lg mx-auto">One dashboard. One command. Seven platforms.</p>
           </div>
 
-          <div className="max-w-md mx-auto">
-            <div className="glass-card p-8 border-indigo-500/20 relative">
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-indigo-500 text-white text-xs font-medium">
-                One Plan
-              </div>
-              <div className="text-center">
-                <div className="flex items-baseline justify-center gap-1">
-                  <span className="text-5xl font-bold text-zinc-100">$29</span>
-                  <span className="text-zinc-500">/month</span>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              { step: "01", title: "You Type", desc: '"Find trending products in skincare, create Shopify pages, and post to TikTok & IG"' },
+              { step: "02", title: "AI Executes", desc: "Researches trends, generates AI avatar videos, writes captions, creates ads, builds pages" },
+              { step: "03", title: "It Publishes", desc: "Auto-posts to TikTok, Instagram, Facebook, YouTube Shorts, LinkedIn, Snapchat & Pinterest" },
+            ].map((item) => (
+              <div key={item.step} className="card-luxury p-6 text-center animate-fade-in">
+                <div className="w-10 h-10 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center mx-auto mb-4">
+                  <span className="text-xs font-bold text-gold">{item.step}</span>
                 </div>
-                <p className="text-zinc-500 mt-2 text-sm">Flat rate. Unlimited content, unlimited platforms.</p>
+                <h3 className="font-semibold text-sm text-dark mb-2">{item.title}</h3>
+                <p className="text-xs text-gray-400 leading-relaxed">{item.desc}</p>
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-              <ul className="mt-8 space-y-4">
-                {[
-                  "AI auto-editing — raw video to polished content",
-                  "AI video generation from scratch (brand/topic → video)",
-                  "Content ideation engine — never run out of ideas",
-                  "Auto-publish to TikTok, Instagram, YouTube, LinkedIn",
-                  "Smart format selection (reels > feed, etc.)",
-                  "Affiliate link management",
-                  "Content calendar — schedule & forget",
-                  "No camera required — AI avatars & voiceover",
-                ].map((item, i) => (
-                  <li key={i} className="flex items-start gap-3 text-sm text-zinc-300">
-                    <Check className="w-4 h-4 text-green-500 mt-0.5 shrink-0" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
+      {/* FEATURES GRID */}
+      <section className="py-20 px-4 bg-gradient-to-b from-cream to-warm-white/50">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-14">
+            <h2 className="section-title text-dark">
+              Everything you need.<br /><span className="gradient-gold">Nothing you don't.</span>
+            </h2>
+            <p className="mt-3 text-sm text-gray-400 max-w-lg mx-auto">9 tools. Infinite content. One subscription.</p>
+          </div>
 
-              <Link href="/login?signup=true" className="block mt-8">
-                <Button variant="glow" size="lg" className="w-full text-base">
-                  Start Your 3-Day Free Trial
-                  <ArrowRight className="ml-2 w-4 h-4" />
-                </Button>
-              </Link>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {features.map((f) => (
+              <div key={f.title} className="card-luxury p-5 animate-fade-in">
+                <div className="w-9 h-9 rounded-lg bg-gold/10 border border-gold/15 flex items-center justify-center mb-3">
+                  <f.icon className="w-4 h-4 text-gold" />
+                </div>
+                <h3 className="font-semibold text-sm text-dark mb-1">{f.title}</h3>
+                <p className="text-xs text-gray-400 leading-relaxed">{f.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-              <p className="text-center text-xs text-zinc-600 mt-4">
-                No credit card required • Cancel anytime
+      {/* MISSION CONTROL PREVIEW */}
+      <section className="py-20 px-4">
+        <div className="max-w-4xl mx-auto">
+          <div className="glass-panel p-8 sm:p-10 text-center">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold/10 text-gold text-xs mb-6">
+              <Wand2 className="w-3 h-3" />
+              Mission Control
+            </div>
+            <div className="bg-dark/90 rounded-2xl p-4 sm:p-6 text-left shadow-2xl">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-2 h-2 rounded-full bg-rose" />
+                <div className="w-2 h-2 rounded-full bg-gold/50" />
+                <div className="w-2 h-2 rounded-full bg-gold/30" />
+                <span className="text-[10px] text-gray-500 ml-2">onepost-ai ~ mission</span>
+              </div>
+              <p className="text-sm text-cream/80 font-mono mb-3">
+                <span className="text-gold">$</span> Find 10 trending beauty products, create Shopify pages, and post to all socials
               </p>
+              <div className="space-y-2 text-xs font-mono">
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-gold animate-pulse" />
+                  <span className="text-cream/60">Researching trending beauty products...</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-gold animate-pulse" />
+                  <span className="text-cream/60">Found 12 products with 65%+ margins</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-green-500" />
+                  <span className="text-cream/80">Creating Shopify pages...</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-green-500" />
+                  <span className="text-cream/80">AI avatar video rendering...</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-green-500" />
+                  <span className="text-cream/80">Publishing to TikTok, IG, FB, YouTube...</span>
+                </div>
+                <div className="pt-2 border-t border-cream/10">
+                  <span className="text-gold">✅ Published to 7 platforms in 3m 42s</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* CROSS-PROMO: Auto Exec */}
-      <section className="py-16 px-4 border-t border-white/5">
-        <div className="max-w-3xl mx-auto text-center">
-          <div className="glass-card p-8 border-indigo-500/20">
-            <h2 className="text-2xl font-bold text-zinc-100">
-              Run your entire business with{" "}
-              <span className="gradient-text">Auto Exec</span>
-            </h2>
-            <p className="text-zinc-400 mt-4 max-w-lg mx-auto leading-relaxed">
-              OnePost AI creates and publishes your content.{" "}
-              <strong className="text-zinc-200">Auto Exec</strong> runs your 
-              dropshipping business 24/7 — billing, Shopify orders, Stripe payments, 
-              and customer management. Together they're a complete business system.
-            </p>
-            <div className="mt-6 flex items-center justify-center gap-4">
-              <a href="https://github.com/AureaHavenTech/AutoExec" target="_blank" rel="noopener noreferrer">
-                <Button variant="glow" size="lg">
-                  <ExternalLink className="w-4 h-4 mr-2" />
-                  Visit Auto Exec
-                </Button>
-              </a>
+      {/* FOR CREATORS */}
+      <section className="py-20 px-4 bg-warm-white/50">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="section-title text-dark mb-4">
+            Built for the creator<br />who's <span className="gradient-gold">ready to scale.</span>
+          </h2>
+          <p className="text-sm text-gray-400 max-w-xl mx-auto leading-relaxed">
+            You know your niche. You know your products. You just don't have time to film, edit, 
+            caption, hashtag, schedule, and post to 7 platforms every day. That's my job now.
+          </p>
+
+          <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
+            {[
+              { label: "Posts/Week", value: "21+" },
+              { label: "Platforms", value: "7" },
+              { label: "Time to Post", value: "&lt;5 min" },
+              { label: "Retainers", value: "$3k-30k" },
+            ].map((s) => (
+              <div key={s.label} className="card-luxury p-4">
+                <p className="text-2xl font-bold text-gold">{s.value}</p>
+                <p className="text-[10px] text-gray-400 mt-0.5">{s.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CROSS-PROMO: AXEL AI */}
+      <section className="py-16 px-4">
+        <div className="max-w-3xl mx-auto">
+          <div className="card-luxury p-8 text-center border-rose/20">
+            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-gold to-rose flex items-center justify-center mx-auto mb-4 shadow-lg shadow-gold/20">
+              <Brain className="w-5 h-5 text-dark" />
             </div>
+            <h3 className="text-lg font-bold text-dark mb-2">
+              Meet <span className="gradient-gold">Axel AI</span>
+            </h3>
+            <p className="text-xs text-gray-400 max-w-md mx-auto leading-relaxed">
+              Your 24/7/365 personal assistant that never sleeps. Manage tasks, automate workflows, 
+              research anything, and get shit done — all through natural conversation. 
+              Think Jarvis, but yours.
+            </p>
+            <a href="https://github.com/AureaHavenTech" target="_blank" rel="noopener noreferrer">
+              <button className="mt-5 px-5 py-2.5 rounded-xl text-xs font-medium border border-gold/30 text-gold hover:bg-gold/10 transition-all inline-flex items-center gap-1.5">
+                Learn More
+                <ExternalLink className="w-3 h-3" />
+              </button>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* PRICING BRIEF */}
+      <section className="py-20 px-4 bg-gradient-to-b from-warm-white/50 to-cream">
+        <div className="max-w-3xl mx-auto text-center">
+          <h2 className="section-title text-dark mb-4">
+            One price. <span className="gradient-gold">Unlimited creation.</span>
+          </h2>
+          <p className="text-sm text-gray-400 mb-8">No tiers. No per-post fees. Just results.</p>
+
+          <div className="glass-panel p-8 max-w-sm mx-auto">
+            <p className="text-[10px] uppercase tracking-widest text-gray-400 mb-2">Flat Rate</p>
+            <p className="text-5xl font-bold text-dark">
+              $29
+              <span className="text-sm font-normal text-gray-400">/month</span>
+            </p>
+            <ul className="mt-6 space-y-2.5 text-left">
+              {[
+                "Unlimited content creation",
+                "All 7 platforms",
+                "AI avatar videos",
+                "Shopify page creator",
+                "Ad creator (Meta, TikTok, IG)",
+                "Content calendar & scheduling",
+                "Market research tools",
+                "Portfolio builder",
+              ].map((item) => (
+                <li key={item} className="flex items-start gap-2 text-xs text-gray-500">
+                  <Check className="w-3.5 h-3.5 text-gold shrink-0 mt-0.5" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <Link href="/login">
+              <button className="mt-6 w-full px-6 py-3 rounded-xl text-sm font-semibold bg-dark text-cream hover:bg-charcoal transition-all shadow-lg">
+                Start 3-Day Free Trial
+              </button>
+            </Link>
+            <p className="mt-2 text-[10px] text-gray-400">No credit card. Cancel anytime.</p>
           </div>
         </div>
       </section>
 
       {/* FOOTER */}
-      <footer className="border-t border-[#e8dfd2] dark:border-[#3d3832] py-12 px-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-4 gap-8">
-            {/* Brand */}
+      <footer className="border-t border-gold/10 py-12 px-4">
+        <div className="max-w-5xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
             <div>
-              <img src="/logo.svg" alt="OnePost AI" className="h-8 w-auto mb-4" />
-              <p className="text-sm text-[#8a7f72] dark:text-[#8a7f72] leading-relaxed">
-                Post like a pro. Without being one.
-              </p>
-            </div>
-            {/* Links */}
-            <div>
-              <h4 className="text-sm font-semibold text-[#2d2a24] dark:text-[#f5f0e8] mb-3">Platform</h4>
-              <div className="space-y-2 text-sm text-[#6b6358] dark:text-[#c4b5a0]">
-                <p>Features</p>
-                <p>Pricing</p>
-                <p>FAQ</p>
-                <p>Support</p>
+              <p className="text-xs font-semibold text-dark mb-3">Product</p>
+              <div className="space-y-2">
+                <Link href="/pricing" className="block text-[11px] text-gray-400 hover:text-dark">Pricing</Link>
+                <Link href="/login" className="block text-[11px] text-gray-400 hover:text-dark">Login</Link>
+                <Link href="/about" className="block text-[11px] text-gray-400 hover:text-dark">About</Link>
               </div>
             </div>
-            {/* Connect */}
             <div>
-              <h4 className="text-sm font-semibold text-[#2d2a24] dark:text-[#f5f0e8] mb-3">Connect</h4>
-              <div className="space-y-2 text-sm text-[#6b6358] dark:text-[#c4b5a0]">
-                <p>@aureahaven — TikTok</p>
-                <p>@aureahaven — Instagram</p>
-                <p>Aurea Haven — LinkedIn</p>
-                <p>@aureahaven — Twitter/X</p>
+              <p className="text-xs font-semibold text-dark mb-3">Resources</p>
+              <div className="space-y-2">
+                <Link href="/faq" className="block text-[11px] text-gray-400 hover:text-dark">FAQ</Link>
+                <Link href="/support" className="block text-[11px] text-gray-400 hover:text-dark">Support</Link>
+                <Link href="/contact" className="block text-[11px] text-gray-400 hover:text-dark">Contact</Link>
               </div>
             </div>
-            {/* Auto Exec */}
             <div>
-              <h4 className="text-sm font-semibold text-[#2d2a24] dark:text-[#f5f0e8] mb-3">Also by Aurea</h4>
-              <div className="space-y-2 text-sm text-[#6b6358] dark:text-[#c4b5a0]">
-                <a href="https://github.com/AureaHavenTech/AutoExec" target="_blank" rel="noopener noreferrer" className="block hover:text-[#eab308] transition-colors">
-                  Auto Exec — Dropshipping Automation
-                </a>
+              <p className="text-xs font-semibold text-dark mb-3">Company</p>
+              <div className="space-y-2">
+                <Link href="/dashboard" className="block text-[11px] text-gray-400 hover:text-dark">Dashboard</Link>
+                <Link href="/dashboard/owner" className="block text-[11px] text-gray-400 hover:text-dark">Founder</Link>
+              </div>
+            </div>
+            <div>
+              <p className="text-xs font-semibold text-dark mb-3">Social</p>
+              <div className="space-y-2">
+                <a href="https://tiktok.com/@funkycoldmedemaa" target="_blank" rel="noopener noreferrer" className="block text-[11px] text-gray-400 hover:text-dark">TikTok</a>
+                <a href="https://instagram.com/funkycoldmedemaa" target="_blank" rel="noopener noreferrer" className="block text-[11px] text-gray-400 hover:text-dark">Instagram</a>
+                <a href="https://twitter.com/funkycoldmedemaa" target="_blank" rel="noopener noreferrer" className="block text-[11px] text-gray-400 hover:text-dark">Twitter / X</a>
               </div>
             </div>
           </div>
-          <div className="mt-10 pt-6 border-t border-[#e8dfd2] dark:border-[#3d3832] text-center text-xs text-[#8a7f72] dark:text-[#8a7f72]">
-            &copy; {new Date().getFullYear()} OnePost AI by Aurea Haven. All rights reserved.
+          <div className="border-t border-gold/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p className="text-[10px] text-gray-400">
+              © 2026 OnePost AI. All rights reserved.
+            </p>
+            <p className="text-[10px] text-gray-400">
+              Built by <span className="text-gold">@funkycoldmedemaa</span>
+            </p>
           </div>
         </div>
       </footer>
