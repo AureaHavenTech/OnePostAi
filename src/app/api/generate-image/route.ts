@@ -21,9 +21,13 @@ export async function POST(request: NextRequest) {
       quality: "standard",
     });
 
-    return new Response(JSON.stringify({ 
-      url: response.data[0]?.url,
-      revisedPrompt: response.data[0]?.revised_prompt 
+    const imageData = response.data?.[0];
+    if (!imageData?.url) {
+      return new Response(JSON.stringify({ error: "Image generation failed" }), { status: 500 });
+    }
+    return new Response(JSON.stringify({
+      url: imageData.url,
+      revisedPrompt: imageData.revised_prompt || null
     }), {
       headers: { "Content-Type": "application/json" },
     });
