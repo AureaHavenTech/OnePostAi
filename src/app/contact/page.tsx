@@ -86,7 +86,7 @@ export default function ContactPage() {
             <div className="bg-slate-900/30 border border-slate-900 rounded-xl p-6">
               <Mail className="h-6 w-6 mb-3" style={{ color: '#c9a96e' }} />
               <h3 className="font-bold mb-1">Email</h3>
-              <p className="text-sm text-slate-400">support@onepostai.app</p>
+              <p className="text-sm text-slate-400">aurahaventech@gmail.com</p>
               <p className="text-xs text-slate-500 mt-1">We respond within 24 hours</p>
             </div>
             <div className="bg-slate-900/30 border border-slate-900 rounded-xl p-6">
