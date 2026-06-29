@@ -58,7 +58,7 @@ export default function LandingPage() {
             <span className="gradient-text"> Moves</span>
           </h1>
           <p className="text-xl text-[#a09080] mb-10 max-w-2xl mx-auto leading-relaxed">
-            The creator's diamond. One Post AI lets you create, schedule, and publish content across 
+            The creator&apos;s diamond. One Post AI lets you create, schedule, and publish content across 
             every platform from one place. AI picks viral hashtags, optimizes posting times, and gives 
             you cross-platform analytics. This is the tool that takes away all the grunt work.
           </p>

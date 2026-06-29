@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic';
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { Sparkles, Send, Loader2, CheckCircle2, Instagram, Twitter, Linkedin, Globe, Hash, Clock } from 'lucide-react';
+import { Sparkles, Send, Loader2, CheckCircle2, Camera, MessageCircle, Share2, Globe, Hash, Clock } from 'lucide-react';
 
 const PLATFORMS = [
   { value: 'instagram', label: 'Instagram', icon: '📸' },

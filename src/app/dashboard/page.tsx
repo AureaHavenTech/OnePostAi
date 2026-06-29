@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Send, Sparkles, PenLine, Instagram, Twitter, Linkedin, Globe, CheckCircle2, Clock, Loader2, MessageSquare } from 'lucide-react';
+import { Send, Sparkles, PenLine, Camera, MessageCircle, Share2, Globe, CheckCircle2, Clock, Loader2, MessageSquare } from 'lucide-react';
 
 interface Post {
   id: number;

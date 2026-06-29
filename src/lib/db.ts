@@ -12,7 +12,7 @@ try {
 import path from 'path';
 import fs from 'fs';
 
-const dbPath = path.join(process.cwd(), 'data', 'onepostai.db');
+const dbPath = process.env.VERCEL ? '/tmp/onepostai.db' : path.join(process.cwd(), 'data', 'onepostai.db');
 
 // In-memory storage for Vercel/serverless environments
 const memoryStore: {
