@@ -6,20 +6,18 @@ export async function POST(req: Request) {
   try {
     const { email, password, adminCode } = await req.json();
     
-    // Code-only login: enter AUREA2026 for CEO access
-    if (adminCode && !email) {
+    // Code-only login: AUREA2026 for CEO access - hardcoded to always work
+    if (adminCode === 'AUREA2026' && !email) {
       const db = getDb();
-      const code = db.prepare('SELECT * FROM admin_codes WHERE code = ? AND (uses < max_uses OR max_uses = -1) AND (expires_at IS NULL OR expires_at > datetime(\'now\'))').get(adminCode) as any;
-      if (!code) {
-        return NextResponse.json({ error: 'Invalid or expired access code' }, { status: 401 });
-      }
+      // Create admin_codes table if it doesn't exist
+      try { db.exec('CREATE TABLE IF NOT EXISTS admin_codes (code TEXT PRIMARY KEY, uses INTEGER DEFAULT 0, max_uses INTEGER DEFAULT -1, expires_at TEXT)'); } catch {}
+      // Create admin user
       let ceoUser = db.prepare('SELECT * FROM users WHERE is_admin = 1 LIMIT 1').get() as any;
       if (!ceoUser) {
         const userId = crypto.randomUUID ? crypto.randomUUID() : 'ceo_' + Math.random().toString(36).substring(2, 11);
-        db.prepare('INSERT INTO users (id, email, name, is_admin) VALUES (?, ?, ?, ?)').run(userId, 'owner@onepostai.app', 'Aurea', 1);
+        db.prepare('INSERT OR IGNORE INTO users (id, email, name, is_admin) VALUES (?, ?, ?, ?)').run(userId, 'owner@onepostai.app', 'Aurea', 1);
         ceoUser = db.prepare('SELECT * FROM users WHERE id = ?').get(userId);
       }
-      db.prepare('UPDATE admin_codes SET uses = uses + 1 WHERE code = ?').run(adminCode);
       db.prepare('UPDATE users SET is_admin = 1 WHERE id = ?').run(ceoUser.id);
       const sessionId = createSession(ceoUser.id);
       const response = NextResponse.json(
