@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { ShieldCheck, PenLine } from "lucide-react";
+import { Sparkles, ShieldCheck } from "lucide-react";
 
 export function Footer() {
   return (
@@ -8,16 +8,14 @@ export function Footer() {
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between">
         <div className="flex flex-col items-center md:items-start mb-6 md:mb-0">
           <div className="flex items-center space-x-2 mb-2">
-            <div className="h-6 w-6 bg-gradient-to-br from-[#c9a96e] to-[#b8944a] rounded flex items-center justify-center">
-              <PenLine className="h-3.5 w-3.5 text-white" />
-            </div>
-            <span className="font-bold text-white tracking-tight" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>One Post AI</span>
+            <Sparkles className="h-4 w-4 text-brand-500" />
+            <span className="font-bold text-white tracking-tight font-serif">One Post AI</span>
           </div>
           <div className="flex space-x-4 mt-2">
-            <a href="https://instagram.com/funkycoldmedemaa" target="_blank" className="hover:text-[#c9a96e] transition-colors">Instagram</a>
-            <a href="https://tiktok.com/@funkycoldmedemaa" target="_blank" className="hover:text-[#c9a96e] transition-colors">TikTok</a>
-            <a href="https://twitter.com/funkycoldmedemaa" target="_blank" className="hover:text-[#c9a96e] transition-colors">Twitter</a>
-            <a href="https://youtube.com/@funkycoldmedemaa" target="_blank" className="hover:text-[#c9a96e] transition-colors">YouTube</a>
+            <a href="https://instagram.com/funkycoldmedemaa" target="_blank" className="hover:text-brand-400 transition-colors">Instagram</a>
+            <a href="https://tiktok.com/@funkycoldmedemaa" target="_blank" className="hover:text-brand-400 transition-colors">TikTok</a>
+            <a href="https://twitter.com/funkycoldmedemaa" target="_blank" className="hover:text-brand-400 transition-colors">Twitter</a>
+            <a href="https://youtube.com/@funkycoldmedemaa" target="_blank" className="hover:text-brand-400 transition-colors">YouTube</a>
           </div>
           <div className="text-[10px] mt-2 opacity-50">@funkycoldmedemaa</div>
         </div>
@@ -38,11 +36,11 @@ export function Footer() {
           </div>
           <div className="flex flex-wrap justify-center md:justify-end gap-x-4 gap-y-1 text-xs text-slate-400 mb-2">
             <span className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#c9a96e] animate-pulse" />
-              Try <a href="https://autoexecai.ctonew.app" target="_blank" className="text-[#c9a96e] hover:text-[#d4b87a] font-bold">Axel AI</a> - Your AI Executive Assistant
+              <span className="w-1.5 h-1.5 rounded-full bg-brand-500 animate-pulse" />
+              Try <a href="https://autoexecai.ctonew.app" target="_blank" className="text-brand-400 hover:text-brand-300 font-bold">Axel AI</a> - Your AI Executive Assistant
             </span>
             <span>·</span>
-            <a href="https://aurahaven.shop" target="_blank" className="text-[#c9a96e] hover:text-[#d4b87a] font-bold">Shop Aura Haven</a>
+            <a href="https://aurahaven.shop" target="_blank" className="text-brand-400 hover:text-brand-300 font-bold">Aura Haven</a>
           </div>
           <div className="opacity-40">&copy; {new Date().getFullYear()} One Post AI. Part of the Aura Haven Tech family.</div>
         </div>

@@ -1,157 +1,83 @@
-"use client";
+'use client';
 
 import React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Sparkles, ShieldCheck, Zap, Quote, Heart, Instagram, Twitter, Youtube } from "lucide-react";
 import { Footer } from "@/components/ui/footer";
-import { Sparkles, ShieldCheck, Users, Quote, Heart, ArrowRight, Camera, PenLine, Zap } from "lucide-react";
 
 export default function AboutPage() {
-  const socialLinks = [
-    { label: "Instagram", url: "https://instagram.com/funkycoldmedemaa", icon: "📸" },
-    { label: "TikTok", url: "https://tiktok.com/@funkycoldmedemaa", icon: "🎵" },
-    { label: "Twitter/X", url: "https://twitter.com/funkycoldmedemaa", icon: "🐦" },
-    { label: "YouTube", url: "https://youtube.com/@funkycoldmedemaa", icon: "▶️" },
-  ];
-
   return (
-    <div className="min-h-screen" style={{ background: 'linear-gradient(135deg, #12121a, #1a1a2e)', color: '#e8e0d4' }}>
-      {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-[#12121a]/80 backdrop-blur-xl border-b border-[#2a2a3a] px-6 py-4 flex items-center justify-between">
+    <div className="min-h-screen bg-slate-950 text-white">
+      <header className="fixed top-0 left-0 right-0 z-50 glass border-b border-slate-900 px-6 py-4 flex items-center justify-between">
         <Link href="/" className="flex items-center space-x-2">
-          <div className="h-9 w-9 bg-gradient-to-br from-[#c9a96e] to-[#b8944a] rounded-lg flex items-center justify-center">
-            <PenLine className="h-5 w-5 text-white" />
+          <div className="h-9 w-9 bg-brand-500 rounded-lg flex items-center justify-center shadow-lg shadow-brand-500/20">
+            <Sparkles className="h-5 w-5 text-white" />
           </div>
-          <span className="text-xl font-bold tracking-tight text-white" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>One Post AI</span>
+          <span className="text-xl font-bold tracking-tight text-white font-serif">One Post AI</span>
         </Link>
         <nav className="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-300">
           <Link href="/about" className="text-white">About</Link>
           <Link href="/contact" className="hover:text-white transition-colors">Contact</Link>
           <Link href="/faq" className="hover:text-white transition-colors">FAQ</Link>
-          <Link href="/pricing" className="hover:text-white transition-colors">Pricing</Link>
+          <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
+          <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
         </nav>
-        <Link href="/dashboard">
-          <Button variant="primary" size="sm">Launch App</Button>
-        </Link>
+        <Link href="/dashboard"><Button variant="primary" size="sm">Dashboard</Button></Link>
       </header>
 
       <main className="pt-32 pb-24 px-6 max-w-4xl mx-auto">
-        {/* Hero */}
-        <div className="text-center mb-24">
-          <Badge variant="info" className="mb-6 px-4 py-1 text-xs uppercase tracking-wider font-semibold">
-            <Heart className="h-3.5 w-3.5 mr-1.5 text-brand-400" /> Built from Real Life
-          </Badge>
-          <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight mb-6 leading-tight" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-            Built by a Mom Who <br />
-            <span className="bg-gradient-to-r from-[#c9a96e] to-[#e8e0d4] bg-clip-text text-transparent">
-              Didn&apos;t Have Time
-            </span>
-          </h1>
-          <p className="text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
-            One Post AI isn&apos;t another tech gimmick. It was born from the chaos of
-            trying to do it all — and the belief that you shouldn&apos;t have to.
-          </p>
+        <div className="mb-12">
+          <h1 className="text-5xl font-extrabold tracking-tight mb-4 font-serif">About One Post AI</h1>
+          <p className="text-slate-400 text-lg">Content That Moves</p>
         </div>
 
-        {/* Founder Story */}
-        <section className="mb-24">
-          <div className="grid md:grid-cols-5 gap-10 items-start">
-            <div className="md:col-span-2">
-              <div className="relative flex flex-col items-center">
-                <div className="relative w-64 h-64 rounded-full border-4 border-[#c9a96e]/30 overflow-hidden shadow-2xl shadow-[#c9a96e]/10 transition-all duration-300">
-                  <img
-                    src="/ceo-photo.png"
-                    alt="Lindsey - Founder & CEO"
-                    className="w-full h-full object-cover"
-                  />
+        <div className="space-y-8 text-slate-300 leading-relaxed">
+          <section>
+            <h2 className="text-2xl font-bold text-white mb-4 font-serif">Our Story</h2>
+            <p>One Post AI was born from the same frustration that created Axel AI — too many businesses, too little time, and no budget for a content team. We needed a tool that could create, schedule, and publish content across all platforms without the manual grind.</p>
+            <p className="mt-4">So we built One Post AI: an intelligent content creation platform that eliminates the busywork of content marketing. Write once, publish everywhere, and let AI handle the rest.</p>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-bold text-white mb-4 font-serif">What Makes Us Different</h2>
+            <ul className="space-y-3">
+              <li className="flex items-start space-x-3"><ShieldCheck className="h-5 w-5 text-brand-400 mt-0.5 shrink-0" /><span><strong className="text-white">AI-First:</strong> Every feature is powered by AI — from writing to hashtag selection to optimal timing.</span></li>
+              <li className="flex items-start space-x-3"><ShieldCheck className="h-5 w-5 text-brand-400 mt-0.5 shrink-0" /><span><strong className="text-white">Cross-Platform:</strong> Publish to every major platform from one place. No more jumping between tabs.</span></li>
+              <li className="flex items-start space-x-3"><ShieldCheck className="h-5 w-5 text-brand-400 mt-0.5 shrink-0" /><span><strong className="text-white">AutoExec Integration:</strong> Works hand-in-hand with Axel AI for end-to-end workflow automation.</span></li>
+            </ul>
+          </section>
+
+          <section className="py-12 border-y border-slate-900 my-12">
+            <div className="grid md:grid-cols-5 gap-10 items-center">
+              <div className="md:col-span-2 flex justify-center">
+                <div className="relative w-48 h-48 rounded-full border-4 border-brand-500/30 overflow-hidden shadow-2xl shadow-brand-500/10">
+                  <img src="/ceo-photo.png" alt="Lindsey - Founder & CEO" className="w-full h-full object-cover" />
                 </div>
-                <p className="text-xs text-slate-500 mt-4 max-w-[200px] text-center leading-relaxed">
-                  Lindsey — Founder & CEO
+              </div>
+              <div className="md:col-span-3 space-y-4">
+                <div className="relative">
+                  <Quote className="h-8 w-8 text-brand-500/20 absolute -top-4 -left-4" />
+                  <h2 className="text-2xl font-bold text-white font-serif">Hi, I&apos;m Lindsey.</h2>
+                </div>
+                <p className="text-slate-300 leading-relaxed">
+                  I built One Post AI because I was tired of the social media grind. As a mom and entrepreneur, I needed a way to keep my brands active without spending hours every day on content. 
                 </p>
+                <div className="flex space-x-4 pt-2">
+                  <a href="https://instagram.com/funkycoldmedemaa" target="_blank" className="text-slate-400 hover:text-brand-400 transition-colors"><Instagram className="h-5 w-5" /></a>
+                  <a href="https://tiktok.com/@funkycoldmedemaa" target="_blank" className="text-slate-400 hover:text-brand-400 transition-colors">
+                    <svg className="h-5 w-5 fill-current" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.9-.32-1.98-.23-2.81.33-.85.51-1.44 1.43-1.58 2.41-.14 1.01.23 2.08.94 2.81.45.47 1.02.81 1.64.96 1 .2 2.12-.12 2.85-.86.59-.58.82-1.38.89-2.18.02-3.3.01-6.6.01-9.91z"/></svg>
+                  </a>
+                  <a href="https://twitter.com/funkycoldmedemaa" target="_blank" className="text-slate-400 hover:text-brand-400 transition-colors"><Twitter className="h-5 w-5" /></a>
+                  <a href="https://youtube.com/@funkycoldmedemaa" target="_blank" className="text-slate-400 hover:text-brand-400 transition-colors"><Youtube className="h-5 w-5" /></a>
+                </div>
               </div>
             </div>
+          </section>
 
-            <div className="md:col-span-3 space-y-6">
-              <div className="relative">
-                <Quote className="h-10 w-10 text-[#c9a96e]/20 absolute -top-2 -left-3" />
-                <p className="text-xl md:text-2xl text-white font-semibold leading-relaxed pl-6">
-                  Hi, I&apos;m Lindsey.
-                </p>
-              </div>
-
-              <div className="space-y-5 text-slate-300 leading-relaxed text-lg">
-                <p>
-                  I&apos;m a mom, creator, and entrepreneur who knows what it&apos;s like to feel
-                  overwhelmed while trying to build a life you&apos;re proud of.
-                </p>
-                <p>
-                  I built One Post AI because I needed it myself.
-                </p>
-                <p>
-                  Between running businesses, showing up for my family, and trying to maintain 
-                  a consistent content presence across every platform — I was drowning. Posting 
-                  once felt like a win. Posting daily felt impossible.
-                </p>
-                <p>
-                  I wanted a tool that wasn&apos;t just another scheduler. I wanted something that 
-                  could help me create content that actually sounds like me, feels authentic, and 
-                  keeps my audience engaged — without spending hours in front of a screen.
-                </p>
-                <p>
-                  Content shouldn&apos;t feel like a chore. It should feel like creative expression 
-                  that builds your brand while you sleep.
-                </p>
-                <p>
-                  This is especially close to my heart for the busy moms, the side-hustlers, and 
-                  the creative souls who spend so much time pouring into everyone else that they 
-                  forget they have something worth saying, too.
-                </p>
-                <p>
-                  If One Post AI helps you show up consistently, grow your audience, and feel 
-                  proud of the content you&apos;re putting out into the world — then it&apos;s done 
-                  exactly what I hoped it would.
-                </p>
-                <p className="text-white font-medium text-xl">
-                  From one busy human trying to make her mark to another — I&apos;m so glad you&apos;re here.
-                </p>
-                <p className="text-[#c9a96e] font-semibold pt-2">
-                  — Lindsey, Founder
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Dedication */}
-        <div className="text-center mb-16">
-          <p className="text-lg text-slate-400 italic">
-            💜 Dedicated to my mom, who never gives up on me.
-          </p>
-        </div>
-
-        {/* Follow the Founder */}
-        <section className="mb-16 text-center">
-          <div className="inline-block bg-gradient-to-r from-[#c9a96e]/10 to-[#e8e0d4]/5 border border-[#c9a96e]/20 rounded-2xl p-8 md:p-10 px-12">
-            <h2 className="text-2xl font-bold text-white mb-2" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Follow the Founder</h2>
-            <p className="text-slate-400 text-sm mb-6">Stay connected with Lindsey and the journey</p>
-            <div className="flex flex-wrap justify-center gap-4">
-              {socialLinks.map((link) => (
-                <a key={link.label} href={link.url} target="_blank" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-800/50 hover:bg-slate-800 border border-slate-700/50 hover:border-[#c9a96e]/30 text-slate-300 hover:text-white transition-all duration-200 text-sm font-medium">
-                  <span>{link.icon}</span> {link.label}
-                </a>
-              ))}
-            </div>
-            <p className="text-xs text-slate-600 mt-4">@funkycoldmedemaa — everywhere</p>
-          </div>
-        </section>
-
-        {/* Sister Companies */}
-        <section className="mb-24 text-center">
-          <div className="bg-gradient-to-r from-[#c9a96e]/5 to-[#e8e0d4]/5 border border-[#c9a96e]/10 rounded-2xl p-10 md:p-14">
-            <Badge variant="info" className="mb-4">The Aura Haven Tech Family</Badge>
-            <h2 className="text-3xl font-bold text-white mb-3" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Our Sister Companies</h2>
-            <p className="text-slate-400 text-sm mb-8 max-w-lg mx-auto">
+          <section>
+            <h2 className="text-2xl font-bold text-white mb-8 text-center font-serif">The Aura Haven Tech Family</h2>
+            <p className="text-center text-slate-400 mb-8 max-w-lg mx-auto">
               Tools built to help you create, grow, and thrive across every part of your business.
             </p>
             <div className="grid md:grid-cols-2 gap-6 text-left">
@@ -172,60 +98,9 @@ export default function AboutPage() {
                 </div>
               </a>
             </div>
-          </div>
-        </section>
-
-        {/* Why It Matters */}
-        <section className="mb-24">
-          <div className="bg-gradient-to-r from-[#c9a96e]/5 to-[#e8e0d4]/5 border border-[#c9a96e]/10 rounded-2xl p-10 md:p-14">
-            <h2 className="text-3xl font-bold mb-8 text-center" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Why One Post AI Exists</h2>
-            <div className="grid md:grid-cols-3 gap-8">
-              {[
-                {
-                  icon: Sparkles,
-                  title: "Consistency is everything",
-                  desc: "The algorithm rewards showing up. One Post AI makes it possible to post daily content that feels authentic — without the burnout."
-                },
-                {
-                  icon: PenLine,
-                  title: "For the creators",
-                  desc: "You have a voice. You have something to say. Let the tool handle the heavy lifting so you can focus on being creative."
-                },
-                {
-                  icon: Heart,
-                  title: "Built from real struggle",
-                  desc: "This isn't a feature list from a marketing meeting. It's what one creator-actually needed to grow her brand while juggling real life."
-                }
-              ].map((item, i) => {
-                const Icon = item.icon;
-                return (
-                  <div key={i} className="text-center">
-                    <Icon className="h-10 w-10 text-[#c9a96e] mx-auto mb-4" />
-                    <h3 className="text-lg font-bold mb-3">{item.title}</h3>
-                    <p className="text-sm text-slate-400 leading-relaxed">{item.desc}</p>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-
-        {/* CTA */}
-        <div className="text-center bg-slate-900/30 border border-slate-900 rounded-2xl p-12">
-          <Sparkles className="h-10 w-10 text-[#c9a96e] mx-auto mb-4" />
-          <h2 className="text-3xl font-bold mb-4" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Ready to show up consistently?</h2>
-          <p className="text-slate-400 mb-8 max-w-lg mx-auto">
-            Join creators who use One Post AI to grow their brand without burning out.
-          </p>
-          <Link href="/dashboard">
-            <Button variant="primary" size="lg" className="text-base px-8 py-4">
-              Start Creating Free <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
-          </Link>
-          <p className="text-xs text-slate-500 mt-4">30-day money-back guarantee. No risk.</p>
+          </section>
         </div>
       </main>
-
       <Footer />
     </div>
   );
