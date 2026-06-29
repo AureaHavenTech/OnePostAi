@@ -13,7 +13,22 @@ const PLATFORMS = [
   { value: 'facebook', label: 'Facebook', icon: '📘' },
   { value: 'tiktok', label: 'TikTok', icon: '🎵' },
   { value: 'youtube', label: 'YouTube', icon: '▶️' },
-  { value: 'all', label: 'All Platforms', icon: '🌐' },
+  { value: 'pinterest', label: 'Pinterest', icon: '📌' },
+  { value: 'snapchat', label: 'Snapchat', icon: '👻' },
+  { value: 'threads', label: 'Threads', icon: '🧵' },
+  { value: 'bluesky', label: 'Bluesky', icon: '🦋' },
+  { value: 'mastodon', label: 'Mastodon', icon: '🐘' },
+  { value: 'reddit', label: 'Reddit', icon: '🤖' },
+  { value: 'tumblr', label: 'Tumblr', icon: '📝' },
+  { value: 'whatsapp', label: 'WhatsApp', icon: '💬' },
+  { value: 'telegram', label: 'Telegram', icon: '✈️' },
+  { value: 'discord', label: 'Discord', icon: '🎮' },
+  { value: 'medium', label: 'Medium', icon: '✍️' },
+  { value: 'substack', label: 'Substack', icon: '📫' },
+  { value: 'blog', label: 'Blog / Website', icon: '🌐' },
+  { value: 'shopify', label: 'Shopify Store', icon: '🛍️' },
+  { value: 'etsy', label: 'Etsy Shop', icon: '🧶' },
+  { value: 'all', label: 'All Platforms', icon: '🌟' },
 ];
 
 function CreatePageContent() {
