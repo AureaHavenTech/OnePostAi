@@ -1,22 +1,17 @@
-import type { Metadata, Viewport } from "next";
+import type { Metadata } from "next";
+import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 
-export const viewport: Viewport = {
-  themeColor: "#12121a",
-};
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" });
 
 export const metadata: Metadata = {
-  title: "One Post AI — The Content Creator's Ace of Spades",
+  title: "One Post AI — Content That Moves",
   description: "Create, schedule, and publish content across all platforms with AI-powered assistance. Viral hashtags, optimal timing, cross-platform analytics — all in one place.",
   manifest: "/manifest.json",
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "black-translucent",
-    title: "One Post AI",
-  },
   openGraph: {
-    title: "One Post AI — The Content Creator's Ace of Spades",
-    description: "Create, schedule, and publish content across all platforms with AI. Viral hashtags, optimal timing, cross-platform analytics.",
+    title: "One Post AI — Content That Moves",
+    description: "Create, schedule, and publish content across all platforms. AI-powered content that actually works.",
     type: "website",
   },
 };
@@ -29,12 +24,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <meta name="theme-color" content="#12121a" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="One Post AI" />
       </head>
-      <body className="antialiased">
+      <body className={`${inter.variable} ${playfair.variable} font-sans antialiased`}>
         {children}
       </body>
     </html>

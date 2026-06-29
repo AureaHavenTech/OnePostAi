@@ -1,19 +1,26 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { Send, Sparkles, PenLine, Camera, MessageCircle, Share2, Globe, CheckCircle2, Clock, Loader2, MessageSquare } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { 
+  Sparkles, FileText, BarChart3, CalendarDays, 
+  Settings, LogOut, Plus, Edit, Clock, CheckCircle2,
+  Pen, Send, Loader2
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Footer } from "@/components/ui/footer";
 
 interface Post {
   id: number;
   title: string;
+  content: string;
   status: string;
   platform: string;
-  scheduled_for: string | null;
   created_at: string;
   updated_at: string;
-  published_at: string | null;
 }
 
 export default function DashboardPage() {
@@ -21,8 +28,6 @@ export default function DashboardPage() {
   const [user, setUser] = useState<any>(null);
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
-  const [input, setInput] = useState('');
-  const [creating, setCreating] = useState(false);
 
   useEffect(() => {
     fetch('/api/auth/me')
@@ -35,170 +40,122 @@ export default function DashboardPage() {
           return fetch('/api/posts').then(r => r.json());
         }
       })
-      .then(data => {
-        if (data?.posts) setPosts(data.posts);
-      })
+      .then(data => { if (data?.posts) setPosts(data.posts); })
       .catch(() => router.push('/auth/login'))
       .finally(() => setLoading(false));
   }, [router]);
 
-  const handleCreate = () => {
-    if (!input.trim()) return;
-    setCreating(true);
-    // Navigate to create page with the prompt pre-filled
-    router.push(`/create?prompt=${encodeURIComponent(input.trim())}`);
+  const statusBadge = (status: string) => {
+    const variants: Record<string, "success" | "warning" | "info" | "secondary"> = {
+      published: "success",
+      scheduled: "info",
+      draft: "warning",
+    };
+    return <Badge variant={variants[status] || "secondary"}>{status}</Badge>;
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-brand-500" />
+      </div>
+    );
+  }
 
   const published = posts.filter(p => p.status === 'published').length;
   const drafts = posts.filter(p => p.status === 'draft').length;
   const scheduled = posts.filter(p => p.status === 'scheduled').length;
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#12121a' }}>
-        <div className="w-8 h-8 border-2 border-[#c9a96e] border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#12121a', color: '#e8e0d4' }}>
+    <div className="min-h-screen bg-slate-950">
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 glass border-b border-[#2a2a3a] px-6 py-3 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#c9a96e] to-[#b8944a] flex items-center justify-center text-white font-bold text-sm">1P</div>
-          <span className="font-bold text-sm" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>One Post AI</span>
-        </div>
-        <div className="flex items-center gap-3">
-          <Link href="/create" className="inline-flex items-center gap-1.5 text-sm px-4 py-2 rounded-lg bg-gradient-to-r from-[#c9a96e] to-[#b8944a] text-white font-medium hover:shadow-lg hover:shadow-[#c9a96e]/20 transition-all">
-            <PenLine className="h-4 w-4" />
-            <span className="hidden sm:inline">New Post</span>
+      <header className="glass border-b border-slate-900 px-6 py-4 flex items-center justify-between sticky top-0 z-50">
+        <div className="flex items-center space-x-3">
+          <Link href="/" className="flex items-center space-x-2">
+            <div className="h-8 w-8 bg-brand-500 rounded-lg flex items-center justify-center shadow-lg shadow-brand-500/20">
+              <Sparkles className="h-4 w-4 text-white" />
+            </div>
+            <span className="text-lg font-bold text-white font-serif">One Post AI</span>
           </Link>
+        </div>
+        <nav className="hidden md:flex items-center space-x-6 text-sm text-slate-400">
+          <Link href="/dashboard" className="text-white font-medium">Dashboard</Link>
+          <Link href="/create" className="hover:text-white transition-colors">Create</Link>
+          <Link href="/publish" className="hover:text-white transition-colors">Publish</Link>
+          <Link href="/pricing" className="hover:text-white transition-colors">Pricing</Link>
+        </nav>
+        <div className="flex items-center space-x-3">
+          <div className="text-sm text-slate-400 hidden sm:block">{user?.email}</div>
+          <Link href="/create"><Button variant="primary" size="sm"><Plus className="h-4 w-4 mr-1" /> New Post</Button></Link>
         </div>
       </header>
 
-      <main className="pt-20 px-4 pb-10 max-w-3xl mx-auto">
-        {/* Hero section - CHAT FIRST */}
-        <div className="text-center mb-8 pt-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#c9a96e]/10 border border-[#c9a96e]/20 text-[#c9a96e] text-xs mb-4">
-            <Sparkles className="h-3.5 w-3.5" />
-            AI-Powered Content Creation
+      <main className="max-w-6xl mx-auto px-6 py-10">
+        <div className="flex items-center justify-between mb-10">
+          <div>
+            <h1 className="text-3xl font-bold text-white font-serif">Dashboard</h1>
+            <p className="text-slate-400 mt-1">Welcome back, {user?.name}</p>
           </div>
-          <h1 className="text-3xl md:text-4xl font-bold mb-2" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-            What do you want to post today?
-          </h1>
-          <p className="text-[#a09080] text-sm max-w-lg mx-auto">
-            Just type what you want to say. Our AI will write it, pick hashtags, and get it ready to publish.
-          </p>
+          <Link href="/create"><Button variant="primary"><Plus className="h-4 w-4 mr-1" /> Create Post</Button></Link>
         </div>
 
-        {/* Big chat-like input */}
-        <div className="mb-8">
-          <div className="relative">
-            <div className="flex items-end gap-2 bg-[#1a1a28] border border-[#2a2a3a] rounded-2xl p-3 focus-within:border-[#c9a96e]/50 focus-within:ring-1 focus-within:ring-[#c9a96e]/30 transition-all shadow-xl shadow-black/20">
-              <textarea
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="e.g., Write a fun Instagram post about our new summer collection with 5 hashtags"
-                rows={2}
-                className="flex-1 bg-transparent text-base text-[#e8e0d4] placeholder-[#6b6b80] resize-none outline-none px-2 py-1 min-h-[56px]"
-                style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
-              />
-              <button
-                onClick={handleCreate}
-                disabled={creating || !input.trim()}
-                className="h-12 w-12 flex items-center justify-center rounded-xl bg-gradient-to-r from-[#c9a96e] to-[#b8944a] text-white hover:shadow-lg hover:shadow-[#c9a96e]/30 disabled:opacity-40 disabled:cursor-not-allowed transition-all shrink-0"
-              >
-                {creating ? (
-                  <Loader2 className="h-5 w-5 animate-spin" />
-                ) : (
-                  <Send className="h-5 w-5" />
-                )}
-              </button>
-            </div>
-            <p className="text-xs text-[#6b6b80] mt-2 px-1">
-              Press Enter or tap the send button → AI writes, hashtags, schedule — all handled for you
-            </p>
-          </div>
-        </div>
-
-        {/* Quick platform badges */}
-        <div className="flex flex-wrap justify-center gap-2 mb-10">
+        {/* Stats */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
           {[
-            { icon: '📸', label: 'Instagram' },
-            { icon: '🐦', label: 'Twitter/X' },
-            { icon: '💼', label: 'LinkedIn' },
-            { icon: '📘', label: 'Facebook' },
-            { icon: '▶️', label: 'YouTube' },
-            { icon: '🎵', label: 'TikTok' },
-          ].map((p) => (
-            <span key={p.label} className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#1a1a28] border border-[#2a2a3a] text-xs text-[#a09080]">
-              <span>{p.icon}</span>
-              {p.label}
-            </span>
-          ))}
-        </div>
-
-        {/* Mini divider */}
-        <div className="gold-line mb-8" />
-
-        {/* Stats - minimal */}
-        <div className="grid grid-cols-3 gap-4 mb-8">
-          {[
-            { label: 'Published', value: published, color: '#34d399' },
-            { label: 'Scheduled', value: scheduled, color: '#c9a96e' },
-            { label: 'Drafts', value: drafts, color: '#a09080' },
+            { label: 'Total Posts', value: posts.length, icon: FileText, color: 'text-brand-400' },
+            { label: 'Published', value: published, icon: CheckCircle2, color: 'text-emerald-400' },
+            { label: 'Drafts', value: drafts, icon: Pen, color: 'text-amber-400' },
+            { label: 'Scheduled', value: scheduled, icon: CalendarDays, color: 'text-blue-400' },
           ].map((stat) => (
-            <div key={stat.label} className="rounded-xl p-4 text-center" style={{ backgroundColor: '#1a1a28', border: '1px solid #2a2a3a' }}>
-              <p className="text-2xl font-bold" style={{ color: stat.color }}>{stat.value}</p>
-              <p className="text-xs text-[#a09080] mt-0.5">{stat.label}</p>
-            </div>
+            <Card key={stat.label} className="p-5">
+              <div className="flex items-center justify-between">
+                <p className="text-slate-400 text-sm">{stat.label}</p>
+                <stat.icon className={`h-5 w-5 ${stat.color}`} />
+              </div>
+              <p className={`text-3xl font-bold mt-2 ${stat.color}`}>{stat.value}</p>
+            </Card>
           ))}
         </div>
 
-        {/* Recent Posts - minimal list */}
+        {/* Recent Posts */}
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Recent Posts</h2>
-          <Link href="/create" className="text-sm text-[#c9a96e] hover:text-[#d4b87a]">View All →</Link>
+          <h2 className="text-xl font-bold text-white font-serif">Recent Posts</h2>
+          <Link href="/create"><Button variant="outline" size="sm"><Plus className="h-4 w-4 mr-1" /> New</Button></Link>
         </div>
 
         {posts.length === 0 ? (
-          <div className="rounded-xl p-10 text-center" style={{ backgroundColor: '#1a1a28', border: '1px solid #2a2a3a' }}>
-            <div className="text-4xl mb-3">✍️</div>
-            <h3 className="text-lg font-semibold mb-1" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>No posts yet</h3>
-            <p className="text-[#a09080] text-sm mb-4">Type what you want to say above and let AI handle the rest!</p>
-          </div>
+          <Card className="p-12 text-center">
+            <FileText className="h-12 w-12 text-slate-600 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-white mb-2 font-serif">No posts yet</h3>
+            <p className="text-slate-400 text-sm mb-6">Create your first post to get started</p>
+            <Link href="/create"><Button variant="primary">Create Your First Post</Button></Link>
+          </Card>
         ) : (
-          <div className="space-y-2">
-            {posts.slice(0, 5).map((post) => (
-              <div key={post.id} className="rounded-xl p-4 flex items-center justify-between" style={{ backgroundColor: '#1a1a28', border: '1px solid #2a2a3a' }}>
-                <div className="flex items-center gap-3 min-w-0">
-                  <div className="h-8 w-8 rounded-lg flex items-center justify-center text-sm" style={{ backgroundColor: '#2a2a3a' }}>
-                    {post.status === 'published' ? '✅' : post.status === 'scheduled' ? '📅' : '📝'}
+          <div className="space-y-3">
+            {posts.slice(0, 10).map((post) => (
+              <Card key={post.id} className="p-5 flex items-center justify-between glass-hover">
+                <div className="flex items-start space-x-4">
+                  <div className="h-10 w-10 rounded-lg bg-slate-800 flex items-center justify-center shrink-0">
+                    <FileText className="h-5 w-5 text-slate-400" />
                   </div>
-                  <div className="min-w-0">
-                    <p className="text-sm font-medium truncate">{post.title || 'Untitled'}</p>
-                    <div className="flex items-center gap-2 mt-0.5">
-                      <span className="text-xs" style={{ color: post.status === 'published' ? '#34d399' : post.status === 'scheduled' ? '#c9a96e' : '#a09080' }}>
-                        {post.status}
-                      </span>
-                      <span className="text-xs text-[#6b6b80]">{post.platform || 'General'}</span>
+                  <div>
+                    <h3 className="font-medium text-white">{post.title || 'Untitled Post'}</h3>
+                    <div className="flex items-center gap-3 mt-1.5">
+                      {statusBadge(post.status)}
+                      <span className="text-xs text-slate-500">{post.platform}</span>
+                      <span className="text-xs text-slate-500">{new Date(post.updated_at).toLocaleDateString()}</span>
                     </div>
                   </div>
                 </div>
-                <Link href={`/create?id=${post.id}`} className="text-xs text-[#c9a96e] hover:text-[#d4b87a] shrink-0">Edit</Link>
-              </div>
+                <Link href={`/create?id=${post.id}`}>
+                  <Button variant="ghost" size="sm"><Edit className="h-4 w-4 mr-1" /> Edit</Button>
+                </Link>
+              </Card>
             ))}
           </div>
         )}
-
-        {/* Quick tip */}
-        <div className="mt-10 text-center">
-          <p className="text-xs text-[#6b6b80]">
-            <span className="text-[#c9a96e]">💡 Tip:</span> Try &quot;Write a LinkedIn post about our latest product launch with 3 key benefits&quot;
-          </p>
-        </div>
       </main>
+      <Footer />
     </div>
   );
 }

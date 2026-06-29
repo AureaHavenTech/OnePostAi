@@ -3,6 +3,11 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { Sparkles, Send, CalendarDays, Clock, Loader2, FileText, CheckCircle2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Footer } from '@/components/ui/footer';
 
 interface Post {
   id: number;
@@ -25,18 +30,15 @@ export default function PublishPage() {
 
   useEffect(() => {
     fetch('/api/auth/me').then(r => r.json()).then(data => {
-      if (!data.user) {
-        router.push('/auth/login');
-      } else {
-        setUser(data.user);
-        Promise.all([
-          fetch('/api/posts').then(r => r.json()),
-          fetch('/api/publish').then(r => r.json()),
-        ]).then(([postsData, scheduledData]) => {
-          if (postsData.posts) setDrafts(postsData.posts.filter((p: Post) => p.status === 'draft'));
-          if (scheduledData.scheduled) setScheduled(scheduledData.scheduled);
-        });
-      }
+      if (!data.user) { router.push('/auth/login'); return; }
+      setUser(data.user);
+      Promise.all([
+        fetch('/api/posts').then(r => r.json()),
+        fetch('/api/publish').then(r => r.json()),
+      ]).then(([postsData, scheduledData]) => {
+        if (postsData.posts) setDrafts(postsData.posts.filter((p: Post) => p.status === 'draft'));
+        if (scheduledData.scheduled) setScheduled(scheduledData.scheduled);
+      });
     }).catch(() => router.push('/auth/login')).finally(() => setLoading(false));
   }, [router]);
 
@@ -44,16 +46,10 @@ export default function PublishPage() {
     setPublishing(postId);
     try {
       const res = await fetch('/api/publish', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ postId }),
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ postId }),
       });
-      if (res.ok) {
-        setDrafts(prev => prev.filter(p => p.id !== postId));
-      }
-    } finally {
-      setPublishing(null);
-    }
+      if (res.ok) setDrafts(prev => prev.filter(p => p.id !== postId));
+    } finally { setPublishing(null); }
   };
 
   const handleSchedule = async (postId: number) => {
@@ -61,123 +57,107 @@ export default function PublishPage() {
     setPublishing(postId);
     try {
       const res = await fetch('/api/publish', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ postId, scheduleFor: scheduleDate }),
       });
-      if (res.ok) {
-        setDrafts(prev => prev.filter(p => p.id !== postId));
-        setSchedulePost(null);
-        setScheduleDate('');
-      }
-    } finally {
-      setPublishing(null);
-    }
+      if (res.ok) { setDrafts(prev => prev.filter(p => p.id !== postId)); setSchedulePost(null); setScheduleDate(''); }
+    } finally { setPublishing(null); }
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-purple-400 border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
+    return <div className="min-h-screen bg-slate-950 flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-brand-500" /></div>;
   }
 
   return (
-    <div className="min-h-screen">
-      <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-[#0a0a0f]/90 backdrop-blur-xl border-b border-[#2a2a3a] p-4">
-        <Link href="/dashboard" className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-md bg-gradient-to-br from-[#a78bfa] to-[#7c3aed] flex items-center justify-center text-white font-bold text-xs">1P</div>
-          <span className="font-bold text-sm">One Post AI</span>
-        </Link>
-      </div>
-
-      <div className="max-w-4xl mx-auto pt-20 md:pt-10 p-6">
-        <Link href="/dashboard" className="text-sm text-[#6b6b80] hover:text-white mb-2 inline-block">← Back to Dashboard</Link>
-        <h1 className="text-2xl font-bold mb-8">Publish & Schedule</h1>
-
-        {/* Ready to Publish */}
-        <div className="mb-10">
-          <h2 className="text-lg font-semibold mb-4">Ready to Publish</h2>
-          {drafts.length === 0 ? (
-            <div className="card p-8 text-center">
-              <p className="text-[#6b6b80]">No drafts ready to publish. Create a post first.</p>
-              <Link href="/create" className="btn-primary mt-4 inline-block">Create Post</Link>
+    <div className="min-h-screen bg-slate-950 text-white">
+      <header className="glass border-b border-slate-900 px-6 py-4 flex items-center justify-between sticky top-0 z-50">
+        <div className="flex items-center space-x-3">
+          <Link href="/" className="flex items-center space-x-2">
+            <div className="h-8 w-8 bg-brand-500 rounded-lg flex items-center justify-center shadow-lg shadow-brand-500/20">
+              <Sparkles className="h-4 w-4 text-white" />
             </div>
+            <span className="text-lg font-bold text-white font-serif">One Post AI</span>
+          </Link>
+        </div>
+        <nav className="hidden md:flex items-center space-x-6 text-sm text-slate-400">
+          <Link href="/dashboard" className="hover:text-white transition-colors">Dashboard</Link>
+          <Link href="/create" className="hover:text-white transition-colors">Create</Link>
+          <Link href="/publish" className="text-white font-medium">Publish</Link>
+        </nav>
+        <Link href="/create"><Button variant="primary" size="sm"><Send className="h-4 w-4 mr-1" /> New Post</Button></Link>
+      </header>
+
+      <main className="max-w-5xl mx-auto px-6 py-10">
+        <Link href="/dashboard" className="text-sm text-slate-500 hover:text-white transition-colors mb-6 inline-block">← Dashboard</Link>
+        <h1 className="text-3xl font-bold text-white mb-8 font-serif">Publish & Schedule</h1>
+
+        <section className="mb-12">
+          <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2 font-serif">
+            <Send className="h-5 w-5 text-brand-400" /> Ready to Publish
+          </h2>
+          {drafts.length === 0 ? (
+            <Card className="p-10 text-center">
+              <FileText className="h-12 w-12 text-slate-600 mx-auto mb-4" />
+              <p className="text-slate-400">No drafts ready to publish</p>
+              <Link href="/create"><Button variant="primary" className="mt-4">Create Post</Button></Link>
+            </Card>
           ) : (
             <div className="space-y-3">
               {drafts.map(post => (
-                <div key={post.id} className="card p-5">
+                <Card key={post.id} className="p-5">
                   <div className="flex items-center justify-between">
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-medium truncate">{post.title || 'Untitled'}</h3>
-                      <p className="text-sm text-[#6b6b80] mt-1 truncate">{post.content?.substring(0, 100)}</p>
+                      <div className="flex items-center gap-2"><FileText className="h-4 w-4 text-slate-500 shrink-0" /><h3 className="font-medium text-white truncate">{post.title || 'Untitled'}</h3></div>
+                      <p className="text-sm text-slate-500 mt-1 truncate ml-6">{post.content?.substring(0, 100) || 'No content'}</p>
                     </div>
                     <div className="flex gap-2 ml-4 shrink-0">
-                      <button
-                        onClick={() => setSchedulePost(schedulePost === post.id ? null : post.id)}
-                        className="btn-secondary text-sm px-4 py-2"
-                      >
-                        Schedule
-                      </button>
-                      <button
-                        onClick={() => handlePublish(post.id)}
-                        disabled={publishing === post.id}
-                        className="btn-primary text-sm px-4 py-2"
-                      >
-                        {publishing === post.id ? '...' : 'Publish Now'}
-                      </button>
+                      <Button variant="outline" size="sm" onClick={() => setSchedulePost(schedulePost === post.id ? null : post.id)}>
+                        <CalendarDays className="h-4 w-4 mr-1" /> Schedule
+                      </Button>
+                      <Button variant="primary" size="sm" onClick={() => handlePublish(post.id)} disabled={publishing === post.id}>
+                        {publishing === post.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4 mr-1" />}
+                        {publishing === post.id ? '' : 'Publish Now'}
+                      </Button>
                     </div>
                   </div>
                   {schedulePost === post.id && (
-                    <div className="mt-4 pt-4 border-t border-[#2a2a3a] flex gap-3 items-center">
-                      <input
-                        type="datetime-local"
-                        className="input-field flex-1"
-                        value={scheduleDate}
-                        onChange={e => setScheduleDate(e.target.value)}
-                      />
-                      <button
-                        onClick={() => handleSchedule(post.id)}
-                        disabled={publishing === post.id || !scheduleDate}
-                        className="btn-primary text-sm px-4 py-2"
-                      >
-                        {publishing === post.id ? '...' : 'Confirm Schedule'}
-                      </button>
+                    <div className="mt-4 pt-4 border-t border-slate-800 flex gap-3 items-center">
+                      <input type="datetime-local" className="flex-1 px-4 py-2.5 rounded-lg bg-slate-900 border border-slate-800 text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 transition-all"
+                        value={scheduleDate} onChange={e => setScheduleDate(e.target.value)} />
+                      <Button variant="primary" size="sm" onClick={() => handleSchedule(post.id)} disabled={publishing === post.id || !scheduleDate}>
+                        {publishing === post.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <Clock className="h-4 w-4 mr-1" />}
+                        Confirm Schedule
+                      </Button>
                     </div>
                   )}
-                </div>
+                </Card>
               ))}
             </div>
           )}
-        </div>
+        </section>
 
-        {/* Scheduled Posts */}
-        <div>
-          <h2 className="text-lg font-semibold mb-4">Scheduled Posts</h2>
+        <section>
+          <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2 font-serif">
+            <Clock className="h-5 w-5 text-blue-400" /> Scheduled Posts
+          </h2>
           {scheduled.length === 0 ? (
-            <div className="card p-8 text-center">
-              <p className="text-[#6b6b80]">No scheduled posts</p>
-            </div>
+            <Card className="p-10 text-center"><Clock className="h-12 w-12 text-slate-600 mx-auto mb-4" /><p className="text-slate-400">No scheduled posts</p></Card>
           ) : (
             <div className="space-y-3">
               {scheduled.map(post => (
-                <div key={post.id} className="card p-5">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="font-medium">{post.title || 'Untitled'}</h3>
-                      <p className="text-sm text-blue-400 mt-1">
-                        Scheduled for: {post.scheduled_for ? new Date(post.scheduled_for).toLocaleString() : 'Unknown'}
-                      </p>
-                    </div>
-                    <span className="tag">Scheduled</span>
+                <Card key={post.id} className="p-5 flex items-center justify-between">
+                  <div>
+                    <h3 className="font-medium text-white">{post.title || 'Untitled'}</h3>
+                    <p className="text-sm text-blue-400 mt-1">Scheduled: {post.scheduled_for ? new Date(post.scheduled_for).toLocaleString() : 'Unknown'}</p>
                   </div>
-                </div>
+                  <Badge variant="info">Scheduled</Badge>
+                </Card>
               ))}
             </div>
           )}
-        </div>
-      </div>
+        </section>
+      </main>
+      <Footer />
     </div>
   );
 }

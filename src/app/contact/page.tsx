@@ -1,10 +1,11 @@
-"use client";
+'use client';
 
 import React, { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Sparkles, Mail, Send, Loader2, CheckCircle2 } from "lucide-react";
 import { Footer } from "@/components/ui/footer";
-import { PenLine, Mail, Send, Loader2, CheckCircle2, MessageSquare, ShieldCheck } from "lucide-react";
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
@@ -13,97 +14,62 @@ export default function ContactPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    // Simulate sending
-    await new Promise(r => setTimeout(r, 1500));
+    const form = e.target as HTMLFormElement;
+    const formData = new FormData(form);
+    const data = { name: formData.get('name') as string, email: formData.get('email') as string, message: formData.get('message') as string };
+    await fetch("/api/contact", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) }).catch(() => {});
     setLoading(false);
     setSubmitted(true);
   };
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#12121a', color: '#e8e0d4' }}>
-      <header className="fixed top-0 left-0 right-0 z-50 glass border-b border-[#2a2a3a] px-6 py-4 flex items-center justify-between">
+    <div className="min-h-screen bg-slate-950 text-white">
+      <header className="fixed top-0 left-0 right-0 z-50 glass border-b border-slate-900 px-6 py-4 flex items-center justify-between">
         <Link href="/" className="flex items-center space-x-2">
-          <div className="h-9 w-9 bg-gradient-to-br from-[#c9a96e] to-[#b8944a] rounded-lg flex items-center justify-center">
-            <PenLine className="h-5 w-5 text-white" />
+          <div className="h-9 w-9 bg-brand-500 rounded-lg flex items-center justify-center shadow-lg shadow-brand-500/20">
+            <Sparkles className="h-5 w-5 text-white" />
           </div>
-          <span className="text-xl font-bold tracking-tight text-white" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>One Post AI</span>
+          <span className="text-xl font-bold tracking-tight text-white font-serif">One Post AI</span>
         </Link>
-        <nav className="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-300">
-          <Link href="/about" className="hover:text-white transition-colors">About</Link>
-          <Link href="/contact" className="text-white">Contact</Link>
-          <Link href="/faq" className="hover:text-white transition-colors">FAQ</Link>
-          <Link href="/pricing" className="hover:text-white transition-colors">Pricing</Link>
-        </nav>
-        <Link href="/dashboard"><Button variant="primary" size="sm">Launch App</Button></Link>
+        <Link href="/dashboard"><Button variant="primary" size="sm">Dashboard</Button></Link>
       </header>
 
-      <main className="pt-32 pb-24 px-6 max-w-4xl mx-auto">
-        <div className="text-center mb-16">
-          <Mail className="h-12 w-12 mx-auto mb-4" style={{ color: '#c9a96e' }} />
-          <h1 className="text-5xl font-extrabold tracking-tight mb-4" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Contact Us</h1>
-          <p className="text-xl text-slate-400 max-w-2xl mx-auto">
-            Have a question, feedback, or need help? We&apos;d love to hear from you.
-          </p>
+      <main className="pt-32 pb-24 px-6 max-w-2xl mx-auto">
+        <div className="mb-12">
+          <h1 className="text-5xl font-extrabold tracking-tight mb-4 font-serif">Contact Us</h1>
+          <p className="text-slate-400 text-lg">We&apos;d love to hear from you</p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-12 max-w-3xl mx-auto">
-          {/* Contact form */}
-          <div>
-            {submitted ? (
-              <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-8 text-center">
-                <CheckCircle2 className="h-12 w-12 text-emerald-400 mx-auto mb-4" />
-                <h3 className="text-xl font-bold mb-2">Message Sent!</h3>
-                <p className="text-slate-400">We&apos;ll get back to you within 24 hours.</p>
+        {submitted ? (
+          <Card className="p-10 text-center">
+            <CheckCircle2 className="h-16 w-16 text-emerald-400 mx-auto mb-4" />
+            <h2 className="text-2xl font-bold text-white mb-2 font-serif">Message Sent!</h2>
+            <p className="text-slate-400">We&apos;ll get back to you within 24 hours.</p>
+            <Link href="/" className="mt-6 inline-block"><Button variant="primary">Back Home</Button></Link>
+          </Card>
+        ) : (
+          <Card className="p-8">
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-2">Name</label>
+                <input name="name" required className="w-full px-4 py-3 rounded-lg bg-slate-900 border border-slate-800 text-white text-sm placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-all" placeholder="Your name" />
               </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-5">
-                <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-1.5">Name</label>
-                  <input required className="w-full bg-slate-900/60 border border-slate-800 rounded-lg px-4 py-2.5 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:ring-2" style={{ borderColor: '#2a2a3a', outlineColor: '#c9a96e' }} placeholder="Your name" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-1.5">Email</label>
-                  <input required type="email" className="w-full bg-slate-900/60 border border-slate-800 rounded-lg px-4 py-2.5 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:ring-2" style={{ borderColor: '#2a2a3a', outlineColor: '#c9a96e' }} placeholder="you@example.com" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-1.5">Message</label>
-                  <textarea required rows={5} className="w-full bg-slate-900/60 border border-slate-800 rounded-lg px-4 py-2.5 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:ring-2 resize-none" style={{ borderColor: '#2a2a3a', outlineColor: '#c9a96e' }} placeholder="How can we help?" />
-                </div>
-                <Button type="submit" variant="primary" className="w-full" disabled={loading}>
-                  {loading ? <><Loader2 className="animate-spin mr-2 h-4 w-4" /> Sending...</> : <><Send className="mr-2 h-4 w-4" /> Send Message</>}
-                </Button>
-              </form>
-            )}
-          </div>
-
-          {/* Contact info */}
-          <div className="space-y-6">
-            <div className="bg-slate-900/30 border border-slate-900 rounded-xl p-6">
-              <MessageSquare className="h-6 w-6 mb-3" style={{ color: '#c9a96e' }} />
-              <h3 className="font-bold mb-1">Chat Support</h3>
-              <p className="text-sm text-slate-400">Use the in-app chat to get instant answers from our AI support assistant.</p>
-              <Link href="/dashboard"><Button variant="outline" size="sm" className="mt-3">Open Chat</Button></Link>
-            </div>
-            <div className="bg-slate-900/30 border border-slate-900 rounded-xl p-6">
-              <Mail className="h-6 w-6 mb-3" style={{ color: '#c9a96e' }} />
-              <h3 className="font-bold mb-1">Email</h3>
-              <p className="text-sm text-slate-400">aurahaven@gmail.com</p>
-              <p className="text-xs text-slate-500 mt-1">We respond within 24 hours</p>
-            </div>
-            <div className="bg-slate-900/30 border border-slate-900 rounded-xl p-6">
-              <h3 className="font-bold mb-3">Follow the Founder</h3>
-              <div className="flex flex-wrap gap-3">
-                <a href="https://instagram.com/funkycoldmedemaa" target="_blank" className="text-sm text-slate-400 hover:text-white transition-colors">📸 Instagram</a>
-                <a href="https://tiktok.com/@funkycoldmedemaa" target="_blank" className="text-sm text-slate-400 hover:text-white transition-colors">🎵 TikTok</a>
-                <a href="https://twitter.com/funkycoldmedemaa" target="_blank" className="text-sm text-slate-400 hover:text-white transition-colors">🐦 Twitter/X</a>
-                <a href="https://youtube.com/@funkycoldmedemaa" target="_blank" className="text-sm text-slate-400 hover:text-white transition-colors">▶️ YouTube</a>
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-2">Email</label>
+                <input name="email" type="email" required className="w-full px-4 py-3 rounded-lg bg-slate-900 border border-slate-800 text-white text-sm placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-all" placeholder="you@example.com" />
               </div>
-              <p className="text-xs text-slate-600 mt-2">@funkycoldmedemaa — everywhere</p>
-            </div>
-          </div>
-        </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-2">Message</label>
+                <textarea name="message" required rows={5} className="w-full px-4 py-3 rounded-lg bg-slate-900 border border-slate-800 text-white text-sm placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-all resize-none" placeholder="How can we help?" />
+              </div>
+              <Button type="submit" disabled={loading} variant="primary" className="w-full py-3">
+                {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Send className="h-4 w-4 mr-2" />}
+                {loading ? "Sending..." : "Send Message"}
+              </Button>
+            </form>
+          </Card>
+        )}
       </main>
-
       <Footer />
     </div>
   );

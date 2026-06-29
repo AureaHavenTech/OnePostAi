@@ -3,7 +3,8 @@
 import { Suspense, useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { Sparkles, Send, Loader2, CheckCircle2, Camera, MessageCircle, Share2, Globe, Hash, Clock } from 'lucide-react';
+import { Sparkles, Send, Loader2, CheckCircle2, Camera, MessageCircle, Share2, Globe, Hash, Clock, ArrowLeft } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const PLATFORMS = [
   { value: 'instagram', label: 'Instagram', icon: '📸' },

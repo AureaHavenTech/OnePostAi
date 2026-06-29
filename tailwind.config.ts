@@ -9,9 +9,6 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
-        // Warm brand palette matching the family
         slate: {
           50: '#f8f6f3',
           100: '#e8e3da',
@@ -22,8 +19,8 @@ const config: Config = {
           600: '#6e6052',
           700: '#544840',
           800: '#3a322e',
-          900: '#26211e',
-          950: '#181512',
+          900: '#12121a',
+          950: '#0a0a0f',
         },
         brand: {
           50: '#faf8f5',
@@ -32,10 +29,10 @@ const config: Config = {
           300: '#dcc8a8',
           400: '#d4b87a',
           500: '#c9a96e',
-          600: '#b8944a',
-          700: '#9a7a3e',
-          800: '#7a6032',
-          900: '#5c4826',
+          600: '#a88640',
+          700: '#8a6b36',
+          800: '#6e552b',
+          900: '#584422',
           950: '#3d2e17',
         },
         accent: {
@@ -45,16 +42,20 @@ const config: Config = {
           300: '#dcc8a8',
           400: '#d4b87a',
           500: '#c9a96e',
-          600: '#b8944a',
-          700: '#9a7a3e',
-          800: '#7a6032',
-          900: '#5c4826',
+          600: '#a88640',
+          700: '#8a6b36',
+          800: '#6e552b',
+          900: '#584422',
           950: '#3d2e17',
         },
       },
       fontFamily: {
         serif: ['Playfair Display', 'Georgia', 'serif'],
         sans: ['Inter', 'system-ui', 'sans-serif'],
+      },
+      backgroundImage: {
+        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
+        "gradient-conic": "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
     },
   },
