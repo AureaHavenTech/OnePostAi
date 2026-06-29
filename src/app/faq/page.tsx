@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Footer } from "@/components/ui/footer";
 import { PenLine, ChevronDown, ChevronRight, Search, ShieldCheck } from "lucide-react";
 
 const faqs = [
@@ -138,30 +139,7 @@ export default function FAQPage() {
         </div>
       </main>
 
-      <footer className="border-t border-[#2a2a3a] py-12 px-6 text-slate-500 text-sm">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between">
-          <div className="flex items-center space-x-2 mb-4 md:mb-0">
-            <PenLine className="h-4 w-4" style={{ color: '#c9a96e' }} />
-            <span className="font-bold text-white" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>One Post AI</span>
-          </div>
-          <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-slate-400 mb-4 md:mb-0">
-            <Link href="/about" className="hover:text-white transition-colors">About</Link>
-            <Link href="/contact" className="hover:text-white transition-colors">Contact</Link>
-            <Link href="/faq" className="hover:text-white transition-colors">FAQ</Link>
-            <Link href="/pricing" className="hover:text-white transition-colors">Pricing</Link>
-            <Link href="/dashboard" className="hover:text-white transition-colors">Dashboard</Link>
-            <a href="https://aurahaven.shop" target="_blank" className="hover:text-white transition-colors">Aura Haven</a>
-            <a href="https://autoexec-nine.vercel.app" target="_blank" className="hover:text-white transition-colors">Axel AI</a>
-          </div>
-          <div className="text-center md:text-right">
-            <div className="flex items-center justify-center md:justify-end gap-2 text-emerald-400 text-xs mb-1">
-              <ShieldCheck className="h-3.5 w-3.5" />
-              <span>30-day money-back guarantee</span>
-            </div>
-            <div>&copy; {new Date().getFullYear()} One Post AI Inc.</div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

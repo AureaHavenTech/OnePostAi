@@ -4,7 +4,8 @@ import React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Sparkles, ShieldCheck, Users, Quote, Heart, ArrowRight, Camera, PenLine } from "lucide-react";
+import { Footer } from "@/components/ui/footer";
+import { Sparkles, ShieldCheck, Users, Quote, Heart, ArrowRight, Camera, PenLine, Zap } from "lucide-react";
 
 export default function AboutPage() {
   const socialLinks = [
@@ -145,6 +146,35 @@ export default function AboutPage() {
           </div>
         </section>
 
+        {/* Sister Companies */}
+        <section className="mb-24 text-center">
+          <div className="bg-gradient-to-r from-[#c9a96e]/5 to-[#e8e0d4]/5 border border-[#c9a96e]/10 rounded-2xl p-10 md:p-14">
+            <Badge variant="info" className="mb-4">The Aura Haven Tech Family</Badge>
+            <h2 className="text-3xl font-bold text-white mb-3" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Our Sister Companies</h2>
+            <p className="text-slate-400 text-sm mb-8 max-w-lg mx-auto">
+              Tools built to help you create, grow, and thrive across every part of your business.
+            </p>
+            <div className="grid md:grid-cols-2 gap-6 text-left">
+              <a href="https://autoexecai.ctonew.app" target="_blank" className="flex items-center gap-4 p-6 rounded-2xl bg-slate-900/50 hover:bg-slate-900 border border-slate-800 hover:border-[#c9a96e]/30 transition-all duration-300 group">
+                <div className="w-12 h-12 rounded-xl bg-[#c9a96e] flex items-center justify-center text-slate-950 shadow-lg group-hover:scale-110 transition-transform">
+                  <Zap className="w-6 h-6 fill-slate-950" />
+                </div>
+                <div>
+                  <div className="text-lg font-bold text-white">Axel AI</div>
+                  <div className="text-sm text-slate-500">Your AI Executive Assistant. Handles research and outreach.</div>
+                </div>
+              </a>
+              <a href="https://aurahaven.shop" target="_blank" className="flex items-center gap-4 p-6 rounded-2xl bg-slate-900/50 hover:bg-slate-900 border border-slate-800 hover:border-[#c9a96e]/30 transition-all duration-300 group">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#c9a96e] to-[#e8e0d4] flex items-center justify-center text-white font-bold text-lg shadow-lg group-hover:scale-110 transition-transform">AH</div>
+                <div>
+                  <div className="text-lg font-bold text-white">Aura Haven</div>
+                  <div className="text-sm text-slate-500">Premium tech for modern living. Luxury quality gadgets.</div>
+                </div>
+              </a>
+            </div>
+          </div>
+        </section>
+
         {/* Why It Matters */}
         <section className="mb-24">
           <div className="bg-gradient-to-r from-[#c9a96e]/5 to-[#e8e0d4]/5 border border-[#c9a96e]/10 rounded-2xl p-10 md:p-14">
@@ -196,31 +226,7 @@ export default function AboutPage() {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-[#2a2a3a] py-12 px-6 text-slate-500 text-sm">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between">
-          <div className="flex items-center space-x-2 mb-4 md:mb-0">
-            <PenLine className="h-4 w-4 text-[#c9a96e]" />
-            <span className="font-bold text-white" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>One Post AI</span>
-          </div>
-          <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-slate-400 mb-4 md:mb-0">
-            <Link href="/about" className="hover:text-white transition-colors">About</Link>
-            <Link href="/contact" className="hover:text-white transition-colors">Contact</Link>
-            <Link href="/faq" className="hover:text-white transition-colors">FAQ</Link>
-            <Link href="/pricing" className="hover:text-white transition-colors">Pricing</Link>
-            <Link href="/dashboard" className="hover:text-white transition-colors">Dashboard</Link>
-            <a href="https://aurahaven.shop" target="_blank" className="hover:text-white transition-colors">Aura Haven</a>
-            <a href="https://autoexec-nine.vercel.app" target="_blank" className="hover:text-white transition-colors">Axel AI</a>
-          </div>
-          <div className="text-center md:text-right">
-            <div className="flex items-center justify-center md:justify-end gap-2 text-emerald-400 text-xs mb-1">
-              <ShieldCheck className="h-3.5 w-3.5" />
-              <span>30-day money-back guarantee</span>
-            </div>
-            <div>&copy; {new Date().getFullYear()} One Post AI Inc.</div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

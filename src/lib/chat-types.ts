@@ -9,6 +9,6 @@ export interface ChatMessage {
 
 export interface ChatStreamChunk {
   type: "text" | "result" | "error";
-  content?: string;
+  content: string;
   metadata?: Record<string, any>;
 }

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { Footer } from '@/components/ui/footer';
 import { PRICING_TIERS } from '@/lib/types';
 
 export default function LandingPage() {
@@ -151,21 +152,7 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="py-12 px-4 border-t border-[#2a2a3a]">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-md bg-gradient-to-br from-[#c9a96e] to-[#b8944a] flex items-center justify-center text-white font-bold text-xs">1P</div>
-            <span className="text-sm font-semibold" style={{ color: '#e8e0d4' }}>One Post AI</span>
-          </div>
-          <div className="flex items-center gap-6 text-sm text-[#a09080]">
-            <span>Works alongside <a href="https://autoexec-nine.vercel.app" className="text-[#c9a96e] hover:text-[#d4b87a]">Axel AI</a></span>
-            <span>·</span>
-            <a href="https://aurahaven.shop" target="_blank" className="text-[#c9a96e] hover:text-[#d4b87a]">Shop Aura Haven</a>
-            <span>·</span>
-            <span>© 2026 One Post AI</span>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

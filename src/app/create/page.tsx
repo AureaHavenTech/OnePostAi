@@ -1,8 +1,6 @@
 'use client';
 
-export const dynamic = 'force-dynamic';
-
-import { useState, useEffect } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Sparkles, Send, Loader2, CheckCircle2, Camera, MessageCircle, Share2, Globe, Hash, Clock } from 'lucide-react';
@@ -17,7 +15,7 @@ const PLATFORMS = [
   { value: 'all', label: 'All Platforms', icon: '🌐' },
 ];
 
-export default function CreatePage() {
+function CreatePageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const prefilledPrompt = searchParams.get('prompt') || '';
@@ -181,5 +179,17 @@ export default function CreatePage() {
         </div>
       </main>
     </div>
+  );
+}
+
+export default function CreatePage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#12121a' }}>
+        <div className="w-8 h-8 border-2 border-[#c9a96e] border-t-transparent rounded-full animate-spin" />
+      </div>
+    }>
+      <CreatePageContent />
+    </Suspense>
   );
 }
