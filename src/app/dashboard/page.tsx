@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { MediaUploader } from "@/components/MediaUploader";
+import MediaUploader from "@/components/MediaUploader";
 import { CampaignView } from "@/components/CampaignView";
 import { ResultPreview } from "@/components/ResultPreview";
 import { cn } from "@/lib/utils";
