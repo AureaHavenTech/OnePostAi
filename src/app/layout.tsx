@@ -1,30 +1,21 @@
 import type { Metadata } from "next";
+import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" });
+
 export const metadata: Metadata = {
-  title: "OnePost AI — Post like a pro. Without being one.",
-  description: "Auto-edit, AI generate, and auto-publish content across all platforms. Zero editing skills needed. Zero camera required.",
-  keywords: ["content creation", "AI video editing", "auto-publish", "UGC", "social media automation", "content creator"],
+  title: "One Post AI — Content That Moves",
+  description: "Just like an axle keeps your car moving, One Post AI keeps your content moving. Describe any task in plain language — it researches, writes, builds, emails, and analyzes for you 24/7.",
   manifest: "/manifest.json",
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "black-translucent",
-    title: "OnePost AI",
-  },
-  openGraph: {
-    title: "OnePost AI — Post like a pro. Without being one.",
-    description: "Drop a raw video or just an idea. AI edits, captions, and publishes everywhere. On autopilot.",
-    type: "website",
-  },
   icons: {
-    icon: [
-      { url: "/icon-192.svg", sizes: "192x192", type: "image/svg+xml" },
-    ],
-    apple: [
-      { url: "/icon-192.svg", sizes: "192x192", type: "image/svg+xml" },
-    ],
+    icon: "/icon-512.png",
+    apple: "/icon-512.png",
   },
 };
+
+import { NotificationProvider } from "@/components/ui/notifications";
 
 export default function RootLayout({
   children,
@@ -32,16 +23,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en">
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+        <meta name="theme-color" content="#12121a" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <link rel="apple-touch-icon" href="/icon-192.svg" />
+        <meta name="apple-mobile-web-app-title" content="Axel AI" />
       </head>
-      <body className="min-h-screen bg-background text-foreground antialiased">
-        {children}
+      <body className={`${inter.variable} ${playfair.variable} font-sans`}>
+        <NotificationProvider>
+          {children}
+        </NotificationProvider>
       </body>
     </html>
   );
