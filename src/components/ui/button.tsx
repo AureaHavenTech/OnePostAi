@@ -1,44 +1,55 @@
-import React from "react";
+import * as React from "react";
+import { Slot } from "@radix-ui/react-slot";
+import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "@/lib/utils";
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  children: React.ReactNode;
-  variant?: "primary" | "secondary" | "outline" | "ghost" | "danger" | "accent";
-  size?: "sm" | "md" | "lg" | "icon";
+const buttonVariants = cva(
+  "inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/30 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  {
+    variants: {
+      variant: {
+        default: "bg-dark text-cream hover:bg-charcoal shadow-lg shadow-dark/10",
+        destructive: "bg-red-500 text-white hover:bg-red-400",
+        outline: "border border-gold/20 bg-transparent hover:bg-gold/5 text-gray-500 hover:text-dark",
+        secondary: "bg-warm-white text-dark hover:bg-cream border border-gray-200",
+        ghost: "hover:bg-gold/5 text-gray-400 hover:text-dark",
+        link: "text-gold underline-offset-4 hover:underline",
+        glow: "bg-gradient-to-r from-gold to-gold-light text-dark font-semibold shadow-lg shadow-gold/25 hover:shadow-gold/40 hover:from-gold-light hover:to-gold",
+        rose: "bg-gradient-to-r from-rose to-blush text-dark font-semibold shadow-lg shadow-rose/25 hover:shadow-rose/40",
+      },
+      size: {
+        default: "h-10 px-5 py-2",
+        sm: "h-9 rounded-lg px-3 text-xs",
+        lg: "h-12 rounded-xl px-8 text-base",
+        xl: "h-14 rounded-xl px-10 text-lg",
+        icon: "h-10 w-10",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  }
+);
+
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean;
 }
 
-export function Button({
-  children,
-  variant = "primary",
-  size = "md",
-  className = "",
-  disabled,
-  ...props
-}: ButtonProps) {
-  const baseStyles = "inline-flex items-center justify-center font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 focus:ring-offset-slate-950 disabled:opacity-50 disabled:cursor-not-allowed";
-  
-  const variants = {
-    primary: "bg-brand-500 text-white hover:bg-brand-600 active:bg-brand-700 shadow-lg shadow-brand-500/20 hover:shadow-brand-500/30",
-    secondary: "bg-slate-800 text-slate-100 hover:bg-slate-700 active:bg-slate-600 border border-slate-700",
-    outline: "bg-transparent text-slate-100 hover:bg-slate-900 border border-slate-800 hover:border-slate-700",
-    ghost: "bg-transparent text-slate-400 hover:text-white hover:bg-slate-900",
-    danger: "bg-rose-600 text-white hover:bg-rose-700 active:bg-rose-800 shadow-lg shadow-rose-600/20",
-    accent: "bg-accent-500 text-white hover:bg-accent-600 active:bg-accent-700 shadow-lg shadow-accent-500/20",
-  };
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant, size, asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot : "button";
+    return (
+      <Comp
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref}
+        {...props}
+      />
+    );
+  }
+);
+Button.displayName = "Button";
 
-  const sizes = {
-    sm: "px-3 py-1.5 text-xs",
-    md: "px-4 py-2 text-sm",
-    lg: "px-6 py-3 text-base",
-    icon: "p-1.5 text-xs",
-  };
-
-  return (
-    <button
-      className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`}
-      disabled={disabled}
-      {...props}
-    >
-      {children}
-    </button>
-  );
-}
+export { Button, buttonVariants };

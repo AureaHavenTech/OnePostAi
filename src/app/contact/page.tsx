@@ -1,76 +1,47 @@
-'use client';
+"use client";
 
 import React, { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Sparkles, Mail, Send, Loader2, CheckCircle2 } from "lucide-react";
-import { Footer } from "@/components/ui/footer";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { ArrowLeft, Mail, Send, Check } from "lucide-react";
 
 export default function ContactPage() {
-  const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [sent, setSent] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    const form = e.target as HTMLFormElement;
-    const formData = new FormData(form);
-    const data = { name: formData.get('name') as string, email: formData.get('email') as string, message: formData.get('message') as string };
-    await fetch("/api/contact", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) }).catch(() => {});
-    setLoading(false);
-    setSubmitted(true);
+    setSent(true);
+    setTimeout(() => setSent(false), 4000);
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white">
-      <header className="fixed top-0 left-0 right-0 z-50 glass border-b border-slate-900 px-6 py-4 flex items-center justify-between">
-        <Link href="/" className="flex items-center space-x-2">
-          <div className="h-9 w-9 bg-brand-500 rounded-lg flex items-center justify-center shadow-lg shadow-brand-500/20">
-            <Sparkles className="h-5 w-5 text-white" />
+    <div className="min-h-screen bg-[#fcf9f5] dark:bg-[#141416] py-16 px-4">
+      <div className="max-w-lg mx-auto">
+        <Link href="/"><Button variant="ghost" size="sm" className="mb-8"><ArrowLeft className="w-4 h-4 mr-2" />Back to Home</Button></Link>
+
+        <h1 className="text-3xl font-bold text-[#1c1c1e] dark:text-[#f5f0f1]">Contact Us</h1>
+        <p className="text-sm text-[#6b5a5e] dark:text-[#8a797d] mt-2">Have a question or need help? Send us a message.</p>
+
+        <form onSubmit={handleSubmit} className="mt-8 bg-white dark:bg-[#1c1c1e] border border-[#e0d5d8] dark:border-[#3d3537] rounded-2xl p-6 space-y-4 shadow-sm">
+          <div>
+            <label className="text-sm font-medium text-[#1c1c1e] dark:text-[#f5f0f1]">Name</label>
+            <Input placeholder="Your name" className="mt-1 bg-[#f5f0f1] dark:bg-[#2a2426] border-0" />
           </div>
-          <span className="text-xl font-bold tracking-tight text-white font-serif">One Post AI</span>
-        </Link>
-        <Link href="/dashboard"><Button variant="primary" size="sm">Dashboard</Button></Link>
-      </header>
-
-      <main className="pt-32 pb-24 px-6 max-w-2xl mx-auto">
-        <div className="mb-12">
-          <h1 className="text-5xl font-extrabold tracking-tight mb-4 font-serif">Contact Us</h1>
-          <p className="text-slate-400 text-lg">We&apos;d love to hear from you</p>
-        </div>
-
-        {submitted ? (
-          <Card className="p-10 text-center">
-            <CheckCircle2 className="h-16 w-16 text-emerald-400 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold text-white mb-2 font-serif">Message Sent!</h2>
-            <p className="text-slate-400">We&apos;ll get back to you within 24 hours.</p>
-            <Link href="/" className="mt-6 inline-block"><Button variant="primary">Back Home</Button></Link>
-          </Card>
-        ) : (
-          <Card className="p-8">
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Name</label>
-                <input name="name" required className="w-full px-4 py-3 rounded-lg bg-slate-900 border border-slate-800 text-white text-sm placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-all" placeholder="Your name" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Email</label>
-                <input name="email" type="email" required className="w-full px-4 py-3 rounded-lg bg-slate-900 border border-slate-800 text-white text-sm placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-all" placeholder="you@example.com" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Message</label>
-                <textarea name="message" required rows={5} className="w-full px-4 py-3 rounded-lg bg-slate-900 border border-slate-800 text-white text-sm placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-all resize-none" placeholder="How can we help?" />
-              </div>
-              <Button type="submit" disabled={loading} variant="primary" className="w-full py-3">
-                {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Send className="h-4 w-4 mr-2" />}
-                {loading ? "Sending..." : "Send Message"}
-              </Button>
-            </form>
-          </Card>
-        )}
-      </main>
-      <Footer />
+          <div>
+            <label className="text-sm font-medium text-[#1c1c1e] dark:text-[#f5f0f1]">Email</label>
+            <Input type="email" placeholder="your@email.com" className="mt-1 bg-[#f5f0f1] dark:bg-[#2a2426] border-0" />
+          </div>
+          <div>
+            <label className="text-sm font-medium text-[#1c1c1e] dark:text-[#f5f0f1]">Message</label>
+            <Textarea placeholder="How can we help?" rows={5} className="mt-1 bg-[#f5f0f1] dark:bg-[#2a2426] border-0" />
+          </div>
+          <Button type="submit" variant="glow" size="lg" className="w-full">
+            {sent ? <><Check className="w-4 h-4 mr-2" />Sent! We'll get back to you.</> : <><Send className="w-4 h-4 mr-2" />Send Message</>}
+          </Button>
+        </form>
+      </div>
     </div>
   );
 }

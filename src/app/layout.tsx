@@ -1,18 +1,28 @@
 import type { Metadata } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" });
-
 export const metadata: Metadata = {
-  title: "One Post AI — Content That Moves",
-  description: "Create, schedule, and publish content across all platforms with AI-powered assistance. Viral hashtags, optimal timing, cross-platform analytics — all in one place.",
+  title: "OnePost AI — Post like a pro. Without being one.",
+  description: "Auto-edit, AI generate, and auto-publish content across all platforms. Zero editing skills needed. Zero camera required.",
+  keywords: ["content creation", "AI video editing", "auto-publish", "UGC", "social media automation", "content creator"],
   manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "OnePost AI",
+  },
   openGraph: {
-    title: "One Post AI — Content That Moves",
-    description: "Create, schedule, and publish content across all platforms. AI-powered content that actually works.",
+    title: "OnePost AI — Post like a pro. Without being one.",
+    description: "Drop a raw video or just an idea. AI edits, captions, and publishes everywhere. On autopilot.",
     type: "website",
+  },
+  icons: {
+    icon: [
+      { url: "/icon-192.svg", sizes: "192x192", type: "image/svg+xml" },
+    ],
+    apple: [
+      { url: "/icon-192.svg", sizes: "192x192", type: "image/svg+xml" },
+    ],
   },
 };
 
@@ -22,14 +32,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <head>
-        <meta name="theme-color" content="#12121a" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="apple-mobile-web-app-title" content="One Post AI" />
+        <link rel="apple-touch-icon" href="/icon-192.svg" />
       </head>
-      <body className={`${inter.variable} ${playfair.variable} font-sans antialiased`}>
+      <body className="min-h-screen bg-background text-foreground antialiased">
         {children}
       </body>
     </html>

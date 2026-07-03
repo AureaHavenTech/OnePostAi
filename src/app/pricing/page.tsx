@@ -1,82 +1,77 @@
-'use client';
+"use client";
 
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { PRICING_TIERS } from '@/lib/types';
+import React from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Check, ArrowLeft, ArrowRight, Sparkles } from "lucide-react";
 
 export default function PricingPage() {
-  const router = useRouter();
-
   return (
-    <div className="min-h-screen">
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0f]/80 backdrop-blur-xl border-b border-[#2a2a3a]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#a78bfa] to-[#7c3aed] flex items-center justify-center text-white font-bold text-sm">1P</div>
-              <span className="font-bold text-lg">One Post AI</span>
-            </Link>
-            <Link href="/auth/signup" className="btn-primary text-sm px-5 py-2">Get Started</Link>
-          </div>
+    <div className="min-h-screen bg-cream py-16 px-4">
+      <div className="max-w-4xl mx-auto">
+        <div className="mb-6">
+          <Link href="/">
+            <Button variant="ghost" size="sm">
+              <ArrowLeft className="w-4 h-4 mr-1.5" />
+              Back to Home
+            </Button>
+          </Link>
         </div>
-      </nav>
 
-      <section className="pt-24 pb-20 px-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16 pt-10">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">Simple, Transparent Pricing</h1>
-            <p className="text-[#6b6b80] text-lg">No hidden fees. No surprises. Cancel anytime.</p>
-          </div>
+        <div className="text-center mb-10">
+          <h1 className="text-3xl sm:text-4xl font-bold text-dark mb-3">
+            One price. <span className="gradient-gold">Everything.</span>
+          </h1>
+          <p className="text-sm text-gray-400">No tiers. No per-post fees. Just results.</p>
+        </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
-            {PRICING_TIERS.map((tier, i) => (
-              <div key={i} className={`card p-8 flex flex-col relative ${tier.highlighted ? 'border-purple-500/40 animate-glow' : ''}`}>
-                {tier.highlighted && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-[#a78bfa] to-[#7c3aed] text-xs font-semibold text-white whitespace-nowrap">
-                    Most Popular
-                  </div>
-                )}
-                <h3 className="text-xl font-bold mb-2">{tier.name}</h3>
-                <p className="text-[#6b6b80] text-sm mb-6">{tier.description}</p>
-                <div className="mb-6">
-                  <span className="text-4xl font-bold">${tier.price}</span>
-                  <span className="text-[#6b6b80]">{tier.period}</span>
-                </div>
-                <ul className="space-y-3 mb-8 flex-1">
-                  {tier.features.map((f, j) => (
-                    <li key={j} className="flex items-start gap-3 text-sm">
-                      <svg className="w-5 h-5 text-purple-400 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-                <button onClick={() => router.push('/auth/signup')} className={tier.highlighted ? 'btn-primary w-full' : 'btn-secondary w-full'}>
-                  {tier.cta}
-                </button>
+        <div className="max-w-sm mx-auto">
+          <div className="card-luxury p-6 sm:p-8 relative border-gold/20">
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-gold to-gold-light text-dark text-[10px] font-semibold shadow-lg shadow-gold/20">
+              Best Value
+            </div>
+            <div className="text-center">
+              <p className="text-[10px] uppercase tracking-widest text-gray-400 mb-2">Flat Rate</p>
+              <div className="flex items-baseline justify-center gap-1">
+                <span className="text-5xl font-bold text-dark">$29</span>
+                <span className="text-sm text-gray-400">/month</span>
               </div>
-            ))}
-          </div>
+              <p className="text-xs text-gray-400 mt-1">Unlimited content. Unlimited platforms.</p>
+            </div>
 
-          <div className="mt-16 card p-8 text-center">
-            <h3 className="text-xl font-bold mb-4">Works with Axel AI</h3>
-            <p className="text-[#6b6b80] mb-6 max-w-2xl mx-auto">
-              One Post AI integrates seamlessly with Axel AI — your AI executive assistant. 
-              Delegate content creation tasks and let AI handle the entire workflow.
+            <ul className="mt-6 space-y-2.5">
+              {[
+                "Unlimited content creation",
+                "AI avatar videos (no camera needed)",
+                "Auto-edit raw footage",
+                "Shopify page creator",
+                "Ad creator (Meta, TikTok, IG)",
+                "Content calendar & auto-scheduling",
+                "Market research & trend analysis",
+                "Portfolio builder ($3k-$30k retainers)",
+                "Post to 7 platforms at once",
+                "Priority support",
+              ].map((item, i) => (
+                <li key={i} className="flex items-start gap-2 text-xs text-gray-500">
+                  <Check className="w-3.5 h-3.5 text-gold shrink-0 mt-0.5" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+
+            <Link href="/login">
+              <Button variant="glow" size="lg" className="w-full mt-6">
+                Start 3-Day Free Trial
+                <ArrowRight className="ml-1.5 w-4 h-4" />
+              </Button>
+            </Link>
+
+            <p className="text-center text-[10px] text-gray-400 mt-3">
+              No credit card required • Cancel anytime
             </p>
-            <a href="https://autoexec-nine.vercel.app" className="text-purple-400 hover:text-purple-300 font-medium">
-              Learn about Axel AI integration →
-            </a>
           </div>
         </div>
-      </section>
-
-      <footer className="py-8 px-4 border-t border-[#2a2a3a]">
-        <div className="max-w-6xl mx-auto text-center text-sm text-[#6b6b80]">
-          © 2026 One Post AI — Built for creators who value their time
-        </div>
-      </footer>
+      </div>
     </div>
   );
 }
