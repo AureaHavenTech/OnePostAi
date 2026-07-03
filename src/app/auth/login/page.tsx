@@ -105,7 +105,7 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <Button type="submit" disabled={loading} variant="primary" className="w-full py-3">
+            <Button type="submit" disabled={loading} variant="default" className="w-full py-3">
               {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
               {loading ? "Signing in..." : "Sign In"}
             </Button>

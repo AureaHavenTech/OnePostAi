@@ -39,8 +39,6 @@ export function Footer() {
               <span className="w-1.5 h-1.5 rounded-full bg-brand-500 animate-pulse" />
               Try <a href="https://autoexecai.ctonew.app" target="_blank" className="text-brand-400 hover:text-brand-300 font-bold">Axel AI</a> - Your AI Executive Assistant
             </span>
-            <span>·</span>
-            <a href="https://aurahaven.shop" target="_blank" className="text-brand-400 hover:text-brand-300 font-bold">Aura Haven</a>
           </div>
           <div className="opacity-40">&copy; {new Date().getFullYear()} One Post AI. Part of the Aura Haven Tech family.</div>
         </div>

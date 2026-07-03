@@ -16,7 +16,7 @@ export default function PrivacyPage() {
           </div>
           <span className="text-xl font-bold tracking-tight text-white font-serif">One Post AI</span>
         </Link>
-        <Link href="/dashboard"><Button variant="primary" size="sm">Dashboard</Button></Link>
+        <Link href="/dashboard"><Button variant="default" size="sm">Dashboard</Button></Link>
       </header>
       <main className="pt-32 pb-24 px-6 max-w-4xl mx-auto">
         <div className="mb-12"><h1 className="text-5xl font-extrabold tracking-tight mb-4 font-serif">Privacy Policy</h1><p className="text-slate-400 text-sm">Last updated: June 25, 2026</p></div>

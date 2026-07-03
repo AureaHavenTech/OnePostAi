@@ -84,7 +84,7 @@ export default function PublishPage() {
           <Link href="/create" className="hover:text-white transition-colors">Create</Link>
           <Link href="/publish" className="text-white font-medium">Publish</Link>
         </nav>
-        <Link href="/create"><Button variant="primary" size="sm"><Send className="h-4 w-4 mr-1" /> New Post</Button></Link>
+        <Link href="/create"><Button variant="default" size="sm"><Send className="h-4 w-4 mr-1" /> New Post</Button></Link>
       </header>
 
       <main className="max-w-5xl mx-auto px-6 py-10">
@@ -99,7 +99,7 @@ export default function PublishPage() {
             <Card className="p-10 text-center">
               <FileText className="h-12 w-12 text-slate-600 mx-auto mb-4" />
               <p className="text-slate-400">No drafts ready to publish</p>
-              <Link href="/create"><Button variant="primary" className="mt-4">Create Post</Button></Link>
+              <Link href="/create"><Button variant="default" className="mt-4">Create Post</Button></Link>
             </Card>
           ) : (
             <div className="space-y-3">
@@ -114,7 +114,7 @@ export default function PublishPage() {
                       <Button variant="outline" size="sm" onClick={() => setSchedulePost(schedulePost === post.id ? null : post.id)}>
                         <CalendarDays className="h-4 w-4 mr-1" /> Schedule
                       </Button>
-                      <Button variant="primary" size="sm" onClick={() => handlePublish(post.id)} disabled={publishing === post.id}>
+                      <Button variant="default" size="sm" onClick={() => handlePublish(post.id)} disabled={publishing === post.id}>
                         {publishing === post.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4 mr-1" />}
                         {publishing === post.id ? '' : 'Publish Now'}
                       </Button>
@@ -124,7 +124,7 @@ export default function PublishPage() {
                     <div className="mt-4 pt-4 border-t border-slate-800 flex gap-3 items-center">
                       <input type="datetime-local" className="flex-1 px-4 py-2.5 rounded-lg bg-slate-900 border border-slate-800 text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 transition-all"
                         value={scheduleDate} onChange={e => setScheduleDate(e.target.value)} />
-                      <Button variant="primary" size="sm" onClick={() => handleSchedule(post.id)} disabled={publishing === post.id || !scheduleDate}>
+                      <Button variant="default" size="sm" onClick={() => handleSchedule(post.id)} disabled={publishing === post.id || !scheduleDate}>
                         {publishing === post.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <Clock className="h-4 w-4 mr-1" />}
                         Confirm Schedule
                       </Button>

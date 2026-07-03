@@ -5,6 +5,9 @@ import { Upload, Film, Image, FileVideo, X, Check, AlertCircle, Loader2 } from "
 
 interface MediaUploaderProps {
   onUpload?: (files: File[]) => void;
+  onFileSelect?: (file: File | null) => void;
+  selectedFile?: File | null;
+  onClear?: () => void;
   maxSizeMB?: number;
   accept?: string;
   multiple?: boolean;
