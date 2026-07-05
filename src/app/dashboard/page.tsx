@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -12,7 +12,7 @@ import {
   Sparkles, Wand2, Lightbulb, Loader2, Zap,
   TrendingUp, Check, Upload, Globe, Terminal,
   Store, Search, UserCircle, ShoppingCart,
-  Film, Clock, Hash, Brain
+  Film, Clock, Hash, Brain, Mic, MicOff
 } from "lucide-react";
 
 type Mode = "upload" | "generate" | "ideas" | "shopify" | "research" | "avatar";
@@ -50,6 +50,64 @@ export default function DashboardPage() {
   const [showPreview, setShowPreview] = useState(false);
   const [previewData, setPreviewData] = useState<any>(null);
   const [previewType, setPreviewType] = useState<"shopify" | "post" | "ad" | "avatar">("post");
+  const [isListening, setIsListening] = useState(false);
+  const recognitionRef = useRef<any>(null);
+
+  // Cleanup speech recognition on unmount
+  useEffect(() => {
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.abort();
+      }
+    };
+  }, []);
+
+  const toggleListening = () => {
+    if (isListening) {
+      stopListening();
+      return;
+    }
+
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      setCommand("⚠️ Speech recognition is not supported in this browser. Try Chrome or Edge.");
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = true;
+    recognition.lang = 'en-US';
+
+    recognition.onresult = (event: any) => {
+      let transcript = '';
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        transcript += event.results[i][0].transcript;
+      }
+      setCommand((prev) => prev + transcript);
+    };
+
+    recognition.onerror = () => {
+      setIsListening(false);
+    };
+
+    recognition.onend = () => {
+      setIsListening(false);
+    };
+
+    recognitionRef.current = recognition;
+    recognition.start();
+    setIsListening(true);
+  };
+
+  const stopListening = () => {
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+      recognitionRef.current.abort();
+      recognitionRef.current = null;
+    }
+    setIsListening(false);
+  };
 
   const togglePlatform = (id: string) => {
     setPlatforms(prev => prev.includes(id) ? prev.filter(p => p !== id) : [...prev, id]);
@@ -216,6 +274,19 @@ export default function DashboardPage() {
           <Input value={command} onChange={e => setCommand(e.target.value)}
             placeholder='e.g., "Find 10 viral beauty products for Shopify, create pages, and post to TikTok"'
             className="flex-1 bg-zinc-900/60 text-sm" />
+          <button
+            type="button"
+            onClick={toggleListening}
+            disabled={isWorking}
+            className={`h-9 w-9 flex items-center justify-center rounded-lg transition-all duration-200 shrink-0 ${
+              isListening
+                ? "bg-rose-500 text-white shadow-lg shadow-rose-500/30 animate-pulse"
+                : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white border border-white/10"
+            }`}
+            title={isListening ? "Stop listening" : "Voice input"}
+          >
+            {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+          </button>
           <Button variant="glow" size="sm" onClick={executeMission} disabled={!command.trim() || isWorking}>
             {isWorking ? <Loader2 className="w-4 h-4 animate-spin" /> : <Zap className="w-4 h-4" />} Go
           </Button>

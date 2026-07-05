@@ -15,7 +15,7 @@ export default function DashboardLayout({
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const navItems = [
-    { href: "/dashboard", label: "Create", icon: Wand2 },
+    { href: "/dashboard/create", label: "Create", icon: Wand2 },
     { href: "/dashboard/ideas", label: "Ideas", icon: Lightbulb },
     { href: "/dashboard/calendar", label: "Schedule", icon: CalendarDays },
     { href: "/dashboard/portfolio", label: "Portfolio", icon: Briefcase },
