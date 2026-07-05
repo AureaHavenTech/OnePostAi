@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
-import { LayoutDashboard, Wand2, Lightbulb, CalendarDays, Briefcase, Settings, LogOut, Menu, X, Sparkles, Gift } from "lucide-react";
+import { LayoutDashboard, Wand2, Lightbulb, CalendarDays, Briefcase, Settings, LogOut, Menu, X, Sparkles, Gift, Bot } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function DashboardLayout({
@@ -15,6 +15,7 @@ export default function DashboardLayout({
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const navItems = [
+    { href: "/dashboard/generate", label: "AI Generate", icon: Bot },
     { href: "/dashboard/create", label: "Create", icon: Wand2 },
     { href: "/dashboard/ideas", label: "Ideas", icon: Lightbulb },
     { href: "/dashboard/calendar", label: "Schedule", icon: CalendarDays },
