@@ -91,7 +91,7 @@ export default function AboutPage() {
               <p className="text-sm text-[#8a797d]">
                 Built with <Heart className="w-3.5 h-3.5 inline text-[#d44a6a]" /> for creators who want to eat too.
               </p>
-              <p className="text-xs text-[#8a797d] mt-2">@funkycoldmedemaa — TikTok, Instagram, Twitter/X</p>
+              <p className="text-xs text-[#8a797d] mt-2">@funkycoldmedemaa — TikTok, Instagram, Facebook, Pinterest, Snapchat</p>
             </div>
           </div>
         </div>

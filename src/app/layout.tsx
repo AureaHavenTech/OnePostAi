@@ -6,8 +6,8 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" });
 
 export const metadata: Metadata = {
-  title: "One Post AI — Content That Moves",
-  description: "Just like an axle keeps your car moving, One Post AI keeps your content moving. Describe any task in plain language — it researches, writes, builds, emails, and analyzes for you 24/7.",
+  title: "OnePost AI — Post like a pro. Without being one.",
+  description: "Upload your own videos and photos and edit them in a professional-grade editing suite — or give it an idea and AI creates it for you. Full editing, auto-publishing, and cross-platform analytics in one place.",
   manifest: "/manifest.json",
   icons: {
     icon: "/icon-512.png",
@@ -28,7 +28,7 @@ export default function RootLayout({
         <meta name="theme-color" content="#12121a" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="apple-mobile-web-app-title" content="Axel AI" />
+        <meta name="apple-mobile-web-app-title" content="OnePost AI" />
       </head>
       <body className={`${inter.variable} ${playfair.variable} font-sans`}>
         <NotificationProvider>

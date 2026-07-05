@@ -1,13 +1,13 @@
 {
   "name": "OnePost AI",
-  "short_name": "OnePost",
-  "description": "AI content agency in a box — post everywhere, no editing needed",
+  "short_name": "OnePost AI",
+  "description": "Upload your own videos and photos — edit them in a professional suite, or let AI generate content from your ideas. Auto-publish everywhere.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#faf7f2",
-  "theme_color": "#c9a84c",
+  "background_color": "#12121a",
+  "theme_color": "#c9a96e",
   "icons": [
-    { "src": "/icon-192.svg", "sizes": "192x192", "type": "image/svg+xml" },
-    { "src": "/icon-512.svg", "sizes": "512x512", "type": "image/svg+xml" }
+    { "src": "/icons/icon-192x192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icons/icon-512x512.png", "sizes": "512x512", "type": "image/png" }
   ]
 }

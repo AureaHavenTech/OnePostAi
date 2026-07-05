@@ -1,154 +1,243 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { ArrowLeft, Mail, Lock, Eye, EyeOff, Sparkles, Check } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { Camera, Mail, Lock, ArrowRight, Loader2, ShieldCheck, Crown, Eye, EyeOff } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [isSignUp, setIsSignUp] = useState(true);
-  const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showCodeField, setShowCodeField] = useState(false);
+  const [accessCode, setAccessCode] = useState("");
+  const [isCodeLogin, setIsCodeLogin] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
-    setTimeout(() => {
-      if (password.length < 6) {
-        setError("Password must be at least 6 characters");
-        setLoading(false);
-        return;
+    try {
+      let body: any = {};
+
+      // If "Access Code" tab is selected, do code-only login
+      if (isCodeLogin) {
+        if (!accessCode) {
+          setError("Enter your access code");
+          setLoading(false);
+          return;
+        }
+        body = { adminCode: accessCode };
+      } else {
+        // Email + password login
+        if (!email || !password) {
+          setError("Email and password are required");
+          setLoading(false);
+          return;
+        }
+        body = { email, password, name };
+
+        // If they also entered a code, send it along
+        if (accessCode) {
+          body.adminCode = accessCode;
+        }
       }
+
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+
+      const data = await res.json();
+
+      if (data.user) {
+        router.push("/dashboard");
+      } else {
+        setError(data.error || "Login failed");
+      }
+    } catch (err) {
+      setError("An unexpected error occurred");
+    } finally {
       setLoading(false);
-      router.push("/dashboard");
-    }, 800);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-cream flex flex-col">
-      {/* Back button */}
-      <div className="p-4">
-        <Link href="/">
-          <Button variant="ghost" size="sm">
-            <ArrowLeft className="w-4 h-4 mr-1.5" />
-            Back to Home
-          </Button>
-        </Link>
-      </div>
-
-      <div className="flex-1 flex items-center justify-center px-4 py-8">
-        <div className="w-full max-w-md">
-          {/* Logo */}
-          <div className="text-center mb-8">
-            <div className="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-br from-gold to-gold-light flex items-center justify-center mb-4 shadow-xl shadow-gold/20">
-              <Sparkles className="w-6 h-6 text-dark" />
+    <div className="min-h-screen bg-[#12121a] text-white flex items-center justify-center p-6 selection:bg-[#c9a96e]/50">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(201,169,110,0.05),transparent_50%)] pointer-events-none" />
+      
+      <Card className="w-full max-w-md bg-[#0a0a0f]/60 border-[#1e1e2a] backdrop-blur-xl shadow-2xl relative z-10">
+        <CardHeader className="space-y-1 text-center pb-8">
+          <div className="flex justify-center mb-4">
+            <div className="h-14 w-14 rounded-2xl bg-[#c9a96e]/10 flex items-center justify-center border border-[#c9a96e]/20 shadow-lg shadow-[#c9a96e]/5">
+              <Camera className="h-8 w-8 text-[#c9a96e]" />
             </div>
-            <h1 className="text-2xl font-bold text-dark">
-              {isSignUp ? "Start Your 3-Day Trial" : "Welcome Back"}
-            </h1>
-            <p className="text-gray-400 mt-1.5 text-sm">
-              {isSignUp
-                ? "No credit card needed. Cancel anytime."
-                : "Sign in to your dashboard."}
-            </p>
           </div>
+          <CardTitle className="text-2xl font-bold tracking-tight">Welcome to OnePost AI</CardTitle>
+          <CardDescription className="text-slate-400">
+            Sign in to your content dashboard
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleLogin} className="space-y-4">
+            {isCodeLogin ? (
+              <>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-yellow-500/80 flex items-center gap-1.5 ml-1">
+                    <Crown className="h-4 w-4" /> Access Code
+                  </label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-3 h-5 w-5 text-yellow-500/40" />
+                    <input
+                      type="text"
+                      placeholder="Enter your access code"
+                      value={accessCode}
+                      onChange={(e) => setAccessCode(e.target.value)}
+                      className="w-full bg-yellow-500/5 border border-yellow-500/20 rounded-xl py-2.5 pl-11 pr-4 text-white placeholder:text-yellow-900/40 focus:outline-none focus:ring-2 focus:ring-yellow-500/30 focus:border-yellow-500/30 transition-all"
+                      autoFocus
+                    />
+                  </div>
+                  <p className="text-[10px] text-yellow-500/30 ml-1">Owner? Use AUREA2026 for CEO access</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsCodeLogin(false)}
+                  className="text-xs text-slate-500 hover:text-[#c9a96e] transition-colors"
+                >
+                  ← Sign in with email instead
+                </button>
+              </>
+            ) : (
+              <>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-slate-300 ml-1">Email Address</label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-3 h-5 w-5 text-slate-500" />
+                    <input
+                      type="email"
+                      placeholder="name@company.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="w-full bg-slate-800/50 border border-slate-700 rounded-xl py-2.5 pl-11 pr-4 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-[#c9a96e]/50 focus:border-[#c9a96e]/50 transition-all"
+                      required
+                    />
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-slate-300 ml-1">Password</label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-3 h-5 w-5 text-slate-500" />
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      placeholder="At least 6 characters"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="w-full bg-slate-800/50 border border-slate-700 rounded-xl py-2.5 pl-11 pr-11 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-[#c9a96e]/50 focus:border-[#c9a96e]/50 transition-all"
+                      required
+                      minLength={6}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-3 text-slate-500 hover:text-slate-300 transition-colors"
+                    >
+                      {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                    </button>
+                  </div>
+                </div>
 
-          {/* Benefits list for signup */}
-          {isSignUp && (
-            <div className="mb-5 flex flex-wrap justify-center gap-x-4 gap-y-1 text-xs text-gray-400">
-              <span className="flex items-center gap-1"><Check className="w-3 h-3 text-green-500" /> AI avatar videos</span>
-              <span className="flex items-center gap-1"><Check className="w-3 h-3 text-green-500" /> Auto-publish</span>
-              <span className="flex items-center gap-1"><Check className="w-3 h-3 text-green-500" /> Cancel anytime</span>
-            </div>
-          )}
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-slate-300 ml-1">Full Name <span className="text-slate-500">(optional)</span></label>
+                  <input
+                    type="text"
+                    placeholder="Jane Doe"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="w-full bg-slate-800/50 border border-slate-700 rounded-xl py-2.5 px-4 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-[#c9a96e]/50 focus:border-[#c9a96e]/50 transition-all"
+                  />
+                </div>
 
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="card-luxury p-6 sm:p-8 space-y-4">
+                {/* Code field (hidden until clicked) */}
+                {showCodeField && (
+                  <div className="space-y-2 pt-1 animate-in fade-in slide-in-from-top-2 duration-200">
+                    <label className="text-xs font-medium text-yellow-500/60 flex items-center gap-1.5 ml-1">
+                      <Crown className="h-3 w-3" /> Access / Promo / Discount Code
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Enter code"
+                      value={accessCode}
+                      onChange={(e) => setAccessCode(e.target.value)}
+                      className="w-full bg-yellow-500/5 border border-yellow-500/20 rounded-xl py-2 px-4 text-sm text-white placeholder:text-yellow-900/40 focus:outline-none focus:ring-2 focus:ring-yellow-500/30 focus:border-yellow-500/30 transition-all"
+                    />
+                  </div>
+                )}
+
+                <div className="flex items-center justify-between pt-1">
+                  <button
+                    type="button"
+                    onClick={() => setShowCodeField(!showCodeField)}
+                    className="text-xs text-slate-500 hover:text-[#c9a96e] transition-colors"
+                  >
+                    {showCodeField ? "− Hide code field" : "+ Have an access / promo / discount code?"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setIsCodeLogin(true)}
+                    className="text-xs text-yellow-500/50 hover:text-yellow-400 transition-colors"
+                  >
+                    CEO? Sign in with code
+                  </button>
+                </div>
+              </>
+            )}
+
             {error && (
-              <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-red-600 text-xs">
+              <div className="bg-rose-500/10 border border-rose-500/20 text-rose-400 text-sm p-3 rounded-xl">
                 {error}
               </div>
             )}
 
-            <div className="space-y-1.5">
-              <label className="text-xs text-gray-500 font-medium" htmlFor="email">
-                Email
-              </label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="you@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="pl-10 bg-warm-white border-gray-200"
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="space-y-1.5">
-              <label className="text-xs text-gray-500 font-medium" htmlFor="password">
-                Password
-              </label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <Input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="pl-10 pr-10 bg-warm-white border-gray-200"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-dark"
-                >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
-              </div>
-            </div>
-
-            <Button type="submit" variant="glow" size="lg" className="w-full text-sm" disabled={loading}>
-              {loading ? "Loading..." : isSignUp ? "Start Free Trial" : "Sign In"}
-            </Button>
-
-            <div className="text-center text-xs text-gray-400">
-              {isSignUp ? (
-                <>
-                  Already have an account?{" "}
-                  <button type="button" onClick={() => setIsSignUp(false)} className="text-gold hover:text-gold/80 font-medium">
-                    Sign in
-                  </button>
-                </>
+            <Button 
+              type="submit" 
+              variant="glow" 
+              className="w-full py-6 rounded-xl font-bold text-base mt-2" 
+              disabled={loading}
+            >
+              {loading ? (
+                <Loader2 className="h-5 w-5 animate-spin mr-2" />
               ) : (
                 <>
-                  Don&apos;t have an account?{" "}
-                  <button type="button" onClick={() => setIsSignUp(true)} className="text-gold hover:text-gold/80 font-medium">
-                    Start 3-day trial
-                  </button>
+                  Launch Dashboard <ArrowRight className="ml-2 h-5 w-5" />
                 </>
               )}
-            </div>
+            </Button>
           </form>
-
-          {/* Demo notice */}
-          <p className="text-center text-[10px] text-gray-400 mt-5">
-            Demo mode: any credentials work. No real data stored.
+        </CardContent>
+        <CardFooter className="flex flex-col space-y-4 pt-2">
+          <div className="flex items-center gap-2 text-xs text-emerald-400">
+            <ShieldCheck className="h-4 w-4" />
+            <span>30-day money-back guarantee · Secure & Private</span>
+          </div>
+          <p className="text-xs text-slate-500 text-center">
+            By signing in, you agree to our Terms of Service and Privacy Policy.
           </p>
-        </div>
+        </CardFooter>
+      </Card>
+
+      <div className="fixed bottom-8 left-0 right-0 text-center">
+        <Link href="/" className="text-slate-500 hover:text-white text-sm transition-colors">
+          ← Back to home
+        </Link>
       </div>
     </div>
   );
