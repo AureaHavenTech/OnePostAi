@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -12,6 +13,9 @@ export const metadata: Metadata = {
   icons: {
     icon: "/icon-512.png",
     apple: "/icon-512.png",
+  },
+  other: {
+    "crossorigin": "use-credentials",
   },
 };
 
@@ -29,6 +33,25 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="OnePost AI" />
+        <link rel="manifest" href="/manifest.json" crossOrigin="use-credentials" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                  navigator.serviceWorker.register('/sw.js').then(
+                    function(registration) {
+                      console.log('SW registered:', registration.scope);
+                    },
+                    function(err) {
+                      console.log('SW registration failed:', err);
+                    }
+                  );
+                });
+              }
+            `,
+          }}
+        />
       </head>
       <body className={`${inter.variable} ${playfair.variable} font-sans`}>
         <NotificationProvider>

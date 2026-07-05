@@ -4,10 +4,29 @@
   "description": "Upload your own videos and photos — edit them in a professional suite, or let AI generate content from your ideas. Auto-publish everywhere.",
   "start_url": "/",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#12121a",
   "theme_color": "#c9a96e",
+  "categories": ["social", "productivity", "photo-video"],
+  "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7",
+  "screenshots": [
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "OnePost AI Dashboard"
+    },
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "OnePost AI Mobile"
+    }
+  ],
   "icons": [
-    { "src": "/icons/icon-192x192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "/icons/icon-512x512.png", "sizes": "512x512", "type": "image/png" }
+    { "src": "/icon-192x192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512x512.png", "sizes": "512x512", "type": "image/png" }
   ]
 }
