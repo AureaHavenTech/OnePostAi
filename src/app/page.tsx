@@ -335,6 +335,73 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Cross-Promotion — Axel AI & Aura Haven */}
+      <section className="py-24 border-t border-[#1e1e2a] bg-[#0a0a0f]/10 relative">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="text-center max-w-3xl mx-auto mb-14">
+            <span className="inline-flex items-center rounded-full px-4 py-1 text-xs font-semibold bg-[#c9a96e]/10 text-[#c9a96e] border border-[#c9a96e]/20 mb-6 tracking-wider uppercase">
+              <Sparkles className="h-3.5 w-3.5 mr-1.5 text-[#c9a96e]" />
+              From the Aura Haven Tech Family
+            </span>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white">Tools that work together</h2>
+            <p className="mt-4 text-slate-400 text-lg">OnePost AI is part of a family of premium products built for empire-builders.</p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            {/* Axel AI Card */}
+            <div className="bg-[#0a0a0f]/40 border border-[#1e1e2a] hover:border-[#c9a96e]/30 rounded-2xl p-8 transition-all duration-300 group">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#c9a96e] to-[#d4b87a] flex items-center justify-center shadow-lg shadow-[#c9a96e]/20">
+                  <span className="text-xl font-black text-[#12121a]">A</span>
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-white">Axel AI</h3>
+                  <p className="text-xs text-[#c9a96e] font-semibold tracking-wider uppercase">The Axle That Drives Your Business</p>
+                </div>
+              </div>
+              <p className="text-sm text-slate-400 leading-relaxed mb-4">
+                Your autonomous AI executive assistant. Describe any task in plain language — research, email outreach, 
+                webpages, data gathering, content, analytics — and it executes end-to-end. 
+                Just like an axle keeps your car moving, Axel AI keeps your business running.
+              </p>
+              <a 
+                href="https://axelai.app" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#c9a96e] hover:text-[#d4b87a] transition-colors group/link"
+              >
+                Visit Axel AI <ArrowRight className="h-4 w-4 group-hover/link:translate-x-0.5 transition-transform" />
+              </a>
+            </div>
+
+            {/* Aura Haven Card */}
+            <div className="bg-[#0a0a0f]/40 border border-[#1e1e2a] hover:border-[#c9a96e]/30 rounded-2xl p-8 transition-all duration-300 group">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#c9a96e] to-[#d4b87a] flex items-center justify-center shadow-lg shadow-[#c9a96e]/20">
+                  <span className="text-xl font-black text-[#12121a]">AH</span>
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-white">Aura Haven</h3>
+                  <p className="text-xs text-[#c9a96e] font-semibold tracking-wider uppercase">Premium Tech for Modern Living</p>
+                </div>
+              </div>
+              <p className="text-sm text-slate-400 leading-relaxed mb-4">
+                Premium tech products for people who appreciate quality. Curated innovations that blend seamlessly 
+                into your modern lifestyle — from smart home gadgets to beauty tech. Elevated living, simplified.
+              </p>
+              <a 
+                href="https://aurbhaven.shop" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#c9a96e] hover:text-[#d4b87a] transition-colors group/link"
+              >
+                Visit Aura Haven <ArrowRight className="h-4 w-4 group-hover/link:translate-x-0.5 transition-transform" />
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <Footer />
     </div>
   );
