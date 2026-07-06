@@ -3,10 +3,9 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Sparkles, Send, Loader2, CheckCircle2, XCircle, Clock, 
+import {
+  Sparkles, Send, Loader2, CheckCircle2, XCircle, Clock,
   Globe, Hash, CalendarDays, Image, Link2, AlertCircle,
-  Instagram, Youtube, Music, Linkedin, MessageCircle, 
   Eye, EyeOff, FileText, RefreshCw, CheckSquare, Square
 } from "lucide-react";
 
