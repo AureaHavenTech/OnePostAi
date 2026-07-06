@@ -59,7 +59,7 @@ export default function PricingPage() {
               ))}
             </ul>
 
-            <Link href="/login">
+            <Link href="https://buy.stripe.com/dRmcN51blcX24vreeecwg08">
               <Button variant="glow" size="lg" className="w-full mt-6">
                 Start 3-Day Free Trial
                 <ArrowRight className="ml-1.5 w-4 h-4" />
