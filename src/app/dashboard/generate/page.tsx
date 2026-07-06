@@ -104,7 +104,7 @@ export default function GeneratePage() {
           {generated && (
             <Badge variant="success" className="text-xs">
               <Sparkles className="h-3 w-3 mr-1" />
-              {generated.isDemo ? "Demo Mode" : "AI Generated"}
+              {generated?.isDemo ? "Demo Mode" : "AI Generated"}
             </Badge>
           )}
         </div>
@@ -246,7 +246,7 @@ export default function GeneratePage() {
                       {contentType.charAt(0).toUpperCase() + contentType.slice(1)}
                     </Badge>
                     <button
-                      onClick={() => copyToClipboard(generated.caption)}
+                      onClick={() => copyToClipboard(generated?.caption)}
                       className="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-slate-200 transition-colors"
                     >
                       {copied ? <Check className="h-4 w-4 text-emerald-400" /> : <Copy className="h-4 w-4" />}
@@ -259,7 +259,7 @@ export default function GeneratePage() {
                   <div className="space-y-2">
                     <h3 className="text-xs font-semibold text-brand-400 uppercase tracking-wider">Caption</h3>
                     <div className="bg-slate-950 border border-slate-800 rounded-lg p-4">
-                      <p className="text-sm text-slate-200 whitespace-pre-line">{generated.caption}</p>
+                      <p className="text-sm text-slate-200 whitespace-pre-line">{generated?.caption}</p>
                     </div>
                   </div>
 
@@ -269,7 +269,7 @@ export default function GeneratePage() {
                       <Hash className="h-3 w-3" /> Hashtags
                     </h3>
                     <div className="flex flex-wrap gap-2">
-                      {generated.hashtags.map((tag) => (
+                      {generated?.hashtags.map((tag) => (
                         <span key={tag} className="text-xs bg-brand-500/10 text-brand-300 border border-brand-500/20 px-2.5 py-1 rounded-full">
                           {tag}
                         </span>
@@ -278,27 +278,27 @@ export default function GeneratePage() {
                   </div>
 
                   {/* Image */}
-                  {contentType === "image" && generated.image && (
+                  {contentType === "image" && generated?.image && (
                     <div className="space-y-2">
                       <h3 className="text-xs font-semibold text-brand-400 uppercase tracking-wider flex items-center gap-1">
                         <Image className="h-3 w-3" /> Image Suggestion
                       </h3>
                       <div className="rounded-lg overflow-hidden border border-slate-800">
-                        <img src={generated.image.url} alt={generated.image.alt || "Generated"} className="w-full h-48 object-cover" />
+                        <img src={generated?.image.url} alt={generated?.image.alt || "Generated"} className="w-full h-48 object-cover" />
                       </div>
                     </div>
                   )}
 
                   {/* Ad Copy */}
-                  {contentType === "ad" && generated.adCopy && (
+                  {contentType === "ad" && generated?.adCopy && (
                     <div className="space-y-2">
                       <h3 className="text-xs font-semibold text-brand-400 uppercase tracking-wider">Ad Creative</h3>
                       <div className="bg-slate-950 border border-brand-500/20 rounded-lg p-4 space-y-3">
-                        <h4 className="text-sm font-bold text-white">{generated.adCopy.headline}</h4>
-                        <p className="text-xs text-slate-400">{generated.adCopy.body}</p>
+                        <h4 className="text-sm font-bold text-white">{generated?.adCopy.headline}</h4>
+                        <p className="text-xs text-slate-400">{generated?.adCopy.body}</p>
                         <div className="flex items-center justify-between pt-2 border-t border-slate-800">
-                          <span className="text-xs text-brand-400 font-semibold">{generated.adCopy.cta}</span>
-                          <Badge variant="success" className="text-[10px]">{generated.adCopy.valueProp}</Badge>
+                          <span className="text-xs text-brand-400 font-semibold">{generated?.adCopy.cta}</span>
+                          <Badge variant="success" className="text-[10px]">{generated?.adCopy.valueProp}</Badge>
                         </div>
                       </div>
                     </div>
@@ -308,10 +308,10 @@ export default function GeneratePage() {
                   {contentType === "video" && (
                     <div className="space-y-2">
                       <h3 className="text-xs font-semibold text-brand-400 uppercase tracking-wider flex items-center gap-1">
-                        <Music2 className="h-3 w-3" /> Generated Content
+                        <Music className="h-3 w-3" /> Generated Content
                       </h3>
                       <div className="bg-slate-950 border border-slate-800 rounded-lg p-4">
-                        <pre className="text-xs text-slate-300 whitespace-pre-wrap font-mono">{generated.caption || generated.body || "No content generated"}</pre>
+                        <pre className="text-xs text-slate-300 whitespace-pre-wrap font-mono">{generated?.caption || "No content generated"}</pre>
                       </div>
                     </div>
                   )}
@@ -321,15 +321,15 @@ export default function GeneratePage() {
                     <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Estimated Performance</h3>
                     <div className="grid grid-cols-3 gap-4">
                       <div className="text-center p-3 rounded-lg bg-slate-950 border border-slate-800">
-                        <div className="text-lg font-bold text-white">{(generated.estimatedViews || 0).toLocaleString()}</div>
+                        <div className="text-lg font-bold text-white">{(generated?.estimatedViews || 0).toLocaleString()}</div>
                         <div className="text-[10px] text-slate-500">Views</div>
                       </div>
                       <div className="text-center p-3 rounded-lg bg-slate-950 border border-slate-800">
-                        <div className="text-lg font-bold text-white">{((generated.estimatedViews || 0) * 0.1).toLocaleString()}</div>
+                        <div className="text-lg font-bold text-white">{((generated?.estimatedViews || 0) * 0.1).toLocaleString()}</div>
                         <div className="text-[10px] text-slate-500">Likes</div>
                       </div>
                       <div className="text-center p-3 rounded-lg bg-slate-950 border border-slate-800">
-                        <div className="text-lg font-bold text-white">{((generated.estimatedViews || 0) * 0.02).toLocaleString()}</div>
+                        <div className="text-lg font-bold text-white">{((generated?.estimatedViews || 0) * 0.02).toLocaleString()}</div>
                         <div className="text-[10px] text-slate-500">Shares</div>
                       </div>
                     </div>
@@ -340,16 +340,16 @@ export default function GeneratePage() {
                     <div className="flex items-center gap-3">
                       <TrendingUp className="h-4 w-4 text-brand-400" />
                       <div className="text-xs text-slate-400">
-                        Best time to post: <span className="text-brand-300 font-semibold">{generated.bestTimeToPost || "Not available"}</span>
+                        Best time to post: <span className="text-brand-300 font-semibold">{generated?.bestTimeToPost || "Not available"}</span>
                       </div>
                     </div>
                     <div className="flex gap-2">
-                      <Button size="sm" variant="secondary" onClick={() => copyToClipboard(generated.caption)}>
+                      <Button size="sm" variant="secondary" onClick={() => copyToClipboard(generated?.caption)}>
                         <Copy className="h-3 w-3 mr-1" /> Copy
                       </Button>
                       <Button size="sm" onClick={() => {
                         // Navigate to create page with pre-filled content
-                        window.location.href = `/dashboard/create?caption=${encodeURIComponent(generated.caption)}&hashtags=${encodeURIComponent(generated.hashtags.join(" "))}&platform=${platform}`;
+                        window.location.href = `/dashboard/create?caption=${encodeURIComponent(generated?.caption)}&hashtags=${encodeURIComponent(generated?.hashtags.join(" "))}&platform=${platform}`;
                       }}>
                         <Edit3 className="h-3 w-3 mr-1" /> Edit & Post
                       </Button>
