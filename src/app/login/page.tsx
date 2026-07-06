@@ -25,7 +25,7 @@ export default function LoginPage() {
 
     setTimeout(() => {
       // CEO access code check
-      if (showCEO && accessCode === "FOUNDER2026") {
+      if (showCEO && accessCode.toUpperCase() === "AUREA2026") {
         setLoading(false);
         router.push("/dashboard/owner");
         return;

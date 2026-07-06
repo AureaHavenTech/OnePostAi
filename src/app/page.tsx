@@ -292,6 +292,19 @@ export default function Home() {
         </div>
       </section>
 
+      {/* CROSS-PROMO BAR */}
+      <div className="border-t border-[#c9a84c]/10 py-4 px-4 bg-gradient-to-r from-[#faf7f2] via-[#f5f0ea] to-[#faf7f2]">
+        <div className="max-w-5xl mx-auto flex flex-wrap justify-center md:justify-end gap-x-4 gap-y-1 text-xs">
+          <span className="flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#c9a96e] animate-pulse"></span>
+            Try <a href="https://axelai-eight.vercel.app" target="_blank" className="text-[#c9a96e] hover:text-[#d4b87a] font-bold">Axel AI</a>
+            {' '}- The Axle That Drives Your Business
+          </span>
+          <span>·</span>
+          <a href="https://aurahaven.shop" target="_blank" className="text-[#c9a96e] hover:text-[#d4b87a] font-bold">Shop Aura Haven</a>
+        </div>
+      </div>
+
       {/* FOOTER */}
       <footer className="border-t border-[#c9a84c]/10 py-12 px-4">
         <div className="max-w-5xl mx-auto">
