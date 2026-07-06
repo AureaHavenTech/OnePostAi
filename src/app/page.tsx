@@ -90,13 +90,11 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[#12121a] text-white selection:bg-[#c9a96e]/50 selection:text-white">
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl border-b border-[#1e1e2a] px-6 py-4 flex items-center justify-between">
-        <Link href="/" className="flex items-center">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#c9a96e] to-[#e8d4a8] flex items-center justify-center shadow-lg shadow-[#c9a96e]/20">
-            <span className="text-lg font-bold text-[#12121a]">O</span>
-          </div>
-          <span className="ml-3 font-bold text-white tracking-tight">OnePost AI</span>
-        </Link>
+      <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl border-b border-[#1e1e2a] px-6 py-3 flex items-center justify-between">
+                  <Link href="/" className="flex items-center gap-3">
+                    <img src="/logo.svg" alt="OnePost AI" className="h-10 w-auto" />
+                    <span className="font-bold text-white tracking-tight hidden sm:inline">OnePost AI</span>
+                  </Link>
         <nav className="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-400">
           <a href="#features" className="hover:text-white transition-colors">Features</a>
           <a href="#how-it-works" className="hover:text-white transition-colors">How it Works</a>
@@ -112,37 +110,64 @@ export default function LandingPage() {
         </div>
       </header>
 
-      {/* Hero */}
-      <section className="relative pt-44 pb-24 px-6 max-w-7xl mx-auto flex flex-col items-center text-center">
-        <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-[#c9a96e]/10 rounded-full blur-[120px] pointer-events-none"></div>
-        <span className="inline-flex items-center rounded-full px-4 py-1 text-xs font-semibold bg-[#c9a96e]/10 text-[#c9a96e] border border-[#c9a96e]/20 mb-6 tracking-wider uppercase">
-          <Sparkles className="h-3.5 w-3.5 mr-1.5 text-[#c9a96e] animate-pulse" />
-          Content That Moves
-        </span>
-        <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight max-w-5xl leading-tight md:leading-none text-white">
-          Post everywhere.{" "}
-          <span className="bg-gradient-to-r from-[#c9a96e] via-[#d4b87a] to-[#e8d4a8] bg-clip-text text-transparent">
-            From one place.
-          </span>
-        </h1>
-        <p className="mt-8 text-lg md:text-xl text-slate-400 max-w-3xl leading-relaxed">
-          Upload your own video or photos and edit them in a professional-grade editing suite — or just type an idea and AI creates it for you. OnePost AI has a full editor like CapCut or Canva, auto-generates viral captions, picks trending hashtags, and publishes across every platform. No jumping between apps. No staring at a blank page.
-        </p>
-        <div className="mt-12 flex flex-col sm:flex-row items-center gap-4">
-          <Link href="/login">
-            <Button size="lg" className="text-base px-8 py-4">
-              Start Now <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
-          </Link>
-          <Link href="#pricing">
-            <Button variant="outline" size="lg" className="text-base px-8 py-4">
-              View Pricing
-            </Button>
-          </Link>
+      {/* Hero — Logo as Centerpiece */}
+      <section className="relative min-h-screen flex flex-col items-center justify-center px-6 overflow-hidden">
+        {/* Background glow */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(201,169,110,0.12),transparent_60%)] pointer-events-none" />
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[#c9a96e]/8 rounded-full blur-[150px] pointer-events-none" />
+        
+        {/* Logo as Hero */}
+        <div className="relative mb-8 animate-in fade-in zoom-in duration-1000">
+          <img 
+            src="/logo.svg" 
+            alt="OnePost AI" 
+            className="w-48 h-48 md:w-64 md:h-64 lg:w-80 lg:h-80 drop-shadow-2xl"
+            style={{ filter: 'drop-shadow(0 0 60px rgba(201,169,110,0.3))' }}
+          />
         </div>
-        <div className="mt-6 flex items-center justify-center gap-2 text-sm text-emerald-400">
-          <ShieldCheck className="h-4 w-4" />
-          <span>30-day money-back guarantee · No risk</span>
+
+        {/* Tagline */}
+        <div className="text-center space-y-6 max-w-3xl mx-auto">
+          <span className="inline-flex items-center rounded-full px-5 py-1.5 text-xs font-semibold bg-[#c9a96e]/10 text-[#c9a96e] border border-[#c9a96e]/20 tracking-[0.2em] uppercase">
+            <Sparkles className="h-3 w-3 mr-2 text-[#c9a96e]" />
+            Content That Moves
+          </span>
+          
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white/90 leading-tight" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+            Post everywhere.{" "}
+            <span className="bg-gradient-to-r from-[#c9a96e] via-[#d4b87a] to-[#e8d4a8] bg-clip-text text-transparent">
+              From one place.
+            </span>
+          </h1>
+          
+          <p className="text-base md:text-lg text-slate-400/80 max-w-2xl mx-auto leading-relaxed">
+            Upload your own videos or photos and edit them in a professional-grade suite — or just type an idea and AI creates it for you. Auto-publish across every platform.
+          </p>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+            <Link href="/login">
+              <Button size="lg" className="text-base px-10 py-4 rounded-xl shadow-xl shadow-[#c9a96e]/20">
+                Start Creating <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
+            <Link href="#features">
+              <Button variant="outline" size="lg" className="text-base px-10 py-4 rounded-xl border-[#2a2a3a]">
+                Explore Features
+              </Button>
+            </Link>
+          </div>
+
+          <div className="flex items-center justify-center gap-2 text-sm text-emerald-400/80 pt-2">
+            <ShieldCheck className="h-4 w-4" />
+            <span>30-day money-back guarantee · No risk</span>
+          </div>
+        </div>
+
+        {/* Subtle scroll indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+          <div className="w-5 h-8 rounded-full border border-[#2a2a3a] flex items-start justify-center p-1.5">
+            <div className="w-1 h-2 rounded-full bg-[#c9a96e]/40" />
+          </div>
         </div>
       </section>
 
