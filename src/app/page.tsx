@@ -47,8 +47,8 @@ export default function Home() {
                 <span className="text-xs font-bold text-[#1a1614]">O</span>
               </div>
               <span className="font-semibold text-sm tracking-tight">
-                <span className="text-[#1a1614]">OnePost</span>
-                <span className="text-[#c9a84c]"> AI</span>
+                <span className="text-[#12121a]">OnePost</span>
+                <span className="text-[#c9a96e]"> AI™</span>
               </span>
             </Link>
             <nav className="hidden md:flex items-center gap-8">
@@ -96,7 +96,7 @@ export default function Home() {
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link href="/login">
               <button className="px-8 py-3.5 rounded-xl text-sm font-semibold bg-[#1a1614] text-[#faf7f2] hover:bg-[#2d2824] transition-all shadow-lg shadow-[#1a1614]/10 hover:shadow-[#1a1614]/20 inline-flex items-center gap-2">
-                Start 3-Day Free Trial
+                Start 7-Day Free Trial
                 <ArrowRight className="w-4 h-4" />
               </button>
             </Link>
@@ -107,7 +107,7 @@ export default function Home() {
             </Link>
           </div>
           <div className="mt-6 flex items-center justify-center gap-4 text-xs text-gray-400">
-            <span className="flex items-center gap-1"><Check className="w-3 h-3 text-green-500" /> 3-day free trial</span>
+            <span className="flex items-center gap-1"><Check className="w-3 h-3 text-green-500" /> 7-day free trial</span>
             <span className="w-1 h-1 rounded-full bg-gray-300" />
             <span className="flex items-center gap-1"><Check className="w-3 h-3 text-green-500" /> No credit card</span>
             <span className="w-1 h-1 rounded-full bg-gray-300" />
@@ -243,13 +243,13 @@ export default function Home() {
             <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#c9a84c] to-[#d4a0a0] flex items-center justify-center mx-auto mb-4 shadow-lg shadow-[#c9a84c]/20">
               <Brain className="w-5 h-5 text-[#1a1614]" />
             </div>
-            <h3 className="text-lg font-bold text-[#1a1614] mb-2">
-              Meet <span className="bg-gradient-to-r from-[#c9a84c] to-[#e8c97a] bg-clip-text text-transparent">Axel AI</span>
+            <h3 className="text-lg font-bold text-[#12121a] mb-2">
+              Meet <span className="text-[#c9a96e]">Axel AI™</span>
             </h3>
             <p className="text-xs text-[#6b5a5e] max-w-md mx-auto leading-relaxed">
-              Your 24/7/365 personal assistant that never sleeps. Manage tasks, automate workflows, research anything, and get shit done — all through natural conversation. Think Jarvis, but yours.
+              Your autonomous AI executive assistant. Describe any task — research, email outreach, webpages, data gathering, content, analytics — executes end-to-end. Like having a full-time employee who never sleeps.
             </p>
-            <a href="https://github.com/AureaHavenTech" target="_blank" rel="noopener noreferrer">
+            <a href="https://axelai-eight.vercel.app" target="_blank" rel="noopener noreferrer">
               <button className="mt-5 px-5 py-2.5 rounded-xl text-xs font-medium border border-[#c9a84c]/30 text-[#c9a84c] hover:bg-[#c9a84c]/10 transition-all inline-flex items-center gap-1.5">
                 Learn More <ExternalLink className="w-3 h-3" />
               </button>
@@ -259,36 +259,18 @@ export default function Home() {
       </section>
 
       {/* PRICING */}
-      <section className="py-20 px-4 bg-gradient-to-b from-[#f5f0ea]/50 to-[#faf7f2]">
+      <section className="py-20 px-4 bg-gradient-to-b from-[#f5f0ea]/50 to-[#e8e0d4]">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-4xl font-bold tracking-tight text-[#1a1614] mb-4">
-            One price. <span className="bg-gradient-to-r from-[#c9a84c] to-[#e8c97a] bg-clip-text text-transparent">Unlimited creation.</span>
+          <h2 className="text-4xl font-bold tracking-tight text-[#12121a] mb-4 font-[family-name:var(--font-heading)]">
+            Plans for every creator.<br /><span className="text-[#c9a96e]">From $19/month.</span>
           </h2>
-          <p className="text-sm text-[#6b5a5e] mb-8">No tiers. No per-post fees. Just results.</p>
-          <div className="bg-[#f5f0ea]/60 backdrop-blur-md border border-[#c9a84c]/10 p-8 max-w-sm mx-auto rounded-2xl">
-            <p className="text-[10px] uppercase tracking-widest text-[#6b5a5e] mb-2">Flat Rate</p>
-            <p className="text-5xl font-bold text-[#1a1614]">$29<span className="text-sm font-normal text-[#6b5a5e]">/month</span></p>
-            <ul className="mt-6 space-y-2.5 text-left">
-              {[
-                "Unlimited content creation", "All 7 platforms", "AI avatar videos",
-                "Smart scheduling (3x/day, 2 weeks)", "Viral trend analytics",
-                "Per-platform auto-formatting", "AI content generation from text",
-                "Multi-brand management", "Shopify page creator",
-                "Ad creator (Meta, TikTok, IG)", "Portfolio builder", "10% affiliate program",
-              ].map((item) => (
-                <li key={item} className="flex items-start gap-2 text-xs text-[#6b5a5e]">
-                  <Check className="w-3.5 h-3.5 text-[#c9a84c] shrink-0 mt-0.5" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-            <Link href="/login">
-              <button className="mt-6 w-full px-6 py-3 rounded-xl text-sm font-semibold bg-[#1a1614] text-[#faf7f2] hover:bg-[#2d2824] transition-all shadow-lg">
-                Start 3-Day Free Trial
-              </button>
-            </Link>
-            <p className="mt-2 text-[10px] text-[#6b5a5e]">No credit card. Cancel anytime.</p>
-          </div>
+          <p className="text-sm text-[#6b5a5e] mb-6">30-day money-back guarantee on all plans.</p>
+          <Link href="/pricing">
+            <button className="px-8 py-3.5 rounded-xl text-sm font-semibold bg-[#12121a] text-[#e8e0d4] hover:bg-[#2d2824] transition-all shadow-lg inline-flex items-center gap-2">
+              See Plans & Pricing <ArrowRight className="w-4 h-4" />
+            </button>
+          </Link>
+          <p className="mt-3 text-[10px] text-[#6b5a5e]">7-day free trial • No credit card • Cancel anytime</p>
         </div>
       </section>
 
@@ -343,7 +325,7 @@ export default function Home() {
             </div>
           </div>
           <div className="border-t border-[#c9a84c]/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <p className="text-[10px] text-[#6b5a5e]">© 2026 OnePost AI. All rights reserved.</p>
+            <p className="text-[10px] text-[#6b5a5e]">© 2026 Aura Haven Tech. All rights reserved.</p>
             <p className="text-[10px] text-[#6b5a5e]">Built by <span className="text-[#c9a84c]">@funkycoldmedemaa</span></p>
           </div>
         </div>

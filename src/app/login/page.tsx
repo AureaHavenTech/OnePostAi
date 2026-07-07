@@ -149,7 +149,7 @@ export default function LoginPage() {
 
           {/* Upgrade to paid */}
           <div className="mt-6 p-4 bg-white/80 backdrop-blur-md border border-[#c9a84c]/10 rounded-xl text-center">
-            <p className="text-xs text-[#6b5a5e] mb-2">After your 3-day trial, it's <span className="font-semibold text-[#1a1614]">$29/month</span></p>
+            <p className="text-xs text-[#6b5a5e] mb-2">After your 7-day trial, plans start at <span className="font-semibold text-[#12121a]">$19/month</span></p>
             <a href="https://buy.stripe.com/dRmcN51blcX24vreeecwg08" target="_blank" rel="noopener noreferrer">
               <Button variant="outline" size="sm" className="text-xs">
                 Upgrade Now
