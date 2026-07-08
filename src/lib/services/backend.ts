@@ -1,14 +1,62 @@
-// OnePost AI Backend Integration
-// Imports from separate backend project or inline implementation
+// OnePost AI Backend Integration — Usage Limits & Watermark System
 
-// Content Generation Pipeline
-export async function generateContent(params: {
+export const USAGE_LIMITS = {
+  free: {
+    maxGenerations: 5,          // 5 content generations total during trial
+    maxPlatforms: 2,             // Can only post to 2 platforms
+    maxScheduledPosts: 3,        // Can schedule 3 posts max
+    watermark: true,             // All free content gets watermark overlay
+    hashtagQuality: "basic",     // Basic hashtags, not trending/viral
+    aiAvatar: false,             // No AI avatar on free
+    trendAnalytics: false,       // No trend analytics
+    multiBrand: false,           // 1 brand only
+    scheduleAutomation: false,   // Must post manually
+    contentLock: true,           // Can view but not download/export clean
+  },
+  paid: {
+    maxGenerations: Infinity,
+    maxPlatforms: 7,
+    maxScheduledPosts: 100,
+    watermark: false,
+    hashtagQuality: "viral",
+    aiAvatar: true,
+    trendAnalytics: true,
+    multiBrand: true,
+    scheduleAutomation: true,
+    contentLock: false,
+  },
+};
+
+export function getWatermarkOverlay(brandName: string): string {
+  return `\n\n——\nCreated with OnePost AI™ — Get unlimited, watermark-free content at onepostai.ctonew.app`;
+}
+
+export function generateContent(params: {
   brandName: string;
   prompt: string;
   platforms: string[];
   tone?: string;
+  isFreeTier?: boolean;
+  generationCount?: number;
 }) {
-  const { brandName, prompt, platforms } = params;
+  const { brandName, prompt, platforms, isFreeTier = false, generationCount = 0 } = params;
+  
+  // Check if free user has exceeded limit
+  if (isFreeTier && generationCount >= USAGE_LIMITS.free.maxGenerations) {
+    return {
+      error: true,
+      message: `You've used all ${USAGE_LIMITS.free.maxGenerations} free generations. Upgrade to continue creating — no watermarks, unlimited content.`,
+      upgradeRequired: true,
+      usage: { used: generationCount, limit: USAGE_LIMITS.free.maxGenerations },
+    };
+  }
+
+  // Limit platforms for free users
+  const effectivePlatforms = isFreeTier 
+    ? platforms.slice(0, USAGE_LIMITS.free.maxPlatforms)
+    : platforms;
+
+  const watermark = isFreeTier ? getWatermarkOverlay(brandName) : "";
   
   // Mock implementation — ready for OpenAI API key
   const scripts: Record<string, string> = {
@@ -35,16 +83,22 @@ export async function generateContent(params: {
     linkedin: ["contentstrategy", "marketing", "branding", "growth", "productivity"],
   };
 
-  const selectedPlatforms = platforms.length > 0 ? platforms : Object.keys(scripts);
+  const selectedPlatforms = effectivePlatforms.length > 0 ? effectivePlatforms : Object.keys(scripts);
+  
+  const hashtagQuality = isFreeTier ? "basic" : "viral";
   
   return {
     brandName,
     prompt,
+    tier: isFreeTier ? "free" : "paid",
+    generationLimit: isFreeTier ? { used: generationCount + 1, limit: USAGE_LIMITS.free.maxGenerations } : undefined,
+    watermark: isFreeTier ? "Watermark added. Upgrade for clean exports." : undefined,
     platformContent: selectedPlatforms.map(p => ({
       platform: p,
       script: scripts[p] || scripts.tiktok,
-      caption: captions[p] || captions.tiktok,
-      hashtags: hashtags[p] || hashtags.tiktok,
+      caption: (captions[p] || captions.tiktok) + watermark,
+      hashtags: hashtags[p]?.slice(0, isFreeTier ? 3 : 10) || hashtags.tiktok.slice(0, isFreeTier ? 3 : 10),
+      hashtagQuality,
     })),
     suggestedFormat: selectedPlatforms.includes("tiktok") || selectedPlatforms.includes("instagram") 
       ? "9:16 vertical" : "16:9 horizontal",
