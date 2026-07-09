@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192" fill="none">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1a1a28"/>
+      <stop offset="100%" stop-color="#12121a"/>
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#c9a96e"/>
+      <stop offset="40%" stop-color="#d4b87a"/>
+      <stop offset="60%" stop-color="#e8d4a0"/>
+      <stop offset="100%" stop-color="#c9a96e"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  <!-- Background rounded rect - smoky dark -->
+  <rect x="0" y="0" width="192" height="192" rx="42" ry="42" fill="url(#bgGrad)" filter="url(#shadow)"/>
+  <!-- Subtle gold border -->
+  <rect x="3" y="3" width="186" height="186" rx="39" ry="39" stroke="#c9a96e" stroke-width="1" opacity="0.15"/>
+  <!-- Decorative ring -->
+  <circle cx="96" cy="96" r="64" fill="none" stroke="#c9a96e" stroke-width="1" opacity="0.1"/>
+  <!-- OP Monogram - HERO centered -->
+  <g transform="translate(96, 96)">
+    <!-- O -->
+    <ellipse cx="-6" cy="0" rx="32" ry="38" stroke="url(#goldGrad)" stroke-width="5.5" fill="none" opacity="0.95"/>
+    <ellipse cx="-6" cy="0" rx="19" ry="24" stroke="url(#goldGrad)" stroke-width="1.2" fill="none" opacity="0.25" stroke-dasharray="2.5 3.5"/>
+    <!-- P -->
+    <path d="M28 -34 L28 34" stroke="url(#goldGrad)" stroke-width="5.5" stroke-linecap="round"/>
+    <path d="M28 -34 C44 -34, 58 -24, 58 -6 C58 12, 44 22, 28 22" stroke="url(#goldGrad)" stroke-width="5.5" fill="none" stroke-linecap="round"/>
+  </g>
+  <!-- Tiny sparkle accent -->
+  <path d="M140 56 L140 51 M137.5 53.5 L142.5 53.5" stroke="#d4b87a" stroke-width="1.8" stroke-linecap="round" opacity="0.5"/>
+  <circle cx="50" cy="140" r="2" fill="#c9a96e" opacity="0.3"/>
+</svg>

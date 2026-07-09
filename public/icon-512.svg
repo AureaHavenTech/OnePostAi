@@ -1,17 +1,38 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" fill="none">
   <defs>
-    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#c9a84c"/>
-      <stop offset="50%" stop-color="#e8c97a"/>
-      <stop offset="100%" stop-color="#c9a84c"/>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e8e0d4"/>
+      <stop offset="100%" stop-color="#dcd0be"/>
     </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#c9a96e"/>
+      <stop offset="50%" stop-color="#dbc08a"/>
+      <stop offset="100%" stop-color="#c9a96e"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="6" stdDeviation="20" flood-color="#12121a" flood-opacity="0.1"/>
+    </filter>
   </defs>
-  <rect width="512" height="512" rx="112" fill="#faf7f2"/>
-  <circle cx="256" cy="256" r="230" fill="none" stroke="url(#g)" stroke-width="3"/>
-  <circle cx="256" cy="256" r="190" fill="none" stroke="url(#g)" stroke-width="2" stroke-dasharray="10 10"/>
-  <path d="M172 305 C172 218, 218 174, 256 174 C294 174, 340 218, 340 305 C340 366, 310 392, 256 392 C202 392, 172 366, 172 305Z" fill="none" stroke="url(#g)" stroke-width="8"/>
-  <path d="M208 290 C208 235, 235 210, 256 210 C277 210, 304 235, 304 290 C304 334, 280 350, 256 350 C232 350, 208 334, 208 290Z" fill="none" stroke="url(#g)" stroke-width="3" stroke-dasharray="5 7" opacity="0.6"/>
-  <circle cx="302" cy="183" r="8" fill="url(#g)"/>
-  <circle cx="210" cy="329" r="5" fill="#d4a0a0" opacity="0.8"/>
-  <path d="M330 155 L330 145 M325 150 L335 150" stroke="url(#g)" stroke-width="4" stroke-linecap="round" opacity="0.5"/>
+  <!-- Background rounded rect -->
+  <rect x="0" y="0" width="512" height="512" rx="110" ry="110" fill="url(#bgGrad)" filter="url(#shadow)"/>
+  <!-- Decorative rings -->
+  <circle cx="256" cy="256" r="190" fill="none" stroke="#c9a96e" stroke-width="2.5" opacity="0.1"/>
+  <circle cx="256" cy="256" r="168" fill="none" stroke="#c9a96e" stroke-width="1.5" opacity="0.08"/>
+  <!-- Dark inner circle -->
+  <circle cx="256" cy="256" r="156" fill="#12121a"/>
+  <!-- Gold border -->
+  <circle cx="256" cy="256" r="156" stroke="url(#goldGrad)" stroke-width="4" opacity="0.5"/>
+  <!-- O monogram -->
+  <path d="M190 290 C190 218, 214 184, 256 184 C298 184, 322 218, 322 290 C322 346, 304 370, 256 370 C208 370, 190 346, 290Z"
+        stroke="url(#goldGrad)" stroke-width="12" fill="none"/>
+  <path d="M210 276 C210 230, 228 204, 256 204 C284 204, 302 230, 302 276 C302 314, 290 334, 256 334 C222 334, 210 314, 210 276Z"
+        stroke="url(#goldGrad)" stroke-width="4.5" opacity="0.5" stroke-dasharray="6 8"/>
+  <!-- Sparkle -->
+  <path d="M286 150 L286 135 M278 142.5 L293 142.5" stroke="#c9a96e" stroke-width="5" stroke-linecap="round"/>
+  <!-- Accent dots -->
+  <circle cx="192" cy="348" r="7" fill="#c9a96e" opacity="0.35"/>
+  <circle cx="330" cy="300" r="5" fill="#c9a96e" opacity="0.25"/>
+  <circle cx="230" cy="178" r="4" fill="#c9a96e" opacity="0.2"/>
+  <!-- Brand initials -->
+  <text x="256" y="464" font-family="'Inter', sans-serif" font-size="36" font-weight="600" fill="#12121a" opacity="0.25" text-anchor="middle" letter-spacing="4">OP</text>
 </svg>

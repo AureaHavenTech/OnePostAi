@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 140" width="400" height="140" fill="none">
+  <defs>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#c9a96e"/>
+      <stop offset="40%" stop-color="#d4b87a"/>
+      <stop offset="60%" stop-color="#e8d4a0"/>
+      <stop offset="100%" stop-color="#c9a96e"/>
+    </linearGradient>
+    <linearGradient id="goldGrad2" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#c9a96e"/>
+      <stop offset="100%" stop-color="#d4b87a"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="1.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- OP Monogram - Hero -->
+  <g transform="translate(60, 72)">
+    <!-- O letter -->
+    <ellipse cx="0" cy="0" rx="36" ry="42" stroke="url(#goldGrad)" stroke-width="6" fill="none" opacity="0.9"/>
+    <ellipse cx="0" cy="0" rx="22" ry="28" stroke="url(#goldGrad2)" stroke-width="1.5" fill="none" opacity="0.3" stroke-dasharray="3 4"/>
+    <!-- P letter -->
+    <path d="M42 -38 L42 38" stroke="url(#goldGrad)" stroke-width="6" stroke-linecap="round"/>
+    <path d="M42 -38 C58 -38, 72 -28, 72 -10 C72 8, 58 18, 42 18" stroke="url(#goldGrad)" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <!-- P inner loop -->
+    <path d="M52 -24 C60 -24, 66 -18, 66 -10 C66 -2, 60 4, 52 4" stroke="#e8d4a0" stroke-width="1" fill="none" opacity="0.25"/>
+  </g>
+
+  <!-- Wordmark -->
+  <g transform="translate(170, 74)">
+    <text x="0" y="0" font-family="'Playfair Display', Georgia, 'Times New Roman', serif" font-size="36" font-weight="700" fill="#e8e0d4" letter-spacing="1">
+      OnePost<tspan fill="#c9a96e" font-style="italic"> AI</tspan>
+    </text>
+    <text x="0" y="22" font-family="'Inter', sans-serif" font-size="9" fill="#6a6a80" font-weight="400" letter-spacing="2" text-transform="uppercase">
+      CONTENT. AUTOMATED.
+    </text>
+  </g>
+
+  <!-- Decorative gold line -->
+  <line x1="155" y1="90" x2="158" y2="90" stroke="#c9a96e" stroke-width="1" opacity="0.4"/>
+</svg>

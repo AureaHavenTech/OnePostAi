@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" fill="none">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1a1a28"/>
+      <stop offset="100%" stop-color="#12121a"/>
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#c9a96e"/>
+      <stop offset="40%" stop-color="#d4b87a"/>
+      <stop offset="60%" stop-color="#e8d4a0"/>
+      <stop offset="100%" stop-color="#c9a96e"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="8" stdDeviation="20" flood-color="#000" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+  <!-- Background rounded rect - smoky dark -->
+  <rect x="0" y="0" width="512" height="512" rx="110" ry="110" fill="url(#bgGrad)" filter="url(#shadow)"/>
+  <!-- Subtle gold border -->
+  <rect x="8" y="8" width="496" height="496" rx="102" ry="102" stroke="#c9a96e" stroke-width="2" opacity="0.12"/>
+  <!-- Decorative rings -->
+  <circle cx="256" cy="256" r="175" fill="none" stroke="#c9a96e" stroke-width="2" opacity="0.08"/>
+  <circle cx="256" cy="256" r="155" fill="none" stroke="#c9a96e" stroke-width="1" opacity="0.06"/>
+  <!-- OP Monogram - HERO centered -->
+  <g transform="translate(256, 256)">
+    <!-- O -->
+    <ellipse cx="-16" cy="0" rx="85" ry="102" stroke="url(#goldGrad)" stroke-width="14" fill="none" opacity="0.95"/>
+    <ellipse cx="-16" cy="0" rx="52" ry="64" stroke="url(#goldGrad)" stroke-width="3" fill="none" opacity="0.2" stroke-dasharray="6 8"/>
+    <!-- P -->
+    <path d="M76 -90 L76 90" stroke="url(#goldGrad)" stroke-width="14" stroke-linecap="round"/>
+    <path d="M76 -90 C118 -90, 155 -64, 155 -16 C155 32, 118 58, 76 58" stroke="url(#goldGrad)" stroke-width="14" fill="none" stroke-linecap="round"/>
+  </g>
+  <!-- Sparkle accents -->
+  <path d="M376 148 L376 138 M371 143 L381 143" stroke="#d4b87a" stroke-width="4.5" stroke-linecap="round" opacity="0.4"/>
+  <circle cx="130" cy="376" r="5" fill="#c9a96e" opacity="0.25"/>
+  <circle cx="380" cy="340" r="3.5" fill="#c9a96e" opacity="0.15"/>
+</svg>

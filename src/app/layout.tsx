@@ -15,13 +15,16 @@ export const metadata: Metadata = {
     title: "OnePost AI — Post like a pro. Without being one.",
     description: "Drop a raw video or just an idea. AI edits, captions, and publishes everywhere. On autopilot.",
     type: "website",
+    images: [
+      { url: "/op-og-image.png", width: 1200, height: 630 },
+    ],
   },
   icons: {
     icon: [
-      { url: "/icon-192.svg", sizes: "192x192", type: "image/svg+xml" },
+      { url: "/op-icon-192.svg", sizes: "192x192", type: "image/svg+xml" },
     ],
     apple: [
-      { url: "/icon-192.svg", sizes: "192x192", type: "image/svg+xml" },
+      { url: "/op-icon-192.svg", sizes: "192x192", type: "image/svg+xml" },
     ],
   },
 };
@@ -38,7 +41,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <link rel="apple-touch-icon" href="/icon-192.svg" />
+        <link rel="apple-touch-icon" href="/op-icon-192.svg" />
       </head>
       <body className="min-h-screen bg-background text-foreground antialiased">
         {children}
