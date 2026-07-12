@@ -36,8 +36,14 @@ export default function LoginPage() {
         setLoading(false);
         return;
       }
+      
       setLoading(false);
+      // Use window.location.href for reliable navigation
       router.push("/dashboard");
+      // Fallback in case router.push fails
+      setTimeout(() => {
+        window.location.href = "/dashboard";
+      }, 300);
     }, 800);
   };
 

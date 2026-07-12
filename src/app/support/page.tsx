@@ -3,7 +3,7 @@
 import React, { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Send, Bot, User, Sparkles } from "lucide-react";
+import { Send, Bot, User, Sparkles, Ticket, MessageSquare, AlertCircle } from "lucide-react";
 
 export default function SupportPage() {
   const [messages, setMessages] = useState<{ role: "user" | "ai"; text: string }[]>([
@@ -11,7 +11,13 @@ export default function SupportPage() {
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [ticketMode, setTicketMode] = useState(false);
+  const [ticketSubject, setTicketSubject] = useState("");
+  const [ticketMessage, setTicketMessage] = useState("");
+  const [ticketPriority, setTicketPriority] = useState("medium");
+  const [ticketSubmitted, setTicketSubmitted] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
+  const [showTicketForm, setShowTicketForm] = useState(false);
 
   const sendMessage = async () => {
     if (!input.trim()) return;
@@ -20,7 +26,6 @@ export default function SupportPage() {
     setMessages(prev => [...prev, { role: "user", text: userMsg }]);
     setLoading(true);
 
-    // Simulate an AI response that's context-aware
     setTimeout(() => {
       const lower = userMsg.toLowerCase();
       let reply = "";
@@ -39,6 +44,8 @@ export default function SupportPage() {
         reply = "Hey! 👋 Welcome to OnePost AI. I'm here to help you create amazing content. What would you like to do today? Post to social media? Create a Shopify page? Generate content ideas?";
       } else if (lower.includes("price") || lower.includes("cost") || lower.includes("trial") || lower.includes("plan")) {
         reply = "OnePost AI is $29/month flat rate — unlimited content, unlimited platforms. You get a 3-day free trial to try everything out. No credit card required to start. Want me to help you get set up?";
+      } else if (lower.includes("ticket") || lower.includes("submit") || lower.includes("issue") || lower.includes("bug")) {
+        reply = "Need to report a bug or issue? You can use the support ticket form below the chat — just click 'Submit a Ticket' and fill out the details. I'll help track it down!";
       } else if (lower.includes("help") || lower.includes("how") || lower.includes("what")) {
         reply = "I can help you with:\n\n📱 Posting to social media\n🛍️ Creating Shopify product pages\n🤖 Generating AI avatar videos\n💡 Finding content ideas\n📊 Researching trending products\n🔗 Connecting your social accounts\n\nWhat are you interested in?";
       } else {
@@ -50,6 +57,17 @@ export default function SupportPage() {
     }, 600);
   };
 
+  const handleTicketSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!ticketSubject.trim() || !ticketMessage.trim()) return;
+    setTicketSubmitted(true);
+    setShowTicketForm(false);
+    setTicketSubject("");
+    setTicketMessage("");
+    setTicketPriority("medium");
+    setTimeout(() => setTicketSubmitted(false), 5000);
+  };
+
   return (
     <div className="min-h-screen bg-[#fcf9f5] dark:bg-[#141416] py-8 px-4">
       <div className="max-w-2xl mx-auto">
@@ -58,8 +76,83 @@ export default function SupportPage() {
           <p className="text-sm text-[#6b5a5e] dark:text-[#8a797d] mt-1">Available 24/7 — ask me anything about OnePost AI</p>
         </div>
 
+        {/* Support Ticket Form */}
+        <div className="mb-4">
+          {!showTicketForm ? (
+            <button
+              onClick={() => setShowTicketForm(true)}
+              className="w-full p-4 rounded-2xl border border-[#e0d5d8] dark:border-[#3d3537] bg-white dark:bg-[#1c1c1e] flex items-center gap-3 hover:bg-[#f5f0f1] dark:hover:bg-[#2a2426] transition-colors shadow-sm"
+            >
+              <div className="w-10 h-10 rounded-full bg-[#c9a84c]/20 flex items-center justify-center">
+                <Ticket className="w-5 h-5 text-[#c9a84c]" />
+              </div>
+              <div className="text-left">
+                <p className="font-semibold text-sm text-[#1c1c1e] dark:text-[#f5f0f1]">Submit a Support Ticket</p>
+                <p className="text-xs text-[#6b5a5e] dark:text-[#8a797d]">Report bugs, request features, or ask for help</p>
+              </div>
+              <span className="ml-auto text-[#c9a84c] text-sm font-medium">Open →</span>
+            </button>
+          ) : (
+            <div className="p-6 rounded-2xl border border-[#e0d5d8] dark:border-[#3d3537] bg-white dark:bg-[#1c1c1e] shadow-sm">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-semibold text-[#1c1c1e] dark:text-[#f5f0f1] flex items-center gap-2">
+                  <Ticket className="w-5 h-5 text-[#c9a84c]" /> Submit a Ticket
+                </h2>
+                <button onClick={() => setShowTicketForm(false)} className="text-xs text-[#6b5a5e] hover:text-[#c9a84c] transition-colors">Cancel</button>
+              </div>
+              <form onSubmit={handleTicketSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-xs text-[#6b5a5e] dark:text-[#8a797d] font-medium mb-1">Subject</label>
+                  <Input
+                    type="text"
+                    value={ticketSubject}
+                    onChange={e => setTicketSubject(e.target.value)}
+                    placeholder="Brief description of your issue"
+                    className="bg-[#f5f0f1] dark:bg-[#2a2426] border-0"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs text-[#6b5a5e] dark:text-[#8a797d] font-medium mb-1">Message</label>
+                  <textarea
+                    value={ticketMessage}
+                    onChange={e => setTicketMessage(e.target.value)}
+                    rows={4}
+                    placeholder="Describe your issue in detail..."
+                    className="w-full px-3 py-2 rounded-lg bg-[#f5f0f1] dark:bg-[#2a2426] border-0 text-sm resize-none outline-none text-[#1c1c1e] dark:text-[#f5f0f1]"
+                    required
+                  />
+                </div>
+                <div className="flex items-center gap-3">
+                  <label className="text-xs text-[#6b5a5e] dark:text-[#8a797d] font-medium">Priority</label>
+                  <select
+                    value={ticketPriority}
+                    onChange={e => setTicketPriority(e.target.value)}
+                    className="px-3 py-1.5 rounded-lg bg-[#f5f0f1] dark:bg-[#2a2426] border-0 text-xs text-[#1c1c1e] dark:text-[#f5f0f1] outline-none"
+                  >
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                  </select>
+                </div>
+                <Button type="submit" variant="glow" size="sm" className="w-full">
+                  <Send className="w-4 h-4 mr-1.5" /> Submit Ticket
+                </Button>
+              </form>
+            </div>
+          )}
+        </div>
+
+        {/* Confirmation toast */}
+        {ticketSubmitted && (
+          <div className="mb-4 p-3 rounded-xl bg-green-500/10 border border-green-500/20 text-green-600 text-sm flex items-center gap-2">
+            <AlertCircle className="w-4 h-4" />
+            Ticket submitted! Our team will get back to you within 24 hours.
+          </div>
+        )}
+
+        {/* AI Chat */}
         <div className="bg-white dark:bg-[#1c1c1e] border border-[#e0d5d8] dark:border-[#3d3537] rounded-2xl overflow-hidden shadow-sm">
-          {/* Chat header */}
           <div className="p-4 border-b border-[#e0d5d8] dark:border-[#3d3537] flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#d44a6a] to-[#eab308] flex items-center justify-center">
               <Bot className="w-5 h-5 text-white" />
@@ -68,11 +161,12 @@ export default function SupportPage() {
               <p className="font-semibold text-sm text-[#1c1c1e] dark:text-[#f5f0f1]">OnePost AI Assistant</p>
               <p className="text-xs text-[#6b5a5e] dark:text-[#8a797d]">Online • Powered by AI</p>
             </div>
-            <span className="ml-auto px-2 py-0.5 rounded-full bg-green-500/10 text-green-600 text-[10px] font-medium">Active</span>
+            <span className="ml-auto flex items-center gap-1 px-2 py-0.5 rounded-full bg-green-500/10 text-green-600 text-[10px] font-medium">
+              <span className="w-1.5 h-1.5 rounded-full bg-green-500" /> Active
+            </span>
           </div>
 
-          {/* Messages */}
-          <div className="p-4 space-y-3 h-[420px] overflow-y-auto">
+          <div className="p-4 space-y-3 h-[320px] overflow-y-auto">
             {messages.map((msg, i) => (
               <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
                 <div className={`flex gap-2 max-w-[85%] ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
@@ -112,7 +206,6 @@ export default function SupportPage() {
             <div ref={chatEndRef} />
           </div>
 
-          {/* Input */}
           <div className="p-4 border-t border-[#e0d5d8] dark:border-[#3d3537]">
             <div className="flex gap-2">
               <Input

@@ -1,102 +1,326 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { BRAND, THEME } from "@/lib/shared/brand-config";
+import React, { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Plus, Edit2, Trash2, Briefcase, Globe, Calendar, Save, X } from "lucide-react";
 
 interface Brand {
-  id: string; name: string; description: string; brandVoice: string;
-  platforms: string[]; scheduleConfig: { postsPerDay: number; postEvery: number; timezone: string };
-  createdAt: string;
+  id: string;
+  name: string;
+  description?: string;
+  brandVoice?: string;
+  niche?: string;
+  platforms?: string[];
+  platform_accounts?: string;
+  scheduleConfig?: { postsPerDay?: number; postEvery?: number; timezone?: string };
+  created_at?: string;
 }
 
-const PLATFORMS = ["tiktok", "instagram", "youtube", "facebook", "linkedin", "snapchat", "pinterest"];
+const ALL_PLATFORMS = ["tiktok", "instagram", "youtube", "facebook", "linkedin", "snapchat", "pinterest"];
+const PLATFORM_LABEL: Record<string, string> = {
+  tiktok: "TikTok",
+  instagram: "Instagram",
+  youtube: "YouTube",
+  facebook: "Facebook",
+  linkedin: "LinkedIn",
+  snapchat: "Snapchat",
+  pinterest: "Pinterest",
+};
 
 export default function BrandsPage() {
   const [brands, setBrands] = useState<Brand[]>([]);
   const [loading, setLoading] = useState(true);
-  const [editing, setEditing] = useState<Brand | null>(null);
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ name: "", description: "", brandVoice: "professional", platforms: ["tiktok", "instagram"] as string[], postsPerDay: 3, postEvery: 2, timezone: "EST" });
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [form, setForm] = useState({
+    name: "",
+    description: "",
+    brandVoice: "professional",
+    platforms: ["tiktok", "instagram"],
+    postsPerDay: 3,
+    postEvery: 2,
+    timezone: "EST",
+  });
+  const [error, setError] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
 
-  useEffect(() => { fetchBrands(); }, []);
+  useEffect(() => {
+    loadBrands();
+  }, []);
 
-  async function fetchBrands() {
+  async function loadBrands() {
+    setLoading(true);
+    setError(null);
     try {
-      const res = await fetch("/api/brands");
+      const res = await fetch("/api/brands", { cache: "no-store" });
       const data = await res.json();
-      if (data.brands) setBrands(data.brands);
-    } catch (e) { console.error(e); }
-    setLoading(false);
+      setBrands(data.brands || []);
+    } catch (e: any) {
+      setError(`Failed to load brands: ${e.message}`);
+    } finally {
+      setLoading(false);
+    }
   }
 
-  async function saveBrand() {
-    if (!form.name) return;
-    const method = editing ? "PUT" : "POST";
-    const body = editing ? { ...form, id: editing.id } : form;
-    const res = await fetch("/api/brands", { method, headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
-    if (res.ok) { setShowForm(false); setEditing(null); resetForm(); fetchBrands(); }
+  function resetForm() {
+    setForm({ name: "", description: "", brandVoice: "professional", platforms: ["tiktok", "instagram"], postsPerDay: 3, postEvery: 2, timezone: "EST" });
+    setEditingId(null);
+    setShowForm(false);
   }
 
-  async function deleteBrand(id: string) {
-    if (!confirm("Delete this brand?")) return;
-    await fetch(`/api/brands?id=${id}`, { method: "DELETE" });
-    fetchBrands();
-  }
-
-  function editBrand(brand: Brand) {
-    setEditing(brand);
-    setForm({ name: brand.name, description: brand.description, brandVoice: brand.brandVoice, platforms: brand.platforms, postsPerDay: brand.scheduleConfig.postsPerDay, postEvery: brand.scheduleConfig.postEvery, timezone: brand.scheduleConfig.timezone });
+  function startEdit(brand: Brand) {
+    const platforms = (() => {
+      try {
+        if (Array.isArray(brand.platforms)) return brand.platforms as string[];
+        if (typeof brand.platform_accounts === "string") {
+          const parsed = JSON.parse(brand.platform_accounts);
+          if (Array.isArray(parsed)) return parsed as string[];
+        }
+      } catch {}
+      return ["tiktok", "instagram"];
+    })();
+    setForm({
+      name: brand.name || "",
+      description: brand.description || "",
+      brandVoice: brand.brandVoice || brand.niche || "professional",
+      platforms,
+      postsPerDay: brand.scheduleConfig?.postsPerDay || 3,
+      postEvery: brand.scheduleConfig?.postEvery || 2,
+      timezone: brand.scheduleConfig?.timezone || "EST",
+    });
+    setEditingId(brand.id);
     setShowForm(true);
   }
 
-  function resetForm() { setForm({ name: "", description: "", brandVoice: "professional", platforms: ["tiktok", "instagram"], postsPerDay: 3, postEvery: 2, timezone: "EST" }); }
-  function togglePlatform(p: string) { setForm(f => ({ ...f, platforms: f.platforms.includes(p) ? f.platforms.filter(x => x !== p) : [...f.platforms, p] })); }
+  function togglePlatform(p: string) {
+    setForm((f) => ({
+      ...f,
+      platforms: f.platforms.includes(p) ? f.platforms.filter((x) => x !== p) : [...f.platforms, p],
+    }));
+  }
+
+  async function handleSave() {
+    if (!form.name.trim()) {
+      setError("Brand name is required");
+      return;
+    }
+    setSaving(true);
+    setError(null);
+    try {
+      const payload = {
+        id: editingId || undefined,
+        name: form.name.trim(),
+        description: form.description.trim(),
+        brandVoice: form.brandVoice,
+        platforms: form.platforms,
+        scheduleConfig: { postsPerDay: form.postsPerDay, postEvery: form.postEvery, timezone: form.timezone },
+      };
+      const method = editingId ? "PUT" : "POST";
+      const res = await fetch("/api/brands", {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || `HTTP ${res.status}`);
+      }
+      await loadBrands();
+      resetForm();
+    } catch (e: any) {
+      setError(e.message || "Save failed");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function handleDelete(id: string, name: string) {
+    if (!confirm(`Delete brand "${name}"? This cannot be undone.`)) return;
+    try {
+      const res = await fetch(`/api/brands?id=${encodeURIComponent(id)}`, { method: "DELETE" });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || `HTTP ${res.status}`);
+      }
+      await loadBrands();
+    } catch (e: any) {
+      setError(e.message || "Delete failed");
+    }
+  }
 
   return (
-    <div className="min-h-screen p-8" style={{ background: THEME.colors.cream, color: THEME.colors.charcoal }}>
-      <div className="max-w-5xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
+    <div className="min-h-screen bg-[#12121a] text-[#e8e0d4] p-6">
+      <div className="max-w-6xl mx-auto">
+        <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-3xl font-bold" style={{ fontFamily: THEME.fonts.heading }}>Brands</h1>
-            <p className="text-sm opacity-70 mt-1">Manage your brand profiles and content strategies</p>
+            <h1 className="text-3xl font-bold text-[#c9a96e] flex items-center gap-2" style={{ fontFamily: "Playfair Display, serif" }}>
+              <Briefcase className="w-7 h-7" /> Brands
+            </h1>
+            <p className="text-sm text-[#e8e0d4]/70 mt-1">Manage multiple brands, each with their own voice, platforms, and schedule</p>
           </div>
-          <button onClick={() => { setEditing(null); resetForm(); setShowForm(true); }} className="px-5 py-2.5 rounded-xl font-semibold text-sm transition-all hover:opacity-90" style={{ background: THEME.colors.gold, color: "#fff" }}>+ New Brand</button>
+          <Button onClick={() => { resetForm(); setShowForm(true); }} className="bg-[#c9a96e] text-[#12121a] hover:bg-[#c9a96e]/90">
+            <Plus className="w-4 h-4 mr-2" /> New Brand
+          </Button>
         </div>
 
+        {error && (
+          <div className="mb-4 p-3 rounded border border-red-500/30 bg-red-500/10 text-red-200 text-sm">
+            {error}
+          </div>
+        )}
+
         {showForm && (
-          <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50" onClick={() => setShowForm(false)}>
-            <div className="rounded-2xl p-8 w-full max-w-lg mx-4" style={{ background: "#fff", color: THEME.colors.charcoal }} onClick={e => e.stopPropagation()}>
-              <h2 className="text-xl font-bold mb-6">{editing ? "Edit Brand" : "Create Brand"}</h2>
-              <div className="space-y-4">
-                <div><label className="block text-xs font-semibold mb-1 uppercase tracking-wider opacity-60">Name</label><input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} className="w-full px-4 py-2.5 rounded-xl border" style={{ borderColor: "#e0d8cc" }} placeholder="e.g. Mellow Sleep" /></div>
-                <div><label className="block text-xs font-semibold mb-1 uppercase tracking-wider opacity-60">Description</label><textarea value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} className="w-full px-4 py-2.5 rounded-xl border" style={{ borderColor: "#e0d8cc" }} rows={2} placeholder="Luxury sleepwear brand..." /></div>
-                <div><label className="block text-xs font-semibold mb-1 uppercase tracking-wider opacity-60">Brand Voice</label><select value={form.brandVoice} onChange={e => setForm(f => ({ ...f, brandVoice: e.target.value }))} className="w-full px-4 py-2.5 rounded-xl border" style={{ borderColor: "#e0d8cc" }}><option value="professional">Professional</option><option value="luxury">Luxury</option><option value="casual">Casual</option><option value="humorous">Humorous</option><option value="inspirational">Inspirational</option></select></div>
-                <div><label className="block text-xs font-semibold mb-1 uppercase tracking-wider opacity-60">Platforms</label><div className="flex flex-wrap gap-2">{[...PLATFORMS].map(p => (<button key={p} onClick={() => togglePlatform(p)} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${form.platforms.includes(p) ? "text-white" : "opacity-50"}`} style={{ background: form.platforms.includes(p) ? THEME.colors.gold : "#eee" }}>{p}</button>))}</div></div>
-                <div className="grid grid-cols-3 gap-3"><div><label className="block text-xs font-semibold mb-1 uppercase tracking-wider opacity-60">Posts/Day</label><input type="number" value={form.postsPerDay} onChange={e => setForm(f => ({ ...f, postsPerDay: parseInt(e.target.value) || 3 }))} className="w-full px-3 py-2 rounded-xl border" style={{ borderColor: "#e0d8cc" }} /></div><div><label className="block text-xs font-semibold mb-1 uppercase tracking-wider opacity-60">Every N Days</label><input type="number" value={form.postEvery} onChange={e => setForm(f => ({ ...f, postEvery: parseInt(e.target.value) || 2 }))} className="w-full px-3 py-2 rounded-xl border" style={{ borderColor: "#e0d8cc" }} /></div><div><label className="block text-xs font-semibold mb-1 uppercase tracking-wider opacity-60">Timezone</label><select value={form.timezone} onChange={e => setForm(f => ({ ...f, timezone: e.target.value }))} className="w-full px-3 py-2 rounded-xl border" style={{ borderColor: "#e0d8cc" }}><option>EST</option><option>PST</option><option>CST</option><option>GMT</option><option>UTC</option></select></div></div>
+          <div className="mb-6 p-5 rounded-lg border border-[#c9a96e]/30 bg-[#1a1a26]">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-semibold text-[#c9a96e]">{editingId ? "Edit Brand" : "New Brand"}</h2>
+              <button onClick={resetForm} className="text-[#e8e0d4]/60 hover:text-[#e8e0d4]"><X className="w-5 h-5" /></button>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs uppercase tracking-wider text-[#e8e0d4]/60 mb-1">Name *</label>
+                <input
+                  type="text"
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  className="w-full bg-[#12121a] border border-[#c9a96e]/20 rounded px-3 py-2 text-[#e8e0d4] focus:border-[#c9a96e] outline-none"
+                  placeholder="e.g. Mellow Sleep"
+                />
               </div>
-              <div className="flex gap-3 mt-6"><button onClick={saveBrand} className="flex-1 py-3 rounded-xl font-semibold text-sm text-white transition-all hover:opacity-90" style={{ background: THEME.colors.gold }}>{editing ? "Update" : "Create"} Brand</button><button onClick={() => { setShowForm(false); setEditing(null); resetForm(); }} className="px-6 py-3 rounded-xl font-semibold text-sm" style={{ background: "#f0ece6" }}>Cancel</button></div>
+              <div>
+                <label className="block text-xs uppercase tracking-wider text-[#e8e0d4]/60 mb-1">Brand Voice</label>
+                <select
+                  value={form.brandVoice}
+                  onChange={(e) => setForm({ ...form, brandVoice: e.target.value })}
+                  className="w-full bg-[#12121a] border border-[#c9a96e]/20 rounded px-3 py-2 text-[#e8e0d4] focus:border-[#c9a96e] outline-none"
+                >
+                  <option value="professional">Professional</option>
+                  <option value="playful">Playful</option>
+                  <option value="luxury">Luxury</option>
+                  <option value="casual">Casual</option>
+                  <option value="authoritative">Authoritative</option>
+                  <option value="friendly">Friendly</option>
+                </select>
+              </div>
+              <div className="md:col-span-2">
+                <label className="block text-xs uppercase tracking-wider text-[#e8e0d4]/60 mb-1">Description</label>
+                <textarea
+                  value={form.description}
+                  onChange={(e) => setForm({ ...form, description: e.target.value })}
+                  className="w-full bg-[#12121a] border border-[#c9a96e]/20 rounded px-3 py-2 text-[#e8e0d4] focus:border-[#c9a96e] outline-none"
+                  rows={2}
+                  placeholder="What this brand is about, target audience, unique value..."
+                />
+              </div>
+              <div className="md:col-span-2">
+                <label className="block text-xs uppercase tracking-wider text-[#e8e0d4]/60 mb-2">Platforms</label>
+                <div className="flex flex-wrap gap-2">
+                  {ALL_PLATFORMS.map((p) => (
+                    <button
+                      key={p}
+                      type="button"
+                      onClick={() => togglePlatform(p)}
+                      className={`px-3 py-1 rounded-full text-xs font-medium border transition ${
+                        form.platforms.includes(p)
+                          ? "bg-[#c9a96e] text-[#12121a] border-[#c9a96e]"
+                          : "bg-transparent text-[#e8e0d4]/70 border-[#c9a96e]/30 hover:border-[#c9a96e]/60"
+                      }`}
+                    >
+                      {PLATFORM_LABEL[p]}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <label className="block text-xs uppercase tracking-wider text-[#e8e0d4]/60 mb-1">Posts per day</label>
+                <input
+                  type="number"
+                  min={1}
+                  max={10}
+                  value={form.postsPerDay}
+                  onChange={(e) => setForm({ ...form, postsPerDay: Number(e.target.value) })}
+                  className="w-full bg-[#12121a] border border-[#c9a96e]/20 rounded px-3 py-2 text-[#e8e0d4] focus:border-[#c9a96e] outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-xs uppercase tracking-wider text-[#e8e0d4]/60 mb-1">Post every (days)</label>
+                <input
+                  type="number"
+                  min={1}
+                  max={14}
+                  value={form.postEvery}
+                  onChange={(e) => setForm({ ...form, postEvery: Number(e.target.value) })}
+                  className="w-full bg-[#12121a] border border-[#c9a96e]/20 rounded px-3 py-2 text-[#e8e0d4] focus:border-[#c9a96e] outline-none"
+                />
+              </div>
+            </div>
+            <div className="flex justify-end gap-2 mt-4">
+              <Button variant="outline" onClick={resetForm} className="border-[#c9a96e]/30 text-[#e8e0d4]">Cancel</Button>
+              <Button onClick={handleSave} disabled={saving} className="bg-[#c9a96e] text-[#12121a] hover:bg-[#c9a96e]/90">
+                <Save className="w-4 h-4 mr-2" /> {saving ? "Saving..." : editingId ? "Update" : "Create"}
+              </Button>
             </div>
           </div>
         )}
 
-        {loading ? <p className="text-center py-12 opacity-50">Loading brands...</p> : brands.length === 0 ? (
-          <div className="text-center py-16 rounded-2xl" style={{ background: "#fff" }}>
-            <p className="text-4xl mb-4">🏷️</p>
-            <p className="text-lg font-semibold mb-2">No brands yet</p>
-            <p className="text-sm opacity-60 mb-6">Create your first brand to start generating content</p>
-            <button onClick={() => { resetForm(); setShowForm(true); }} className="px-6 py-3 rounded-xl font-semibold text-sm text-white" style={{ background: THEME.colors.gold }}>+ Create Brand</button>
+        {loading ? (
+          <div className="text-center py-12 text-[#e8e0d4]/60">Loading brands…</div>
+        ) : brands.length === 0 ? (
+          <div className="text-center py-16 border border-dashed border-[#c9a96e]/30 rounded-lg">
+            <Briefcase className="w-10 h-10 mx-auto text-[#c9a96e]/60 mb-3" />
+            <p className="text-[#e8e0d4]/70 mb-1">No brands yet</p>
+            <p className="text-sm text-[#e8e0d4]/50">Create your first brand to start managing its content, schedule, and platforms.</p>
           </div>
         ) : (
-          <div className="grid gap-4 md:grid-cols-2">{brands.map(brand => (
-            <div key={brand.id} className="rounded-2xl p-6 transition-all hover:shadow-md" style={{ background: "#fff" }}>
-              <div className="flex justify-between items-start mb-3">
-                <div><h3 className="text-lg font-bold" style={{ fontFamily: THEME.fonts.heading }}>{brand.name}</h3><p className="text-xs opacity-50 mt-0.5">{brand.description?.substring(0, 60) || "No description"}</p></div>
-                <div className="flex gap-1"><button onClick={() => editBrand(brand)} className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all hover:opacity-70" style={{ background: "#f0ece6" }}>Edit</button><button onClick={() => deleteBrand(brand.id)} className="px-3 py-1.5 rounded-lg text-xs font-medium text-red-500 transition-all hover:bg-red-50">Delete</button></div>
-              </div>
-              <div className="flex flex-wrap gap-1.5 mb-3">{brand.platforms.map(p => (<span key={p} className="px-2.5 py-1 rounded-lg text-xs font-medium capitalize" style={{ background: "#f5f0ea", color: THEME.colors.charcoal }}>{p}</span>))}</div>
-              <div className="flex gap-4 text-xs opacity-60"><span>🗣️ {brand.brandVoice}</span><span>📅 {brand.scheduleConfig.postsPerDay}/day</span><span>🕐 Every {brand.scheduleConfig.postEvery} days</span><span>🌍 {brand.scheduleConfig.timezone}</span></div>
-            </div>
-          ))}</div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {brands.map((brand) => {
+              const platforms = (() => {
+                try {
+                  if (Array.isArray(brand.platforms)) return brand.platforms as string[];
+                  if (typeof brand.platform_accounts === "string") {
+                    const parsed = JSON.parse(brand.platform_accounts);
+                    if (Array.isArray(parsed)) return parsed as string[];
+                  }
+                } catch {}
+                return [];
+              })();
+              return (
+                <div key={brand.id} className="p-5 rounded-lg border border-[#c9a96e]/20 bg-[#1a1a26] hover:border-[#c9a96e]/40 transition">
+                  <div className="flex items-start justify-between mb-3">
+                    <div>
+                      <h3 className="text-lg font-semibold text-[#c9a96e]">{brand.name}</h3>
+                      <p className="text-xs text-[#e8e0d4]/60 mt-0.5">Voice: {brand.brandVoice || brand.niche || "professional"}</p>
+                    </div>
+                    <div className="flex gap-1">
+                      <button onClick={() => startEdit(brand)} className="p-1.5 rounded hover:bg-[#c9a96e]/10 text-[#c9a96e]" title="Edit">
+                        <Edit2 className="w-4 h-4" />
+                      </button>
+                      <button onClick={() => handleDelete(brand.id, brand.name)} className="p-1.5 rounded hover:bg-red-500/10 text-red-400" title="Delete">
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                  {brand.description && <p className="text-sm text-[#e8e0d4]/80 mb-3">{brand.description}</p>}
+                  <div className="flex items-center gap-2 text-xs text-[#e8e0d4]/60 mb-2">
+                    <Globe className="w-3.5 h-3.5" />
+                    <span>{platforms.length} {platforms.length === 1 ? "platform" : "platforms"}</span>
+                  </div>
+                  {platforms.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 mb-3">
+                      {platforms.map((p) => (
+                        <span key={p} className="px-2 py-0.5 rounded-full bg-[#c9a96e]/10 text-[#c9a96e] text-xs">
+                          {PLATFORM_LABEL[p] || p}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                  <div className="flex items-center gap-1.5 text-xs text-[#e8e0d4]/50">
+                    <Calendar className="w-3.5 h-3.5" />
+                    <span>Created {brand.created_at ? new Date(brand.created_at).toLocaleDateString() : "—"}</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         )}
       </div>
     </div>
