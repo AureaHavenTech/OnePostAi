@@ -8,7 +8,7 @@ import {
   User, Upload, Camera, Copy, Check, Share2,
   TrendingUp, Users, DollarSign, BarChart3,
   Gift, Link as LinkIcon, ExternalLink, Crown,
-  Sparkles, Heart, Settings, LogOut
+  Sparkles, Heart, Settings, LogOut, Coins, Clock
 } from "lucide-react";
 import Link from "next/link";
 
@@ -106,6 +106,50 @@ export default function OwnerDashboard() {
               <div className="flex items-center justify-between">
                 <span className="text-xs text-gray-500">Content Published</span>
                 <span className="text-sm font-semibold text-dark">0</span>
+              </div>
+            </div>
+
+            {/* Credit Stats */}
+            <div className="card-luxury p-4 space-y-3">
+              <p className="text-[10px] uppercase tracking-wider text-gray-400 font-medium flex items-center gap-1">
+                <Coins className="w-3 h-3 text-gold" /> Credits
+              </p>
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-gray-500">Available</span>
+                <span className="text-sm font-semibold text-gold">50</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-gray-500">Used This Month</span>
+                <span className="text-sm font-semibold text-dark">12</span>
+              </div>
+              <div className="w-full bg-gold/10 rounded-full h-1.5">
+                <div className="bg-gold h-1.5 rounded-full" style={{ width: '20%' }} />
+              </div>
+            </div>
+
+            {/* Credit History */}
+            <div className="card-luxury p-4">
+              <p className="text-[10px] uppercase tracking-wider text-gray-400 font-medium mb-3 flex items-center gap-1">
+                <Clock className="w-3 h-3 text-gold" /> Credit History
+              </p>
+              <div className="space-y-2">
+                {[
+                  { action: "Content Generation", credits: "-1", time: "2 hours ago", type: "debit" },
+                  { action: "Video Export", credits: "-2", time: "5 hours ago", type: "debit" },
+                  { action: "Credits Purchased (Starter Pack)", credits: "+10", time: "1 day ago", type: "credit" },
+                  { action: "AI Avatar Generation", credits: "-3", time: "2 days ago", type: "debit" },
+                  { action: "Trial Credits", credits: "+5", time: "7 days ago", type: "credit" },
+                ].map((item, i) => (
+                  <div key={i} className="flex items-center justify-between p-2 rounded-lg bg-warm-white">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[11px] font-medium text-dark truncate">{item.action}</p>
+                      <p className="text-[9px] text-gray-400">{item.time}</p>
+                    </div>
+                    <span className={`text-xs font-semibold ${item.type === 'credit' ? 'text-green-500' : 'text-red-400'}`}>
+                      {item.credits}
+                    </span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>

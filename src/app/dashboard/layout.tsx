@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
-import { LayoutDashboard, Wand2, Lightbulb, CalendarDays, Briefcase, Settings, LogOut, Menu, X, Sparkles, Gift } from "lucide-react";
+import { LayoutDashboard, Wand2, Lightbulb, CalendarDays, Briefcase, Settings, LogOut, Menu, X, Sparkles, Gift, Coins } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function DashboardLayout({
@@ -65,6 +65,13 @@ export default function DashboardLayout({
           })}
 
           <div className="pt-3 mt-3 border-t border-gold/10">
+            {/* Credit Display */}
+            <div className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs mb-2 bg-gold/5 border border-gold/10">
+              <Coins className="w-3.5 h-3.5 text-gold" />
+              <span className="text-gray-400">Credits</span>
+              <span className="ml-auto font-semibold text-gold">50</span>
+            </div>
+
             <Link href="/dashboard/owner" onClick={() => setSidebarOpen(false)}>
               <div className={cn(
                 "flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs transition-all",
