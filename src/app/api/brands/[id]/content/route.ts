@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
     try {
       const { execSync } = require("child_process");
       contentId = `cnt_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
-      execSync(`team-db "INSERT INTO content_items (id, brand, prompt, script, captions, hashtags, status) VALUES ('${contentId}', '${brandId.replace(/'/g, "''")}', '${body.prompt.replace(/'/g, "''")}', '${(r.script || "").replace(/'/g, "''")}', '${JSON.stringify(r.captions || {}).replace(/'/g, "''")}', '${JSON.stringify(r.hashtags || {}).replace(/'/g, "''")}', 'generated')"`, { encoding: "utf8" });
+      execSync(`team-db "INSERT INTO content_items (id, brand, prompt, script, captions, hashtags, status) VALUES ('${contentId}', '${brandId.replace(/'/g, "''")}', '${body.prompt.replace(/'/g, "''")}', '${(JSON.stringify(r.scripts || {}).replace(/'/g, "''"))}', '${JSON.stringify(r.captions || {}).replace(/'/g, "''")}', '${JSON.stringify(r.hashtags || {}).replace(/'/g, "''")}', 'generated')"`, { encoding: "utf8" });
     } catch (e) { contentId = `cnt_${Date.now()}`; }
     if (body.schedule) {
       const { generateSchedule } = await import("@/lib/services/backend");

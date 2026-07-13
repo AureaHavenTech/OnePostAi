@@ -1,15 +1,16 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
+import { withApi } from "@/lib/api-utils";
 import { generateSchedule } from "@/lib/services/backend";
 
-export async function POST(req: NextRequest) {
-  try {
-    const body = await req.json();
+export const POST = withApi(
+  {
+    method: "POST",
+    cache: "short", // 30s — schedule results are deterministic for the same params
+    rateLimit: { windowMs: 60_000, max: 60 },
+    validate: (b) => (!b?.brandName ? "brandName is required" : !b?.platforms ? "platforms is required" : true),
+  },
+  async (req, body) => {
     const { brandName, platforms, postsPerDay, startDate, durationDays } = body;
-
-    if (!brandName || !platforms) {
-      return NextResponse.json({ error: "brandName and platforms are required" }, { status: 400 });
-    }
-
     const schedule = generateSchedule({
       brandName,
       platforms,
@@ -17,9 +18,6 @@ export async function POST(req: NextRequest) {
       startDate: startDate ? new Date(startDate) : new Date(),
       durationDays: durationDays || 14,
     });
-
-    return NextResponse.json({ schedule, total: schedule.length });
-  } catch (error) {
-    return NextResponse.json({ error: "Scheduling failed" }, { status: 500 });
+    return { schedule, total: schedule.length };
   }
-}
+);

@@ -69,7 +69,7 @@ export default function CalendarPage() {
           <h1 className="text-2xl font-bold text-zinc-100">📅 Content Calendar</h1>
           <p className="text-zinc-500 mt-1 text-sm">Schedule and manage posts — 3x/day, 2-week view</p>
         </div>
-        <Button variant="glow" size="sm" onClick={() => document.getElementById("autoScheduleModal")?.showModal()}>
+        <Button variant="glow" size="sm" onClick={() => (document.getElementById("autoScheduleModal") as HTMLDialogElement)?.showModal()}>
           <Zap className="w-4 h-4 mr-1.5" /> Auto-Schedule
         </Button>
       </div>
@@ -166,7 +166,7 @@ export default function CalendarPage() {
             <div className="text-center py-8 text-zinc-500">
               <div className="text-3xl mb-2">📭</div>
               <p className="font-medium">No posts scheduled</p>
-              <Button variant="glow" size="sm" className="mt-3" onClick={() => document.getElementById("autoScheduleModal")?.showModal()}>
+              <Button variant="glow" size="sm" className="mt-3" onClick={() => (document.getElementById("autoScheduleModal") as HTMLDialogElement)?.showModal()}>
                 + Schedule a Post
               </Button>
             </div>
@@ -243,7 +243,7 @@ export default function CalendarPage() {
             </div>
           </div>
           <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-white/10">
-            <button onClick={() => document.getElementById("autoScheduleModal")?.close()} className="px-4 py-2 rounded-lg text-sm text-zinc-400 hover:bg-white/5 transition-colors">Cancel</button>
+            <button onClick={() => (document.getElementById("autoScheduleModal") as HTMLDialogElement)?.close()} className="px-4 py-2 rounded-lg text-sm text-zinc-400 hover:bg-white/5 transition-colors">Cancel</button>
             <Button variant="glow" size="sm" onClick={autoSchedule}>🚀 Schedule Now</Button>
           </div>
         </div>
@@ -253,7 +253,7 @@ export default function CalendarPage() {
 
   async function autoSchedule() {
     const contentId = (document.getElementById("autoContentId") as HTMLSelectElement)?.value;
-    const platforms = [...document.querySelectorAll("#autoScheduleModal input[type=checkbox]:checked")].map(i => (i as HTMLInputElement).value);
+    const platforms = Array.from(document.querySelectorAll("#autoScheduleModal input[type=checkbox]:checked")).map(i => (i as HTMLInputElement).value);
     const days = parseInt((document.getElementById("autoDays") as HTMLSelectElement)?.value || "14");
     if (!contentId || platforms.length === 0) return alert("Please select content and at least one platform");
     try {

@@ -1,18 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
+import { withApi } from "@/lib/api-utils";
 import { generateContent } from "@/lib/services/backend";
 
-export async function POST(req: NextRequest) {
-  try {
-    const body = await req.json();
-    const { brandName, prompt, platforms, tone } = body;
-
-    if (!brandName || !prompt) {
-      return NextResponse.json({ error: "brandName and prompt are required" }, { status: 400 });
+export const POST = withApi(
+  {
+    method: "POST",
+    cache: "no-store",
+    rateLimit: { windowMs: 60_000, max: 30 },
+    validate: (b) => (!b?.brandName ? "brandName is required" : !b?.prompt ? "prompt is required" : true),
+  },
+  async (req, body) => {
+    const { brandName, prompt, platforms, tone, captionStyle, isFreeTier, generationCount } = body;
+    const result = await generateContent({ brandName, prompt, platforms: platforms || [], tone, captionStyle, isFreeTier, generationCount });
+    if ((result as any).error) {
+      return NextResponse.json(result, { status: 402 });
     }
-
-    const result = await generateContent({ brandName, prompt, platforms: platforms || [], tone });
-    return NextResponse.json(result);
-  } catch (error) {
-    return NextResponse.json({ error: "Generation failed" }, { status: 500 });
+    return result;
   }
-}
+);

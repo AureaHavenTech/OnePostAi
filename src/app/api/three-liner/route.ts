@@ -1,16 +1,23 @@
-import { NextRequest, NextResponse } from "next/server";
+import { withApi } from "@/lib/api-utils";
 import { generateThreeLiner, THREE_LINER_TEMPLATES } from "@/lib/services/three-liner";
 
-export async function POST(req: NextRequest) {
-  try {
-    const body = await req.json();
-    const result = generateThreeLiner(body);
-    return NextResponse.json(result);
-  } catch (error) {
-    return NextResponse.json({ error: "Generation failed" }, { status: 500 });
+export const POST = withApi(
+  {
+    method: "POST",
+    cache: "no-store",
+    rateLimit: { windowMs: 60_000, max: 60 },
+  },
+  async (req, body) => {
+    return generateThreeLiner(body);
   }
-}
+);
 
-export async function GET() {
-  return NextResponse.json({ templates: Object.keys(THREE_LINER_TEMPLATES), details: THREE_LINER_TEMPLATES });
-}
+export const GET = withApi(
+  {
+    method: "GET",
+    cache: "long", // 1h — template catalog rarely changes
+  },
+  async () => {
+    return { templates: Object.keys(THREE_LINER_TEMPLATES), details: THREE_LINER_TEMPLATES };
+  }
+);

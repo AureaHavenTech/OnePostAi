@@ -1,24 +1,59 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
+import { withApi } from "@/lib/api-utils";
 
-export async function GET() {
+// Simple in-memory + team-db-backed cache for brands (rarely changes within a session).
+let brandsCache: { data: any[]; ts: number } | null = null;
+const CACHE_TTL_MS = 30_000;
+
+function teamDbQuery<T = any>(sql: string): T[] {
   try {
-    let brands: any[] = [];
-    try {
-      const { execSync } = require("child_process");
-      const out = execSync('team-db "SELECT * FROM brands ORDER BY created_at DESC"', { encoding: "utf8" });
-      brands = JSON.parse(out);
-    } catch (e) {}
-    return NextResponse.json({ brands, total: brands.length });
+    const { execSync } = require("child_process");
+    const out = execSync(`team-db "${sql.replace(/"/g, '\\"')}"`, { encoding: "utf8" });
+    const parsed = JSON.parse(out);
+    return Array.isArray(parsed) ? parsed : [];
   } catch (e) {
-    return NextResponse.json({ error: "Failed to fetch brands" }, { status: 500 });
+    return [];
   }
 }
 
-export async function POST(req: NextRequest) {
+function teamDbExec(sql: string): boolean {
   try {
-    const body = await req.json();
+    const { execSync } = require("child_process");
+    execSync(`team-db "${sql.replace(/"/g, '\\"')}"`, { encoding: "utf8" });
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+function esc(v: any): string { return String(v ?? "").replace(/'/g, "''"); }
+
+function invalidateBrandsCache() { brandsCache = null; }
+
+export const GET = withApi(
+  {
+    method: "GET",
+    cache: "short", // 30s; backed by in-memory cache too
+    rateLimit: { windowMs: 60_000, max: 120 },
+  },
+  async () => {
+    const now = Date.now();
+    if (!brandsCache || now - brandsCache.ts > CACHE_TTL_MS) {
+      brandsCache = { data: teamDbQuery("SELECT * FROM brands ORDER BY created_at DESC"), ts: now };
+    }
+    return { brands: brandsCache.data, total: brandsCache.data.length, cached: true };
+  }
+);
+
+export const POST = withApi(
+  {
+    method: "POST",
+    cache: "no-store",
+    rateLimit: { windowMs: 60_000, max: 30 },
+    validate: (b) => (!b?.name ? "Brand name is required" : true),
+  },
+  async (req, body) => {
     const { name, description, brandVoice, platforms, scheduleConfig } = body;
-    if (!name) return NextResponse.json({ error: "Brand name is required" }, { status: 400 });
     const brand = {
       id: `brand_${Date.now()}`,
       name,
@@ -28,41 +63,42 @@ export async function POST(req: NextRequest) {
       scheduleConfig: scheduleConfig || { postsPerDay: 3, postEvery: 2, timezone: "EST" },
       createdAt: new Date().toISOString(),
     };
-    try {
-      const { execSync } = require("child_process");
-      execSync(`team-db "INSERT INTO brands (id, user_id, name, description, niche, platform_accounts, created_at) VALUES ('${brand.id}', 'user', '${name.replace(/'/g, "''")}', '${(description || "").replace(/'/g, "''")}', '${(brandVoice || "").replace(/'/g, "''")}', '${JSON.stringify(platforms || []).replace(/'/g, "''")}', datetime('now'))"`, { encoding: "utf8" });
-    } catch (e) {}
-    return NextResponse.json({ success: true, brand }, { status: 201 });
-  } catch (e) {
-    return NextResponse.json({ error: "Failed to create brand" }, { status: 500 });
+    const persisted = teamDbExec(
+      `INSERT INTO brands (id, user_id, name, description, niche, platform_accounts, created_at) VALUES ('${esc(brand.id)}', 'user', '${esc(brand.name)}', '${esc(brand.description)}', '${esc(brand.brandVoice)}', '${esc(JSON.stringify(brand.platforms))}', datetime('now'))`
+    );
+    invalidateBrandsCache();
+    return NextResponse.json({ success: true, brand, persisted }, { status: 201 });
   }
-}
+);
 
-export async function PUT(req: NextRequest) {
-  try {
-    const body = await req.json();
-    const { id, name, description, brandVoice, platforms, scheduleConfig } = body;
-    if (!id) return NextResponse.json({ error: "Brand id is required" }, { status: 400 });
-    try {
-      const { execSync } = require("child_process");
-      execSync(`team-db "UPDATE brands SET name='${(name || "").replace(/'/g, "''")}', description='${(description || "").replace(/'/g, "''")}', niche='${(brandVoice || "").replace(/'/g, "''")}', platform_accounts='${JSON.stringify(platforms || []).replace(/'/g, "''")}' WHERE id='${id}'"`, { encoding: "utf8" });
-    } catch (e) {}
-    return NextResponse.json({ success: true, message: "Brand updated" });
-  } catch (e) {
-    return NextResponse.json({ error: "Failed to update brand" }, { status: 500 });
+export const PUT = withApi(
+  {
+    method: "PUT",
+    cache: "no-store",
+    rateLimit: { windowMs: 60_000, max: 30 },
+    validate: (b) => (!b?.id ? "Brand id is required" : true),
+  },
+  async (req, body) => {
+    const { id, name, description, brandVoice, platforms } = body;
+    const persisted = teamDbExec(
+      `UPDATE brands SET name='${esc(name || "")}', description='${esc(description || "")}', niche='${esc(brandVoice || "")}', platform_accounts='${esc(JSON.stringify(platforms || []))}' WHERE id='${esc(id)}'`
+    );
+    invalidateBrandsCache();
+    return { success: true, message: "Brand updated", persisted };
   }
-}
+);
 
-export async function DELETE(req: NextRequest) {
-  try {
-    const id = new URL(req.url).searchParams.get("id");
-    if (!id) return NextResponse.json({ error: "Brand id is required" }, { status: 400 });
-    try {
-      const { execSync } = require("child_process");
-      execSync(`team-db "DELETE FROM brands WHERE id='${id}'"`, { encoding: "utf8" });
-    } catch (e) {}
-    return NextResponse.json({ success: true, message: "Brand deleted" });
-  } catch (e) {
-    return NextResponse.json({ error: "Failed to delete brand" }, { status: 500 });
+export const DELETE = withApi(
+  {
+    method: "DELETE",
+    cache: "no-store",
+    rateLimit: { windowMs: 60_000, max: 30 },
+    validate: (b) => (!b?.id ? "Brand id is required" : true),
+  },
+  async (req, body) => {
+    const id = body?.id;
+    const persisted = teamDbExec(`DELETE FROM brands WHERE id='${esc(id)}'`);
+    invalidateBrandsCache();
+    return { success: true, message: "Brand deleted", persisted };
   }
-}
+);
