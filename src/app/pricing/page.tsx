@@ -18,7 +18,8 @@ const plans = [
       "Trending hashtags & captions",
       "7-day free trial",
     ],
-    cta: "Start 7-Day Free Trial",
+    cta: "Start Free Trial",
+    checkoutUrl: "https://buy.stripe.com/bJe3cv7zJ4qw0fb6LMcwg0a",
     popular: false,
   },
   {
@@ -33,7 +34,8 @@ const plans = [
       "Advanced scheduling (2 weeks)",
       "Priority support",
     ],
-    cta: "Start 7-Day Free Trial",
+    cta: "Start Free Trial",
+    checkoutUrl: "https://buy.stripe.com/cNi3cvcU34qwfa59XYcwg0b",
     popular: true,
   },
   {
@@ -48,7 +50,8 @@ const plans = [
       "API access",
       "Dedicated account manager",
     ],
-    cta: "Start 7-Day Free Trial",
+    cta: "Start Free Trial",
+    checkoutUrl: "https://buy.stripe.com/5kQ8wP8DN6yE9PLgmmcwg0c",
     popular: false,
   },
 ];
@@ -97,13 +100,13 @@ export default function PricingPage() {
                   </li>
                 ))}
               </ul>
-              <Link href="/login">
+              <a href={plan.checkoutUrl} target="_blank" rel="noopener noreferrer">
                 <Button variant={plan.popular ? "glow" : "outline"} size="lg" className={`w-full mt-6 ${plan.popular ? '' : 'border-[#c9a96e]/30 text-[#12121a] hover:bg-[#c9a96e]/10'}`}>
                   {plan.cta}
                   <ArrowRight className="ml-1.5 w-4 h-4" />
                 </Button>
-              </Link>
-              <p className="text-[10px] text-[#6b5a5e] mt-2 text-center">No credit card required • 30-day money-back</p>
+              </a>
+              <p className="text-[10px] text-[#6b5a5e] mt-2 text-center">Secure checkout via Stripe • 30-day money-back</p>
             </div>
           ))}
         </div>
