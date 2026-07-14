@@ -173,7 +173,7 @@ export const POST_TRIAL_OPTIONS: PostTrialOption[] = [
     description: "Unlock unlimited access. All features, no limits. From $19/mo.",
     icon: "💎",
     action: "View Plans",
-    href: "/pricing",
+    href: "https://buy.stripe.com/7sYdR9g6fbSY5zvc66cwg0e",
     highlight: true,
   },
   {
