@@ -1,25 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { withApi } from "@/lib/api-utils";
+import { getStripe, persistInvoiceRecord } from "@/lib/stripe-client";
 import Stripe from "stripe";
-
-let stripeClient: Stripe | null = null;
-function getStripe(): Stripe | null {
-  if (stripeClient) return stripeClient;
-  const key = process.env.STRIPE_SECRET_KEY;
-  if (!key) return null;
-  stripeClient = new Stripe(key, { apiVersion: "2024-06-20" as any });
-  return stripeClient;
-}
-
-function esc(v: any): string { return String(v ?? "").replace(/'/g, "''"); }
-
-function persistInvoiceRecord(invoice: { id: string; customer: string; email: string; plan: string; amount: number; currency: string; status: string; date: string }) {
-  try {
-    const { execSync } = require("child_process");
-    const sql = `INSERT OR REPLACE INTO invoices (id, customer, email, plan, amount, currency, status, date) VALUES ('${esc(invoice.id)}', '${esc(invoice.customer)}', '${esc(invoice.email)}', '${esc(invoice.plan)}', ${invoice.amount || 0}, '${esc(invoice.currency)}', '${esc(invoice.status)}', '${esc(invoice.date)}')`;
-    execSync(`team-db "${sql}"`, { encoding: "utf8", stdio: "ignore" });
-  } catch (e) { /* non-fatal */ }
-}
 
 // POST = Stripe webhook receiver
 export const POST = withApi(

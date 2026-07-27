@@ -40,9 +40,9 @@ export function TrialGuard({ limitType, children, fallback }: TrialGuardProps) {
           </div>
         )}
         <UpgradeModal
-          isOpen={showUpgradeModal}
+          open={showUpgradeModal}
           onClose={() => setShowUpgradeModal(false)}
-          reachedLimitKey={reachedLimitKey ?? limitType}
+          limitType={reachedLimitKey ?? limitType}
         />
       </>
     );
