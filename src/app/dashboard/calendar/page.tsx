@@ -166,7 +166,10 @@ export default function CalendarPage() {
             <div className="text-center py-8 text-zinc-500">
               <div className="text-3xl mb-2">📭</div>
               <p className="font-medium">No posts scheduled</p>
-              <Button variant="glow" size="sm" className="mt-3" onClick={() => (document.getElementById("autoScheduleModal") as HTMLDialogElement)?.showModal()}>
+              <Button variant="glow" size="sm" className="mt-3" onClick={() => {
+                    const el = document.getElementById("autoScheduleModal");
+                    if (el && 'showModal' in el) (el as HTMLDialogElement).showModal();
+                  }}>
                 + Schedule a Post
               </Button>
             </div>
@@ -243,7 +246,7 @@ export default function CalendarPage() {
             </div>
           </div>
           <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-white/10">
-            <button onClick={() => (document.getElementById("autoScheduleModal") as HTMLDialogElement)?.close()} className="px-4 py-2 rounded-lg text-sm text-zinc-400 hover:bg-white/5 transition-colors">Cancel</button>
+            <button onClick={() => { const el = document.getElementById("autoScheduleModal"); if (el && 'close' in el) (el as HTMLDialogElement).close(); }} className="px-4 py-2 rounded-lg text-sm text-zinc-400 hover:bg-white/5 transition-colors">Cancel</button>
             <Button variant="glow" size="sm" onClick={autoSchedule}>🚀 Schedule Now</Button>
           </div>
         </div>
@@ -263,10 +266,11 @@ export default function CalendarPage() {
         body: JSON.stringify({ contentId, platforms, days })
       }).then(r => r.json());
       alert(`${res.data?.length || 0} posts scheduled!`);
-      (document.getElementById("autoScheduleModal") as HTMLDialogElement)?.close();
+      const el = document.getElementById("autoScheduleModal");
+      if (el && 'close' in el) (el as HTMLDialogElement).close();
       loadData();
-    } catch (err) {
-      alert("Failed to schedule: " + (err as Error).message);
+    } catch (err: unknown) {
+      alert("Failed to schedule: " + (err instanceof Error ? err.message : String(err)));
     }
   }
 }
