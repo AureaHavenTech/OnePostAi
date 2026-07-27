@@ -60,17 +60,33 @@ export default function Home() {
               {navOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
-          {navOpen && (
-            <div className="md:hidden pb-4 border-t border-[#c9a96e]/10 pt-4 flex flex-col gap-3">
-              <Link href="/pricing" className="text-sm text-[#6b5a5e] py-1">Pricing</Link>
-              <Link href="/about" className="text-sm text-[#6b5a5e] py-1">About</Link>
-              <Link href="/faq" className="text-sm text-[#6b5a5e] py-1">FAQ</Link>
-              <Link href="/support" className="text-sm text-[#6b5a5e] py-1">AI Chat</Link>
-              <Link href="/login"><button className="w-full px-5 py-2.5 rounded-xl text-sm font-medium bg-[#1a1614] text-[#faf7f2]">Start Free Trial</button></Link>
-            </div>
-          )}
         </div>
       </header>
+
+      {/* MOBILE MENU OVERLAY */}
+      {navOpen && (
+        <>
+          {/* Dark backdrop */}
+          <div
+            className="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm md:hidden"
+            onClick={() => setNavOpen(false)}
+          />
+          {/* Slide-down menu panel */}
+          <div className="fixed top-16 left-0 right-0 z-50 bg-[#12121a] border-b border-[#c9a96e]/20 md:hidden shadow-2xl">
+            <div className="px-6 py-6 flex flex-col gap-4">
+              <Link href="/pricing" className="text-base text-[#e8e0d4] hover:text-[#c9a96e] py-1 transition-colors" onClick={() => setNavOpen(false)}>Pricing</Link>
+              <Link href="/about" className="text-base text-[#e8e0d4] hover:text-[#c9a96e] py-1 transition-colors" onClick={() => setNavOpen(false)}>About</Link>
+              <Link href="/faq" className="text-base text-[#e8e0d4] hover:text-[#c9a96e] py-1 transition-colors" onClick={() => setNavOpen(false)}>FAQ</Link>
+              <Link href="/support" className="text-base text-[#e8e0d4] hover:text-[#c9a96e] py-1 transition-colors" onClick={() => setNavOpen(false)}>AI Chat</Link>
+              <Link href="/login" onClick={() => setNavOpen(false)}>
+                <button className="w-full px-5 py-3 rounded-xl text-base font-semibold bg-[#c9a96e] text-[#12121a] hover:bg-[#d4b87a] transition-all">
+                  Start Free Trial
+                </button>
+              </Link>
+            </div>
+          </div>
+        </>
+      )}
 
       {/* HERO */}
       <section className="min-h-screen flex items-center justify-center pt-16 pb-12 px-4">
