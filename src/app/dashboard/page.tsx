@@ -15,6 +15,8 @@ import {
   Film, Clock, Hash, Brain, AlertCircle, RefreshCcw, Coins
 } from "lucide-react";
 import { CREDIT_COSTS } from "@/lib/services/monetization";
+import SsoBridge from "@/components/sso-bridge";
+import { SSO_APPS, type AppKey, getSisterApps } from "@/lib/sso";
 
 type Mode = "upload" | "generate" | "ideas" | "shopify" | "research" | "avatar";
 
@@ -311,6 +313,14 @@ export default function DashboardPage() {
           <span className="flex-1">Low credits: {credits} remaining. <a href="/pricing" className="underline hover:text-amber-300">Upgrade now</a> to get more.</span>
         </div>
       )}
+
+      {/* Cross-App SSO Indicator */}
+      <div className="flex items-center justify-end">
+        <SsoBridge
+          currentApp="onepostai"
+          sisterApps={getSisterApps("onepostai")}
+        />
+      </div>
 
       {/* Credit Cost Indicator */}
       <div className="flex items-center justify-end gap-2 text-[10px] text-zinc-500">

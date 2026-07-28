@@ -125,7 +125,7 @@ export function verifySSOToken(
     usedNonces.add(nonce);
     if (usedNonces.size > NONCE_MAX) {
       // Clear oldest entries
-      const entries = [...usedNonces];
+      const entries = Array.from(usedNonces);
       for (let i = 0; i < entries.length - NONCE_MAX + 100; i++) {
         usedNonces.delete(entries[i]);
       }

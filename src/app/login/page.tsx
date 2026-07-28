@@ -41,6 +41,10 @@ export default function LoginPage() {
         if (data.session_token) {
           localStorage.setItem("session_token", data.session_token);
         }
+        // Store SSO token for cross-app login
+        if (data.sso?.token) {
+          sessionStorage.setItem("sso_onepostai", JSON.stringify(data.sso));
+        }
         router.push("/dashboard/owner");
         return;
       }
@@ -69,6 +73,10 @@ export default function LoginPage() {
       // Store session token
       if (data.session_token) {
         localStorage.setItem("session_token", data.session_token);
+      }
+      // Store SSO token for cross-app login
+      if (data.sso?.token) {
+        sessionStorage.setItem("sso_onepostai", JSON.stringify(data.sso));
       }
 
       // Navigate to dashboard
