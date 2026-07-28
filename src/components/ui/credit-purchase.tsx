@@ -4,9 +4,9 @@ import { CREDIT_PACKS, addCredits, getCreditBalance, getCreditStats, type Credit
 import { Sparkles, ShieldCheck, Check, X, Zap, ArrowRight, Loader2, Coins, ExternalLink } from "lucide-react";
 
 const STRIPE_CREDIT_LINKS: Record<string, string> = {
-  starter: "https://buy.stripe.com/dRm28r5rB9KQ3rn2vwcwg0g", // $29/mo
-  creator: "https://buy.stripe.com/dRm6oH07h6yE3rnc66cwg0k", // $29
-  pro: "https://buy.stripe.com/dRm28r5rB9KQ3rn2vwcwg0g", // $199 lifetime
+  starter: "https://buy.stripe.com/28EdR91bl6yEfa5gmmcwg0u",
+  creator: "https://buy.stripe.com/14A28r07h0ag9PLeeecwg0v",
+  pro: "https://buy.stripe.com/cNibJ107h3ms9PL8TUcwg0w",
 };
 
 interface CreditPurchaseProps {
