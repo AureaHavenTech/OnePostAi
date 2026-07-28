@@ -23,28 +23,60 @@ export default function LoginPage() {
     setLoading(true);
     setError("");
 
-    setTimeout(() => {
-      // CEO access code check
-      if (showCEO && accessCode.toUpperCase() === "AUREA2026") {
-        setLoading(false);
+    try {
+      // CEO access code login
+      if (showCEO) {
+        const res = await fetch("/api/auth", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ adminCode: accessCode.toUpperCase() }),
+        });
+        const data = await res.json();
+        if (!data.success) {
+          setError(data.error || "Invalid access code");
+          setLoading(false);
+          return;
+        }
+        // Store session token for client-side awareness
+        if (data.session_token) {
+          localStorage.setItem("session_token", data.session_token);
+        }
         router.push("/dashboard/owner");
         return;
       }
-      
+
+      // Validate
       if (password.length < 6) {
         setError("Password must be at least 6 characters");
         setLoading(false);
         return;
       }
-      
-      setLoading(false);
-      // Use window.location.href for reliable navigation
+
+      // Email + password auth (signup or login — same endpoint)
+      const res = await fetch("/api/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, action: isSignUp ? "signup" : "login" }),
+      });
+      const data = await res.json();
+
+      if (!data.success) {
+        setError(data.error || "Authentication failed");
+        setLoading(false);
+        return;
+      }
+
+      // Store session token
+      if (data.session_token) {
+        localStorage.setItem("session_token", data.session_token);
+      }
+
+      // Navigate to dashboard
       router.push("/dashboard");
-      // Fallback in case router.push fails
-      setTimeout(() => {
-        window.location.href = "/dashboard";
-      }, 300);
-    }, 800);
+    } catch (err: any) {
+      setError("Network error. Please try again.");
+      setLoading(false);
+    }
   };
 
   return (
@@ -138,7 +170,7 @@ export default function LoginPage() {
                   {isSignUp ? (
                     <><span>Already have an account? </span><button type="button" onClick={() => setIsSignUp(false)} className="text-[#c9a84c] hover:text-[#c9a84c]/80 font-medium">Sign in</button></>
                   ) : (
-                    <><span>Don't have an account? </span><button type="button" onClick={() => setIsSignUp(true)} className="text-[#c9a84c] hover:text-[#c9a84c]/80 font-medium">Start 3-day trial</button></>
+                    <><span>Don&apos;t have an account? </span><button type="button" onClick={() => setIsSignUp(true)} className="text-[#c9a84c] hover:text-[#c9a84c]/80 font-medium">Start 3-day trial</button></>
                   )}
                 </>
               )}
@@ -163,7 +195,7 @@ export default function LoginPage() {
             </a>
           </div>
 
-          <p className="text-center text-[10px] text-[#6b5a5e] mt-4">Demo mode: any credentials work. No real data stored.</p>
+          <p className="text-center text-[10px] text-[#6b5a5e] mt-4">Secure authentication via Aura Haven Tech</p>
         </div>
       </div>
     </div>
