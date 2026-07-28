@@ -7,6 +7,7 @@ interface User {
   name: string;
   is_admin: number;
   password_hash?: string;
+  avatar_url?: string;
   created_at?: string;
 }
 
@@ -134,6 +135,12 @@ export function getDb() {
           } else if (sql.includes('UPDATE users SET is_admin')) {
             const user = store.users.find(u => u.id === params[0]);
             if (user) user.is_admin = 1;
+          } else if (sql.includes('UPDATE users SET name')) {
+            const user = store.users.find(u => u.id === params[1]);
+            if (user) user.name = params[0];
+          } else if (sql.includes('UPDATE users SET avatar_url')) {
+            const user = store.users.find(u => u.id === params[1]);
+            if (user) user.avatar_url = params[0];
           }
           return {};
         },
