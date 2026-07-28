@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
+import { LoadingScreen } from "@/components/ui/loading-screen";
 import { Plus, Edit2, Trash2, Briefcase, Globe, Calendar, Save, X } from "lucide-react";
 
 interface Brand {
@@ -263,13 +265,15 @@ export default function BrandsPage() {
         )}
 
         {loading ? (
-          <div className="text-center py-12 text-[#e8e0d4]/60">Loading brands…</div>
+          <LoadingScreen message="Loading brands" fullScreen={false} />
         ) : brands.length === 0 ? (
-          <div className="text-center py-16 border border-dashed border-[#c9a96e]/30 rounded-lg">
-            <Briefcase className="w-10 h-10 mx-auto text-[#c9a96e]/60 mb-3" />
-            <p className="text-[#e8e0d4]/70 mb-1">No brands yet</p>
-            <p className="text-sm text-[#e8e0d4]/50">Create your first brand to start managing its content, schedule, and platforms.</p>
-          </div>
+          <EmptyState
+            icon="/icon-unboxing.svg"
+            title="No brands yet"
+            description="Create your first brand to start managing content, schedule, and platforms — all from one place."
+            actionLabel="Create Your First Brand"
+            onAction={() => { resetForm(); setShowForm(true); }}
+          />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {brands.map((brand) => {

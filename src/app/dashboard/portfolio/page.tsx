@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Briefcase, ExternalLink, Star, TrendingUp, Plus, Film, Download } from "lucide-react";
 import Link from "next/link";
 
@@ -26,27 +27,24 @@ export default function PortfolioPage() {
       </div>
 
       {portfolioItems.length === 0 ? (
-        <div className="glass-card p-16 text-center">
-          <div className="w-16 h-16 mx-auto rounded-2xl bg-zinc-800 flex items-center justify-center mb-4">
-            <Briefcase className="w-8 h-8 text-zinc-600" />
-          </div>
-          <h3 className="text-lg font-medium text-zinc-300 mb-2">Your portfolio is empty</h3>
-          <p className="text-zinc-500 text-sm max-w-md mx-auto mb-6 leading-relaxed">
-            As you create content with OnePost AI, your best work automatically builds into a 
-            professional portfolio you can send to brands for retainer deals. 
-            <strong className="text-zinc-400"> Post 5 high-quality reviews to unlock the portfolio builder.</strong>
-          </p>
-
-          <div className="max-w-sm mx-auto space-y-3 text-left mb-8">
-            <h4 className="text-sm font-medium text-zinc-400 mb-3">How to get top-tier retainers:</h4>
+        <EmptyState
+          variant="large"
+          icon="/icon-storytelling.svg"
+          title="Your portfolio is empty"
+          description="As you create content with OnePost AI, your best work automatically builds into a professional portfolio you can send to brands for retainer deals. Post 5 high-quality reviews to unlock the portfolio builder."
+          actionLabel="Create Your First Review"
+          actionHref="/dashboard"
+        >
+          <div className="max-w-sm mx-auto space-y-3 text-left mt-2">
+            <h4 className="text-sm font-medium text-cream/70 mb-2">How to get top-tier retainers:</h4>
             {[
               "Create 5 product review videos using AI Generate",
               "Let OnePost auto-edit and polish each one",
               "Portfolio auto-builds with your best content",
               "Share portfolio link with brands for $3k–$30k/month retainers",
             ].map((step, i) => (
-              <div key={i} className="flex items-start gap-3 text-sm text-zinc-400">
-                <span className="w-6 h-6 rounded-full bg-indigo-500/10 text-indigo-400 text-xs flex items-center justify-center font-medium shrink-0">
+              <div key={i} className="flex items-start gap-3 text-sm text-cream/50">
+                <span className="w-6 h-6 rounded-full bg-gold/10 text-gold text-xs flex items-center justify-center font-medium shrink-0">
                   {i + 1}
                 </span>
                 <span>{step}</span>
@@ -54,31 +52,19 @@ export default function PortfolioPage() {
             ))}
           </div>
 
-          <div className="flex gap-3 justify-center">
-            <Link href="/dashboard">
-              <Button variant="glow" size="lg">
-                <Film className="w-4 h-4 mr-2" />
-                Create Your First Review
-              </Button>
-            </Link>
+          <div className="mt-6 grid grid-cols-3 gap-3 max-w-sm mx-auto">
+            {[
+              { value: "$3k", label: "Entry retainer", color: "text-gold-light" },
+              { value: "$10k", label: "Monthly", color: "text-gold" },
+              { value: "$30k", label: "Top-tier", color: "text-gold" },
+            ].map((item, i) => (
+              <div key={i} className="bg-dark border border-gold/10 rounded-xl p-3 text-center">
+                <p className={`text-lg font-heading font-bold ${item.color}`}>{item.value}</p>
+                <p className="text-[10px] text-cream/40 mt-0.5">{item.label}</p>
+              </div>
+            ))}
           </div>
-
-          {/* Target earnings showcase */}
-          <div className="mt-10 grid grid-cols-3 gap-4 max-w-lg mx-auto">
-            <div className="glass-card p-4 text-center">
-              <p className="text-2xl font-bold text-green-400">$3k</p>
-              <p className="text-xs text-zinc-500 mt-1">Entry retainer</p>
-            </div>
-            <div className="glass-card p-4 text-center border-indigo-500/20">
-              <p className="text-2xl font-bold text-indigo-400">$10k</p>
-              <p className="text-xs text-zinc-500 mt-1">Monthly retainer</p>
-            </div>
-            <div className="glass-card p-4 text-center">
-              <p className="text-2xl font-bold text-purple-400">$30k</p>
-              <p className="text-xs text-zinc-500 mt-1">Top-tier retainer</p>
-            </div>
-          </div>
-        </div>
+        </EmptyState>
       ) : (
         <div className="grid md:grid-cols-2 gap-4">
           {portfolioItems.map((item) => (

@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400" fill="none">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#c9a96e"/><stop offset="40%" stop-color="#d4b87a"/><stop offset="60%" stop-color="#e8d4a0"/><stop offset="100%" stop-color="#c9a96e"/>
+    </linearGradient>
+    <linearGradient id="g2" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#c9a96e"/><stop offset="100%" stop-color="#d4b87a"/>
+    </linearGradient>
+    <linearGradient id="fg" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#c9a96e" stop-opacity="0.8"/><stop offset="50%" stop-color="#e8d4a0" stop-opacity="1"/><stop offset="100%" stop-color="#c9a96e" stop-opacity="0.6"/>
+    </linearGradient>
+    <filter id="gl"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="sg"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="900" height="400" fill="#12121a"/>
+  <text x="450" y="55" text-anchor="middle" font-family="'Playfair Display', serif" font-size="22" fill="#e8e0d4" font-weight="700">The Only App You Need.</text>
+  <text x="450" y="78" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#746a5a" letter-spacing="1.5">ONE CONVERSATION → AI GENERATES EVERYTHING → ONE CLICK TO PUBLISH</text>
+  <g transform="translate(45, 185)" filter="url(#gl)">
+    <path d="M0 25 Q0 5 18 5 L165 5 Q183 5 183 25 L183 78 Q183 98 165 98 L65 98 L42 124 L42 98 L18 98 Q0 98 0 78 Z" stroke="url(#g)" stroke-width="2" fill="#12121a"/>
+    <circle cx="18" cy="26" r="5" fill="#c9a96e" opacity="0.6"/>
+    <line x1="30" y1="24" x2="130" y2="24" stroke="#d4b87a" stroke-width="1.2"/>
+    <line x1="30" y1="36" x2="110" y2="36" stroke="#c9a96e" stroke-width="1.2"/>
+    <line x1="30" y1="48" x2="140" y2="48" stroke="#d4b87a" stroke-width="1.2"/>
+    <rect x="30" y="60" width="48" height="16" rx="8" stroke="#c9a96e" stroke-width="0.8" fill="none" opacity="0.6"/>
+    <text x="54" y="71" text-anchor="middle" font-family="Inter" font-size="6" fill="#c9a96e">Unboxing</text>
+    <rect x="83" y="60" width="48" height="16" rx="8" stroke="#d4b87a" stroke-width="0.8" fill="none" opacity="0.6"/>
+    <text x="107" y="71" text-anchor="middle" font-family="Inter" font-size="6" fill="#d4b87a">Voiceover</text>
+    <rect x="136" y="60" width="40" height="16" rx="8" stroke="#746a5a" stroke-width="0.8" fill="none" opacity="0.4"/>
+    <text x="156" y="71" text-anchor="middle" font-family="Inter" font-size="5" fill="#746a5a">+5 more</text>
+  </g>
+  <text x="136" y="165" text-anchor="middle" font-family="'Playfair Display', serif" font-size="13" fill="#e8e0d4" font-weight="600">One Conversation</text>
+  <line x1="85" y1="173" x2="188" y2="173" stroke="#c9a96e" stroke-width="0.8" opacity="0.4"/>
+  <circle cx="136" cy="145" r="9" stroke="#c9a96e" stroke-width="1" fill="#12121a"/>
+  <text x="136" y="149" text-anchor="middle" font-family="Inter" font-size="9" fill="#e8d4a0" font-weight="700">1</text>
+  <path d="M235 235 Q275 235 295 215" stroke="url(#fg)" stroke-width="2.5" fill="none"/>
+  <path d="M290 207 L295 215 L287 219" stroke="url(#fg)" stroke-width="2.5" fill="none"/>
+  <circle cx="255" cy="230" r="2" fill="#e8d4a0" opacity="0.7"/>
+  <circle cx="275" cy="223" r="2" fill="#d4b87a" opacity="0.6"/>
+  <g transform="translate(420, 185)">
+    <circle cx="0" cy="0" r="50" fill="none" stroke="#c9a96e" stroke-width="1" opacity="0.25" filter="url(#sg)"/>
+    <circle cx="0" cy="0" r="50" fill="none" stroke="#c9a96e" stroke-width="0.5" stroke-dasharray="6 10" opacity="0.35"/>
+    <circle cx="0" cy="0" r="36" fill="none" stroke="#d4b87a" stroke-width="1.5" opacity="0.45"/>
+    <circle cx="0" cy="0" r="36" fill="none" stroke="#c9a96e" stroke-width="0.5" stroke-dasharray="4 8" opacity="0.25"/>
+    <circle cx="0" cy="0" r="22" stroke="url(#g)" stroke-width="2" fill="#12121a"/>
+    <circle cx="-7" cy="-7" r="2" fill="#e8d4a0"/><circle cx="7" cy="-5" r="2" fill="#d4b87a"/>
+    <circle cx="0" cy="3" r="2" fill="#c9a96e"/><circle cx="-9" cy="5" r="2" fill="#d4b87a"/>
+    <circle cx="9" cy="7" r="2" fill="#e8d4a0"/>
+    <line x1="-7" y1="-7" x2="7" y2="-5" stroke="#c9a96e" stroke-width="0.5" opacity="0.35"/>
+    <line x1="-7" y1="-7" x2="-9" y2="5" stroke="#d4b87a" stroke-width="0.5" opacity="0.35"/>
+    <line x1="7" y1="-5" x2="9" y2="7" stroke="#e8d4a0" stroke-width="0.5" opacity="0.35"/>
+    <line x1="0" y1="3" x2="-9" y2="5" stroke="#c9a96e" stroke-width="0.5" opacity="0.35"/>
+    <line x1="0" y1="3" x2="9" y2="7" stroke="#d4b87a" stroke-width="0.5" opacity="0.35"/>
+    <text x="0" y="3" text-anchor="middle" font-family="Inter" font-size="9" fill="#e8d4a0" font-weight="700">AI</text>
+  </g>
+  <rect x="403" y="108" width="34" height="34" rx="8" stroke="#c9a96e" stroke-width="1.2" fill="#12121a"/>
+  <polygon points="416,122 426,126 416,130" stroke="#e8d4a0" stroke-width="1" fill="none"/>
+  <rect x="338" y="133" width="34" height="26" rx="6" stroke="#d4b87a" stroke-width="1.2" fill="#12121a"/>
+  <circle cx="350" cy="143" r="2.5" stroke="#c9a96e" stroke-width="0.8" fill="none"/>
+  <path d="M327 148 L334 142 L343 148 L354 139 L358 148" stroke="#e8d4a0" stroke-width="0.7" fill="none"/>
+  <rect x="468" y="133" width="34" height="26" rx="6" stroke="#d4b87a" stroke-width="1.2" fill="#12121a"/>
+  <line x1="474" y1="140" x2="496" y2="140" stroke="#e8d4a0" stroke-width="0.9"/>
+  <line x1="474" y1="145" x2="492" y2="145" stroke="#c9a96e" stroke-width="0.9"/>
+  <line x1="474" y1="150" x2="494" y2="150" stroke="#d4b87a" stroke-width="0.9"/>
+  <rect x="403" y="232" width="34" height="26" rx="6" stroke="#d4b87a" stroke-width="1.2" fill="#12121a"/>
+  <path d="M420 237 Q420 243 424 246 Q428 249 428 253" stroke="#c9a96e" stroke-width="1" fill="none"/>
+  <path d="M417 239 Q417 244 421 248" stroke="#d4b87a" stroke-width="0.7" fill="none" opacity="0.5"/>
+  <path d="M423 239 Q423 244 419 248" stroke="#d4b87a" stroke-width="0.7" fill="none" opacity="0.5"/>
+  <text x="420" y="285" text-anchor="middle" font-family="'Playfair Display', serif" font-size="13" fill="#e8e0d4" font-weight="600">AI Generates Everything</text>
+  <line x1="345" y1="293" x2="495" y2="293" stroke="#c9a96e" stroke-width="0.8" opacity="0.4"/>
+  <circle cx="420" cy="268" r="9" stroke="#c9a96e" stroke-width="1" fill="#12121a"/>
+  <text x="420" y="272" text-anchor="middle" font-family="Inter" font-size="9" fill="#e8d4a0" font-weight="700">2</text>
+  <path d="M550 215 Q590 235 610 235" stroke="url(#fg)" stroke-width="2.5" fill="none"/>
+  <path d="M618 235 L610 239 L615 231" stroke="url(#fg)" stroke-width="2.5" fill="none"/>
+  <circle cx="575" cy="223" r="2" fill="#e8d4a0" opacity="0.7"/>
+  <g transform="translate(670, 135)">
+    <rect x="-55" y="-32" width="190" height="170" rx="16" stroke="#c9a96e" stroke-width="1" fill="#12121a" opacity="0.35" filter="url(#sg)"/>
+    <rect x="-46" y="-20" width="30" height="30" rx="7" stroke="url(#g)" stroke-width="1.2" fill="none"/>
+    <text x="-31" y="-1" text-anchor="middle" font-family="Inter" font-size="10" fill="#e8d4a0" font-weight="600">TT</text>
+    <rect x="-8" y="-20" width="30" height="30" rx="7" stroke="url(#g)" stroke-width="1.2" fill="none"/>
+    <text x="7" y="-1" text-anchor="middle" font-family="Inter" font-size="9" fill="#e8d4a0" font-weight="600">IG</text>
+    <rect x="30" y="-20" width="30" height="30" rx="7" stroke="url(#g)" stroke-width="1.2" fill="none"/>
+    <text x="45" y="-1" text-anchor="middle" font-family="Inter" font-size="9" fill="#e8d4a0" font-weight="600">FB</text>
+    <rect x="68" y="-20" width="30" height="30" rx="7" stroke="url(#g)" stroke-width="1.2" fill="none"/>
+    <text x="83" y="-1" text-anchor="middle" font-family="Inter" font-size="8" fill="#e8d4a0" font-weight="600">YT</text>
+    <rect x="-38" y="20" width="30" height="30" rx="7" stroke="url(#g)" stroke-width="1.2" fill="none"/>
+    <text x="-23" y="39" text-anchor="middle" font-family="Inter" font-size="9" fill="#e8d4a0" font-weight="600">in</text>
+    <rect x="1" y="20" width="30" height="30" rx="7" stroke="url(#g)" stroke-width="1.2" fill="none"/>
+    <text x="16" y="39" text-anchor="middle" font-family="Inter" font-size="8" fill="#e8d4a0" font-weight="600">SC</text>
+    <rect x="39" y="20" width="30" height="30" rx="7" stroke="url(#g)" stroke-width="1.2" fill="none"/>
+    <text x="54" y="39" text-anchor="middle" font-family="Inter" font-size="9" fill="#e8d4a0" font-weight="600">P</text>
+    <rect x="-38" y="60" width="60" height="20" rx="10" stroke="#d4b87a" stroke-width="1" fill="none" opacity="0.5"/>
+    <text x="-8" y="73" text-anchor="middle" font-family="Inter" font-size="6" fill="#d4b87a">Optimal Time</text>
+    <rect x="-46" y="88" width="120" height="28" rx="14" stroke="url(#g)" stroke-width="1.8" fill="#c9a96e" fill-opacity="0.1"/>
+    <text x="14" y="106" text-anchor="middle" font-family="Inter" font-size="9" fill="#e8d4a0" font-weight="700">PUBLISH ALL →</text>
+    <circle cx="66" cy="102" r="2.5" fill="#e8d4a0" opacity="0.8"/>
+  </g>
+  <text x="715" y="325" text-anchor="middle" font-family="'Playfair Display', serif" font-size="13" fill="#e8e0d4" font-weight="600">One Click. Everywhere.</text>
+  <line x1="658" y1="333" x2="772" y2="333" stroke="#c9a96e" stroke-width="0.8" opacity="0.4"/>
+  <circle cx="715" cy="308" r="9" stroke="#c9a96e" stroke-width="1" fill="#12121a"/>
+  <text x="715" y="312" text-anchor="middle" font-family="Inter" font-size="9" fill="#e8d4a0" font-weight="700">3</text>
+  <line x1="200" y1="375" x2="700" y2="375" stroke="#c9a96e" stroke-width="0.5" opacity="0.3"/>
+  <circle cx="450" cy="375" r="3" fill="#c9a96e" opacity="0.5"/>
+  <text x="450" y="395" text-anchor="middle" font-family="Inter" font-size="9" fill="#6a6a80" letter-spacing="2">ONEPOST AI</text>
+</svg>

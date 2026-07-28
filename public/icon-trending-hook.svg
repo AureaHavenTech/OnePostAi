@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <defs>
+    <linearGradient id="goldGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#c9a96e"/>
+      <stop offset="40%" stop-color="#d4b87a"/>
+      <stop offset="60%" stop-color="#e8d4a0"/>
+      <stop offset="100%" stop-color="#c9a96e"/>
+    </linearGradient>
+    <linearGradient id="goldGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#c9a96e"/>
+      <stop offset="100%" stop-color="#d4b87a"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="80" fill="none" stroke="#1e1e2a" stroke-width="1.5"/>
+
+  <!-- Trend line -->
+  <path d="M45 140 L65 118 L85 122 L105 80 L115 90 L130 55 L145 50" stroke="url(#goldGrad)" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Hook arrow at end -->
+  <path d="M138 55 L145 50 L142 62" stroke="url(#goldGrad)" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Dashed upward projection -->
+  <path d="M145 50 L158 30" stroke="#d4b87a" stroke-width="1.5" fill="none" stroke-dasharray="4 4" opacity="0.5"/>
+
+  <!-- Data points -->
+  <g filter="url(#glow)">
+    <circle cx="45" cy="140" r="3" fill="#c9a96e"/>
+    <circle cx="65" cy="118" r="3" fill="#c9a96e"/>
+    <circle cx="85" cy="122" r="3" fill="#c9a96e"/>
+    <circle cx="105" cy="80" r="3" fill="#d4b87a"/>
+    <circle cx="115" cy="90" r="2.5" fill="#d4b87a"/>
+    <circle cx="130" cy="55" r="3" fill="#e8d4a0"/>
+  </g>
+
+  <!-- "Viral" spark -->
+  <g filter="url(#glow)" opacity="0.7">
+    <path d="M155 24 L155 36" stroke="#e8d4a0" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M149 30 L161 30" stroke="#e8d4a0" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M151 26 L159 34" stroke="#e8d4a0" stroke-width="0.8" stroke-linecap="round"/>
+    <path d="M159 26 L151 34" stroke="#e8d4a0" stroke-width="0.8" stroke-linecap="round"/>
+  </g>
+
+  <!-- Grid lines (subtle) -->
+  <line x1="40" y1="110" x2="44" y2="110" stroke="#c9a96e" stroke-width="0.5" opacity="0.2"/>
+  <line x1="40" y1="95" x2="44" y2="95" stroke="#c9a96e" stroke-width="0.5" opacity="0.2"/>
+  <line x1="40" y1="80" x2="44" y2="80" stroke="#c9a96e" stroke-width="0.5" opacity="0.2"/>
+
+  <!-- Decorative dot -->
+  <circle cx="60" cy="45" r="1.5" fill="#c9a96e" opacity="0.4"/>
+</svg>

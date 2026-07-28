@@ -21,7 +21,7 @@ interface Plan {
 const plans: Plan[] = [
   {
     name: "Basic",
-    displayPrice: "$29",
+    displayPrice: "$19",
     period: "/month",
     desc: "For solo creators getting started",
     features: [
@@ -40,7 +40,7 @@ const plans: Plan[] = [
   },
   {
     name: "Pro",
-    displayPrice: "$29",
+    displayPrice: "$49",
     period: "/month",
     desc: "For serious content creators",
     features: [

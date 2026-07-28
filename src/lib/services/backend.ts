@@ -1,4 +1,25 @@
 // OnePost AI Backend Integration — Usage Limits & Watermark System
+// Now with REAL OpenAI (GPT-4o / gpt-4o-mini) generation behind every public helper.
+// When OPENAI_API_KEY is not set, helpers transparently fall back to template output
+// so dev mode still works without credentials. The response always includes an
+// `aiModel` field — either "gpt-4o-mini" / "gpt-4o" (real AI) or "template" (fallback).
+import {
+  generateContentWithAI,
+  generateKeywordsWithAI,
+  generateCTAsWithAI,
+  generateCalendarWithAI,
+  isOpenAIConfigured,
+  type Platform,
+  type ContentTier,
+} from "@/lib/openai";
+import {
+  generateByContentType,
+  detectContentType,
+  CONTENT_TYPE_LIST,
+  type ContentTypeId,
+  type ContentTypeOutput,
+} from "@/lib/services/content-types";
+
 export const USAGE_LIMITS = {
   free: {
     maxGenerations: 5,          // 5 content generations total during trial
@@ -25,16 +46,13 @@ export const USAGE_LIMITS = {
     contentLock: false,
   },
 };
-
 export function getWatermarkOverlay(brandName: string): string {
   return `\n\n——\nCreated with OnePost AI™ — Get unlimited, watermark-free content at onepostai.ctonew.app`;
 }
-
 // ============================================================================
 // CAPTION STYLES
 // ============================================================================
 export type CaptionStyle = "short" | "long" | "storytelling" | "professional" | "funny" | "sales" | "educational";
-
 export const CAPTION_STYLES: Record<CaptionStyle, { label: string; description: string; maxLength: number }> = {
   short: { label: "Short & Punchy", description: "1-2 sentences, hook-first, ideal for TikTok/Reels", maxLength: 150 },
   long: { label: "Long-Form", description: "3-5 sentences with story arc, ideal for LinkedIn/Facebook", maxLength: 500 },
@@ -44,7 +62,6 @@ export const CAPTION_STYLES: Record<CaptionStyle, { label: string; description: 
   sales: { label: "Sales", description: "Pain-point → solution → CTA, ideal for product launches", maxLength: 350 },
   educational: { label: "Educational", description: "Tip or how-to with steps, ideal for carousels/reels", maxLength: 450 },
 };
-
 function renderCaption(style: CaptionStyle, brandName: string, prompt: string, platform: string): string {
   const tpl = CAPTION_STYLES[style];
   const subject = prompt.trim() || "your niche";
@@ -68,8 +85,7 @@ function renderCaption(style: CaptionStyle, brandName: string, prompt: string, p
       return cap(`${brandName} — ${subject.slice(0, 80)}`);
   }
 }
-
-export function generateContent(params: {
+export async function generateContent(params: {
   brandName: string;
   prompt: string;
   platforms: string[];
@@ -77,8 +93,42 @@ export function generateContent(params: {
   isFreeTier?: boolean;
   generationCount?: number;
   captionStyle?: CaptionStyle;
+  contentType?: string;                 // 'unboxing' | 'voiceover' | 'talking_head' | 'ai_twin' | 'product_demo' | 'trending_hook' | 'storytelling'
+  productName?: string;                 // for content-type pipelines
+  productDescription?: string;
+  durationSec?: number;
 }) {
-  const { brandName, prompt, platforms, isFreeTier = false, generationCount = 0, captionStyle = "short" } = params;
+  const { brandName, prompt, platforms, isFreeTier = false, generationCount = 0, captionStyle = "short", contentType, productName, productDescription, durationSec } = params;
+  // If a contentType is specified, dispatch to the specialized pipeline
+  // (Unboxing / Voiceover / Talking Head / AI Twin / Product Demo / Trending Hook / Storytelling).
+  // Output shape is richer: per-platform script + caption + hashtags + textOverlays + hook + cta + videoSpec.
+  if (contentType) {
+    const ctOut = await generateByContentType({
+      brandName,
+      prompt,
+      platforms: (platforms.length ? platforms : ["tiktok", "instagram", "youtube"]) as any,
+      contentType: contentType as ContentTypeId,
+      productName,
+      productDescription,
+      brandVoice: params.tone,
+      tone: params.tone,
+      durationSec,
+    });
+    return {
+      brandName,
+      prompt,
+      contentType: ctOut.contentType,
+      tier: isFreeTier ? "free" : "paid",
+      videoSpec: ctOut.videoSpec,
+      platformContent: ctOut.platformContent,
+      model: ctOut.model,
+      aiModel: ctOut.model,
+      aiConfigured: ctOut.aiConfigured,
+      aiError: ctOut.aiError,
+      generationLimit: isFreeTier ? { used: generationCount + 1, limit: USAGE_LIMITS.free.maxGenerations } : undefined,
+      createdAt: ctOut.createdAt,
+    };
+  }
   // Check if free user has exceeded limit
   if (isFreeTier && generationCount >= USAGE_LIMITS.free.maxGenerations) {
     return {
@@ -93,28 +143,54 @@ export function generateContent(params: {
     ? platforms.slice(0, USAGE_LIMITS.free.maxPlatforms)
     : platforms;
   const watermark = isFreeTier ? getWatermarkOverlay(brandName) : "";
-  // Mock implementation — ready for OpenAI API key
-  const scripts: Record<string, string> = {
-    tiktok: `🔥 ${prompt.split(" ").slice(0, 5).join(" ")}... YOU NEED TO SEE THIS! #viral #fyp`,
-    instagram: `✨ The secret to ${prompt.toLowerCase().slice(0, 30)}... Save this for later! 📌`,
-    youtube: `${prompt.slice(0, 50)} - Full Tutorial and Review`,
-    facebook: `I had to share this with you all! ${prompt.slice(0, 60)}`,
-    linkedin: `I've been researching ${prompt.slice(0, 40)}... Here's what I found.`,
+  // Real OpenAI generation (GPT-4o-mini by default) — falls back to templates if
+  // OPENAI_API_KEY is missing or the call fails. Output shape is identical to
+  // the previous template-based version for backward compatibility.
+  const tier: ContentTier = isFreeTier ? "free" : "paid";
+  const aiInput = {
+    brandName,
+    prompt,
+    platforms: (effectivePlatforms.length ? effectivePlatforms : ["tiktok", "instagram", "youtube", "facebook", "linkedin"]) as Platform[],
+    captionStyle,
+    tone: params.tone,
+    tier,
   };
-  const captions: Record<string, string> = {
-    tiktok: renderCaption(captionStyle, brandName, prompt, "tiktok"),
-    instagram: renderCaption(captionStyle, brandName, prompt, "instagram"),
-    youtube: renderCaption(captionStyle, brandName, prompt, "youtube"),
-    facebook: renderCaption(captionStyle, brandName, prompt, "facebook"),
-    linkedin: renderCaption(captionStyle, brandName, prompt, "linkedin"),
-  };
-  const hashtags: Record<string, string[]> = {
-    tiktok: ["fyp", "viral", "trending", "contentcreator", brandName.replace(/\s/g, "").toLowerCase()],
-    instagram: ["explorepage", "trending", "contentcreator", "viral", "marketingtips"],
-    youtube: ["tutorial", "howto", "review", brandName.replace(/\s/g, "").toLowerCase(), "2026"],
-    facebook: ["trending", "mustwatch", "viralvideo", "sharethis"],
-    linkedin: ["contentstrategy", "marketing", "branding", "growth", "productivity"],
-  };
+  let aiModel: string = "template";
+  let scripts: Record<string, string> = {};
+  let captions: Record<string, string> = {};
+  let hashtags: Record<string, string[]> = {};
+  let aiError: string | undefined;
+  const aiResult = await generateContentWithAI(aiInput);
+  if (aiResult.ok) {
+    aiModel = aiResult.model;
+    scripts = aiResult.data.scripts;
+    captions = aiResult.data.captions;
+    hashtags = aiResult.data.hashtags;
+  } else {
+    aiError = aiResult.message;
+    // Fallback: keep the same template content as before so dev mode still works
+    scripts = {
+      tiktok: `🔥 ${prompt.split(" ").slice(0, 5).join(" ")}... YOU NEED TO SEE THIS! #viral #fyp`,
+      instagram: `✨ The secret to ${prompt.toLowerCase().slice(0, 30)}... Save this for later! 📌`,
+      youtube: `${prompt.slice(0, 50)} - Full Tutorial and Review`,
+      facebook: `I had to share this with you all! ${prompt.slice(0, 60)}`,
+      linkedin: `I've been researching ${prompt.slice(0, 40)}... Here's what I found.`,
+    };
+    captions = {
+      tiktok: renderCaption(captionStyle, brandName, prompt, "tiktok"),
+      instagram: renderCaption(captionStyle, brandName, prompt, "instagram"),
+      youtube: renderCaption(captionStyle, brandName, prompt, "youtube"),
+      facebook: renderCaption(captionStyle, brandName, prompt, "facebook"),
+      linkedin: renderCaption(captionStyle, brandName, prompt, "linkedin"),
+    };
+    hashtags = {
+      tiktok: ["fyp", "viral", "trending", "contentcreator", brandName.replace(/\s/g, "").toLowerCase()],
+      instagram: ["explorepage", "trending", "contentcreator", "viral", "marketingtips"],
+      youtube: ["tutorial", "howto", "review", brandName.replace(/\s/g, "").toLowerCase(), "2026"],
+      facebook: ["trending", "mustwatch", "viralvideo", "sharethis"],
+      linkedin: ["contentstrategy", "marketing", "branding", "growth", "productivity"],
+    };
+  }
   const selectedPlatforms = effectivePlatforms.length > 0 ? effectivePlatforms : Object.keys(scripts);
   const hashtagQuality = isFreeTier ? "basic" : "viral";
   return {
@@ -124,6 +200,9 @@ export function generateContent(params: {
     generationLimit: isFreeTier ? { used: generationCount + 1, limit: USAGE_LIMITS.free.maxGenerations } : undefined,
     watermark: isFreeTier ? "Watermark added. Upgrade for clean exports." : undefined,
     captionStyle,
+    aiModel,                                  // "gpt-4o-mini" | "gpt-4o" | "template"
+    aiConfigured: isOpenAIConfigured(),       // true if real OpenAI is in use
+    aiError,                                  // set if real AI was requested but failed
     platformContent: selectedPlatforms.map(p => ({
       platform: p,
       script: scripts[p] || scripts.tiktok,
@@ -136,12 +215,16 @@ export function generateContent(params: {
     estimatedDuration: "15 seconds",
   };
 }
-
 // ============================================================================
 // SEO KEYWORD GENERATION
 // ============================================================================
-export function generateKeywords(params: { brandName: string; prompt: string; platforms?: string[]; count?: number }): { primary: string[]; secondary: string[]; longTail: string[]; trending: string[] } {
+export async function generateKeywords(params: { brandName: string; prompt: string; platforms?: string[]; count?: number }): Promise<{ primary: string[]; secondary: string[]; longTail: string[]; trending: string[]; aiModel: string }> {
   const { brandName, prompt, platforms = [], count = 10 } = params;
+  const ai = await generateKeywordsWithAI({ brandName, prompt, platforms: platforms as Platform[], count });
+  if (ai.ok) {
+    return { ...ai.data, aiModel: ai.model };
+  }
+  // Fallback
   const brand = brandName.replace(/\s/g, "").toLowerCase();
   const subject = (prompt || "").toLowerCase().replace(/[^\w\s]/g, " ").trim();
   const subjectWords = subject.split(/\s+/).filter(w => w.length > 3).slice(0, 5);
@@ -149,24 +232,13 @@ export function generateKeywords(params: { brandName: string; prompt: string; pl
   const platformTags = platforms.length > 0
     ? platforms.map(p => `${p}marketing`)
     : ["socialmedia", "digitalmarketing", "contentstrategy"];
-
   const primary = [
-    brand,
-    `${brand} ${baseNoun}`,
-    `${baseNoun} tips`,
-    `${baseNoun} 2026`,
-    `best ${baseNoun}`,
+    brand, `${brand} ${baseNoun}`, `${baseNoun} tips`, `${baseNoun} 2026`, `best ${baseNoun}`,
   ].slice(0, count);
-
   const secondary = [
-    `${baseNoun} strategy`,
-    `${baseNoun} ideas`,
-    `${baseNoun} for beginners`,
-    `how to ${baseNoun}`,
-    `${baseNoun} tools`,
-    ...subjectWords.slice(1, 4).map(w => `${w} ${baseNoun}`),
+    `${baseNoun} strategy`, `${baseNoun} ideas`, `${baseNoun} for beginners`, `how to ${baseNoun}`,
+    `${baseNoun} tools`, ...subjectWords.slice(1, 4).map(w => `${w} ${baseNoun}`),
   ].slice(0, count);
-
   const longTail = [
     `how to create ${baseNoun} that goes viral`,
     `best ${baseNoun} strategy for small business`,
@@ -174,23 +246,24 @@ export function generateKeywords(params: { brandName: string; prompt: string; pl
     `affordable ${baseNoun} tools for creators`,
     `${baseNoun} mistakes to avoid in 2026`,
   ].slice(0, count);
-
   const trending = [
     "AI content", "faceless creator", "UGC ads", "short form video", "TikTok algorithm 2026",
     ...platformTags,
   ].slice(0, count);
-
-  return { primary, secondary, longTail, trending };
+  return { primary, secondary, longTail, trending, aiModel: "template" };
 }
-
 // ============================================================================
 // CTA GENERATION
 // ============================================================================
-export function generateCTAs(params: { brandName: string; prompt?: string; style?: "soft" | "medium" | "hard" | "mixed"; count?: number }): { primary: string; alternatives: string[]; perPlatform: Record<string, string> } {
+export async function generateCTAs(params: { brandName: string; prompt?: string; style?: "soft" | "medium" | "hard" | "mixed"; count?: number }): Promise<{ primary: string; alternatives: string[]; perPlatform: Record<string, string>; aiModel: string }> {
   const { brandName, prompt = "", style = "mixed", count = 5 } = params;
+  const ai = await generateCTAsWithAI({ brandName, prompt, style, count });
+  if (ai.ok) {
+    return { ...ai.data, aiModel: ai.model };
+  }
+  // Fallback
   const brand = brandName;
   const subject = prompt.split(" ").slice(0, 3).join(" ").toLowerCase() || "this";
-
   const soft = [
     `Curious? Learn more about ${brand} in our bio.`,
     `Want to see more? Follow for daily ${subject} tips.`,
@@ -215,7 +288,6 @@ export function generateCTAs(params: { brandName: string; prompt?: string; style
   const all = style === "soft" ? soft : style === "medium" ? medium : style === "hard" ? hard : [...medium.slice(0, 2), ...soft.slice(0, 2), ...hard.slice(0, 1)];
   const primary = all[0];
   const alternatives = all.slice(1, count);
-
   return {
     primary,
     alternatives,
@@ -226,14 +298,13 @@ export function generateCTAs(params: { brandName: string; prompt?: string; style
       facebook: `Share this with someone who needs it, and DM us for the free starter kit.`,
       linkedin: `Reach out if you're building in ${subject} — happy to share what ${brand} learned.`,
     },
+    aiModel: "template",
   };
 }
-
 // ============================================================================
 // CONTENT CALENDAR GENERATION
 // ============================================================================
 export type CalendarTheme = "educational" | "entertainment" | "product_promotion" | "community_engagement" | "storytelling";
-
 export const CALENDAR_THEMES: Record<CalendarTheme, { label: string; weight: number; description: string }> = {
   educational: { label: "Educational", weight: 0.30, description: "How-tos, tips, tutorials" },
   entertainment: { label: "Entertainment", weight: 0.25, description: "Trends, memes, behind-the-scenes" },
@@ -241,9 +312,30 @@ export const CALENDAR_THEMES: Record<CalendarTheme, { label: string; weight: num
   community_engagement: { label: "Community", weight: 0.15, description: "Polls, Q&A, UGC, replies" },
   storytelling: { label: "Storytelling", weight: 0.10, description: "Founder story, customer wins" },
 };
-
-export function generateContentCalendar(params: { brandName: string; platforms: string[]; weeks?: number; postsPerWeek?: number; startDate?: Date }) {
+export async function generateContentCalendar(params: { brandName: string; platforms: string[]; weeks?: number; postsPerWeek?: number; startDate?: Date; prompt?: string }) {
   const { brandName, platforms, weeks = 4, postsPerWeek = 7, startDate = new Date() } = params;
+  // Try real OpenAI generation first
+  const ai = await generateCalendarWithAI({
+    brandName,
+    platforms: platforms as Platform[],
+    weeks,
+    postsPerWeek,
+    startDate: (startDate || new Date()).toISOString().split("T")[0],
+    prompt: params.prompt,
+  });
+  if (ai.ok) {
+    return {
+      brandName,
+      weeks,
+      postsPerWeek,
+      totalPosts: ai.data.calendar.length,
+      platforms,
+      calendar: ai.data.calendar,
+      themeBreakdown: ai.data.themeBreakdown,
+      aiModel: ai.model,
+    };
+  }
+  // Fallback to template
   const themes: CalendarTheme[] = Object.keys(CALENDAR_THEMES) as CalendarTheme[];
   const themeWeights = themes.map(t => CALENDAR_THEMES[t].weight);
   const totalPosts = weeks * postsPerWeek;
@@ -297,7 +389,6 @@ export function generateContentCalendar(params: { brandName: string; platforms: 
   };
   const topicGuess = "your niche";
   const fill = (s: string) => s.replace("{topic}", topicGuess).replace("{brand}", brandName).replace("{feature}", "this feature");
-
   const calendar: Array<{ date: string; day: string; platform: string; theme: CalendarTheme; themeLabel: string; idea: string; captionHook: string; suggestedFormat: string }> = [];
   for (let w = 0; w < weeks; w++) {
     for (let d = 0; d < postsPerWeek; d++) {
@@ -329,14 +420,13 @@ export function generateContentCalendar(params: { brandName: string; platforms: 
     platforms,
     calendar,
     themeBreakdown: themes.map(t => ({ theme: t, label: CALENDAR_THEMES[t].label, count: calendar.filter(c => c.theme === t).length })),
+    aiModel: "template",
   };
 }
-
 // ============================================================================
 // CREDIT COSTS
 // ============================================================================
 export type ActionType = "generate_content" | "generate_video" | "generate_image" | "schedule_post" | "publish_post" | "ai_avatar" | "trend_analysis" | "generate_ideas" | "generate_calendar" | "three_liner" | "brand_kit_create";
-
 export const CREDIT_COSTS: Record<ActionType, number> = {
   generate_content: 1,
   generate_video: 5,
@@ -350,7 +440,6 @@ export const CREDIT_COSTS: Record<ActionType, number> = {
   three_liner: 1,
   brand_kit_create: 1,
 };
-
 export function getCreditCost(action: ActionType | string, params?: { platforms?: string[]; durationDays?: number; isFreeTier?: boolean }): { action: string; cost: number; breakdown?: string[]; total?: number } {
   const base = CREDIT_COSTS[action as ActionType];
   if (base === undefined) {
@@ -370,7 +459,6 @@ export function getCreditCost(action: ActionType | string, params?: { platforms?
   }
   return { action, cost: base };
 }
-
 // ============================================================================
 // Scheduling Engine (unchanged)
 // ============================================================================
@@ -383,7 +471,6 @@ export const OPTIMAL_TIMES: Record<string, string[]> = {
   pinterest: ["8:00-11:00 PM"],
   snapchat: ["10:00 AM-12:00 PM", "7:00-10:00 PM"],
 };
-
 export function generateSchedule(params: {
   brandName: string;
   platforms: string[];
@@ -412,9 +499,8 @@ export function generateSchedule(params: {
   }
   return schedule;
 }
-
 // ============================================================================
-// Conversational AI Parser (unchanged)
+// Conversational AI Parser (unchanged — used as a routing hint, not the source of truth)
 // ============================================================================
 export function parseChatIntent(message: string): {
   action: "create" | "schedule" | "post" | "analyze" | "unknown";

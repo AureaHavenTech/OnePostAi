@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <defs>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#c9a96e"/>
+      <stop offset="40%" stop-color="#d4b87a"/>
+      <stop offset="60%" stop-color="#e8d4a0"/>
+      <stop offset="100%" stop-color="#c9a96e"/>
+    </linearGradient>
+    <linearGradient id="glowGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#e8d4a0" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#c9a96e" stop-opacity="0.05"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="softGlow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="80" fill="none" stroke="#1e1e2a" stroke-width="1.5"/>
+
+  <!-- Holographic aura -->
+  <ellipse cx="100" cy="90" rx="38" ry="42" fill="url(#glowGrad)" stroke="#c9a96e" stroke-width="0.5" opacity="0.4" filter="url(#softGlow)"/>
+
+  <!-- Face silhouette -->
+  <ellipse cx="100" cy="78" rx="26" ry="28" stroke="url(#goldGrad)" stroke-width="2.5" fill="none"/>
+  <!-- Neck / digital collar -->
+  <line x1="92" y1="106" x2="90" y2="118" stroke="url(#goldGrad)" stroke-width="2" stroke-linecap="round"/>
+  <line x1="108" y1="106" x2="110" y2="118" stroke="url(#goldGrad)" stroke-width="2" stroke-linecap="round"/>
+  <path d="M65 125 Q80 115 90 118" stroke="url(#goldGrad)" stroke-width="2" stroke-linecap="round"/>
+  <path d="M135 125 Q120 115 110 118" stroke="url(#goldGrad)" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Digital eyes (pixel-like) -->
+  <rect x="88" y="74" width="6" height="4" rx="0.5" stroke="#e8d4a0" stroke-width="1.5" fill="none"/>
+  <rect x="106" y="74" width="6" height="4" rx="0.5" stroke="#e8d4a0" stroke-width="1.5" fill="none"/>
+
+  <!-- Digital matrix dots -->
+  <g opacity="0.5">
+    <circle cx="80" cy="68" r="1" fill="#d4b87a"/>
+    <circle cx="120" cy="68" r="1" fill="#d4b87a"/>
+    <circle cx="100" cy="60" r="1" fill="#e8d4a0"/>
+    <circle cx="86" cy="55" r="0.8" fill="#c9a96e"/>
+    <circle cx="114" cy="55" r="0.8" fill="#c9a96e"/>
+  </g>
+
+  <!-- Scan line effect -->
+  <line x1="72" y1="80" x2="128" y2="80" stroke="#e8d4a0" stroke-width="0.5" opacity="0.3" stroke-dasharray="4 6"/>
+
+  <!-- Twin indicator - double ring -->
+  <circle cx="148" cy="55" r="12" stroke="#c9a96e" stroke-width="1.2" fill="none" opacity="0.5"/>
+  <circle cx="148" cy="55" r="8" stroke="#d4b87a" stroke-width="0.8" fill="none" opacity="0.3"/>
+  <text x="148" y="59" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#e8d4a0" opacity="0.6">AI</text>
+
+  <!-- Decorative dots -->
+  <circle cx="100" cy="38" r="1.5" fill="#c9a96e" opacity="0.4"/>
+</svg>

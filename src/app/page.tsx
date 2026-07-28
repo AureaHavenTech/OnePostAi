@@ -1,250 +1,439 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { Sparkles, Wand2, Brain, Globe, Zap, Film, Menu, X, Check, ArrowRight, Play, Camera, Upload, Hash, CalendarDays, TrendingUp, ShoppingBag, BadgeCheck, Crown, Music2, MessageSquareText, Repeat2, Crop, Music, Users, DollarSign, Star, ExternalLink, Video, Image, MessageCircle, Share2 } from "lucide-react";
+import { Sparkles, ArrowRight, Check, Menu, X, ChevronDown, ExternalLink, Brain, Zap, Film, ShoppingBag, Globe, MessageSquareText, CalendarDays, TrendingUp, Music2 } from "lucide-react";
 
-const features = [
-  { icon: MessageSquareText, title: "AI Chat — Like ChatGPT", description: "Tell me what you need. Create 15-sec viral video for my mop brand, post every 2 days on TikTok and IG. I'll do it. Conversational, no filters, no canned responses." },
-  { icon: Wand2, title: "AI Generate Videos From Text", description: "No recorded content? No problem. Give me a product name and I'll generate the script, create the video with viral text overlays, add music, and post it." },
-  { icon: CalendarDays, title: "Smart Scheduling", description: "Schedule 3 posts/day for the next 2 weeks. I'll analyze optimal posting times per platform and schedule accordingly. Set it and forget it." },
-  { icon: TrendingUp, title: "Viral Trend Analytics", description: "I scrape the internet for trending keywords, viral hooks, and optimal posting times per platform. Every post goes out when it'll get the most traction." },
-  { icon: Globe, title: "Multi-Brand Management", description: "Mellow Sleep, Maverick Mop, Axel AI — manage separate brands, each with their own content calendar, platform selection, and posting schedule." },
-  { icon: Film, title: "AI Video Generator", description: "Product photo + prompt → 15-second viral video with trending hooks, text overlays, music, and platform-optimized formatting. No filming needed." },
-  { icon: Crop, title: "Auto-Resize for Every Platform", description: "One video → auto-formatted for 9:16 TikTok Reels, 1:1 Instagram, 16:9 YouTube. No manual work, no re-editing." },
-  { icon: Hash, title: "Per-Platform Hashtags", description: "Different trending hashtags for TikTok, Instagram, YouTube, Pinterest — not copies, optimized for each platform's algorithm." },
-  { icon: BadgeCheck, title: "Viral Captions & Hooks", description: "AI writes click-stopping hooks, platform-specific captions, and CTAs designed for maximum engagement and FYP traction." },
-  { icon: Music, title: "Trending Audio & Sounds", description: "I find what's trending on TikTok, pull the right sounds, and match them to your content automatically." },
-  { icon: Camera, title: "AI Avatar Videos", description: "Upload 5 photos → your AI twin creates UGC-style videos. Never be on camera again." },
-  { icon: Crown, title: "Portfolio Builder", description: "Auto-build a pro portfolio that commands $3k-$30k monthly retainers. Show results, not effort." },
-  { icon: Repeat2, title: "One-Click Multi-Platform Post", description: "Create once. Select platforms. One post publishes everywhere with correct specs, hashtags, and timing." },
-  { icon: Users, title: "Affiliate Program", description: "10% lifetime commission on every referral. Promote both OnePost AI and Axel AI to double your earnings." },
-  { icon: ShoppingBag, title: "Shopify Integration", description: "Complete product pages with SEO titles, conversion copy, images, and smart pricing. Ready to sell." },
-  { icon: Zap, title: "Post to 7 Platforms", description: "TikTok, Instagram, Facebook, YouTube, LinkedIn, Snapchat, Pinterest — one connection, auto-publish everywhere." },
+const contentTypes = [
+  { icon: "/icon-unboxing.svg", label: "Unboxing Video", desc: "AI-generated unboxing with product reveals & sparkles" },
+  { icon: "/icon-voiceover.svg", label: "Voiceover", desc: "Professional narration with trending sound sync" },
+  { icon: "/icon-talking-head.svg", label: "Talking Head", desc: "UGC-style presenter with natural delivery" },
+  { icon: "/icon-ai-twin.svg", label: "AI Twin", desc: "Your digital avatar — never be on camera again" },
+  { icon: "/icon-product-demo.svg", label: "Product Demo", desc: "Spotlight your product with cinematic reveals" },
+  { icon: "/icon-trending-hook.svg", label: "Trending Hook", desc: "Viral-first formats optimized for the FYP" },
+  { icon: "/icon-storytelling.svg", label: "Storytelling", desc: "Narrative-driven content that builds your brand" },
 ];
 
-const platforms = [
-  { name: "TikTok", icon: Music2 },
-  { name: "Instagram", icon: MessageCircle },
-  { name: "Facebook", icon: Globe },
-  { name: "YouTube", icon: Video },
-  { name: "LinkedIn", icon: Share2 },
-  { name: "Snapchat", icon: Zap },
-  { name: "Pinterest", icon: Hash },
+const competitorsReplaced = [
+  { name: "ChatGPT / Claude", what: "Scripts & Copy", icon: MessageSquareText },
+  { name: "HeyGen / Synthesia", what: "AI Avatars", icon: Film },
+  { name: "InVideo / CapCut", what: "Video Editing", icon: Zap },
+  { name: "Later / Buffer", what: "Scheduling", icon: CalendarDays },
+  { name: "Canva", what: "Design", icon: Globe },
+  { name: "Midjourney", what: "Images", icon: Sparkles },
+  { name: "Trending APIs", what: "Viral Research", icon: TrendingUp },
+  { name: "Shopify Apps", what: "Product Pages", icon: ShoppingBag },
+];
+
+const stats = [
+  { value: "20+", label: "Apps Replaced" },
+  { value: "7", label: "Platforms, 1 Click" },
+  { value: "<5 min", label: "From Idea to Post" },
+  { value: "24/7", label: "Autonomous Content" },
 ];
 
 export default function Home() {
   const [navOpen, setNavOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const observerRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("animate-visible");
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+    observerRefs.current.forEach((ref) => {
+      if (ref) observer.observe(ref);
+    });
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <div className="min-h-screen bg-[#faf7f2] text-[#1a1614]">
-      {/* NAVIGATION */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-[#faf7f2]/80 backdrop-blur-xl border-b border-[#c9a96e]/10">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+    <div className="min-h-screen bg-dark text-cream font-body overflow-x-hidden">
+      <style jsx global>{`
+        .animate-on-scroll {
+          opacity: 0;
+          transform: translateY(30px);
+          transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+        }
+        .animate-visible {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        .gold-gradient {
+          background: linear-gradient(135deg, #c9a96e 0%, #d4b87a 40%, #e8d4a0 60%, #c9a96e 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+        .gold-border-glow {
+          box-shadow: 0 0 20px rgba(201, 169, 110, 0.15), 0 0 40px rgba(201, 169, 110, 0.05);
+        }
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-10px); }
+        }
+        .animate-float {
+          animation: float 4s ease-in-out infinite;
+        }
+        @keyframes shimmer {
+          0% { background-position: -200% center; }
+          100% { background-position: 200% center; }
+        }
+        .animate-shimmer {
+          background: linear-gradient(90deg, transparent 0%, rgba(201, 169, 110, 0.1) 50%, transparent 100%);
+          background-size: 200% 100%;
+          animation: shimmer 3s ease-in-out infinite;
+        }
+        @keyframes pulse-gold {
+          0%, 100% { box-shadow: 0 0 0 0 rgba(201, 169, 110, 0.4); }
+          50% { box-shadow: 0 0 0 15px rgba(201, 169, 110, 0); }
+        }
+        .animate-pulse-gold {
+          animation: pulse-gold 2s ease-in-out infinite;
+        }
+        .content-card:hover .content-icon {
+          filter: brightness(1.3) drop-shadow(0 0 8px rgba(201, 169, 110, 0.5));
+        }
+      `}</style>
+
+      {/* ===== NAVIGATION ===== */}
+      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "bg-dark/90 backdrop-blur-xl border-b border-gold/10 shadow-lg shadow-black/20" : "bg-transparent"}`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-between h-16">
             <Link href="/" className="flex items-center gap-2.5 group">
-<img src="/op-logo.svg" alt="OnePost AI" className="h-8 w-auto" />
+              <img src="/op-logo.svg" alt="OnePost AI" className="h-8 w-auto" />
             </Link>
             <nav className="hidden md:flex items-center gap-8">
-              <Link href="/pricing" className="text-xs text-[#6b5a5e] hover:text-[#1a1614] transition-colors">Pricing</Link>
-              <Link href="/about" className="text-xs text-[#6b5a5e] hover:text-[#1a1614] transition-colors">About</Link>
-              <Link href="/faq" className="text-xs text-[#6b5a5e] hover:text-[#1a1614] transition-colors">FAQ</Link>
-              <Link href="/support" className="text-xs text-[#6b5a5e] hover:text-[#1a1614] transition-colors">AI Chat</Link>
+              <a href="#content-types" className="text-xs text-cream/60 hover:text-gold transition-colors font-medium">Features</a>
+              <a href="#how-it-works" className="text-xs text-cream/60 hover:text-gold transition-colors font-medium">How It Works</a>
+              <Link href="/pricing" className="text-xs text-cream/60 hover:text-gold transition-colors font-medium">Pricing</Link>
               <Link href="/login">
-                <button className="px-5 py-2 rounded-xl text-xs font-medium bg-[#1a1614] text-[#faf7f2] hover:bg-[#2d2824] transition-all shadow-lg">
+                <button className="px-5 py-2 rounded-xl text-xs font-semibold bg-gold text-dark hover:bg-gold-light transition-all shadow-lg shadow-gold/20 hover:shadow-gold/30">
                   Start Free Trial
                 </button>
               </Link>
             </nav>
-            <button className="md:hidden p-2" onClick={() => setNavOpen(!navOpen)}>
+            <button className="md:hidden p-2 text-cream" onClick={() => setNavOpen(!navOpen)}>
               {navOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
           {navOpen && (
-            <div className="md:hidden pb-4 border-t border-[#c9a96e]/10 pt-4 flex flex-col gap-3">
-              <Link href="/pricing" className="text-sm text-[#6b5a5e] py-1">Pricing</Link>
-              <Link href="/about" className="text-sm text-[#6b5a5e] py-1">About</Link>
-              <Link href="/faq" className="text-sm text-[#6b5a5e] py-1">FAQ</Link>
-              <Link href="/support" className="text-sm text-[#6b5a5e] py-1">AI Chat</Link>
-              <Link href="/login"><button className="w-full px-5 py-2.5 rounded-xl text-sm font-medium bg-[#1a1614] text-[#faf7f2]">Start Free Trial</button></Link>
+            <div className="md:hidden pb-4 border-t border-gold/10 pt-4 flex flex-col gap-3 bg-dark">
+              <a href="#content-types" className="text-sm text-cream/70 py-1">Features</a>
+              <a href="#how-it-works" className="text-sm text-cream/70 py-1">How It Works</a>
+              <Link href="/pricing" className="text-sm text-cream/70 py-1">Pricing</Link>
+              <Link href="/login"><button className="w-full px-5 py-2.5 rounded-xl text-sm font-semibold bg-gold text-dark">Start Free Trial</button></Link>
             </div>
           )}
         </div>
       </header>
 
-      {/* HERO */}
-      <section className="min-h-screen flex items-center justify-center pt-16 pb-12 px-4">
-        <div className="max-w-5xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#c9a96e]/20 bg-[#c9a96e]/5 text-xs text-[#c9a96e] mb-8">
+      {/* ===== HERO ===== */}
+      <section className="relative min-h-screen flex flex-col items-center justify-center pt-20 pb-16 px-4 overflow-hidden">
+        {/* Ambient background effects */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(201,169,110,0.06)_0%,transparent_70%)]" />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gold/5 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-gold-light/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1.5s" }} />
+
+        <div className="relative z-10 max-w-5xl mx-auto text-center">
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-gold/20 bg-gold/5 text-xs text-gold mb-8 animate-on-scroll" ref={(el) => { observerRefs.current[0] = el; }}>
             <Sparkles className="w-3 h-3" />
-            Just tell me what you need. I'll make it.
+            The only app you need. Just talk to it.
           </div>
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.05] text-[#1a1614]">
-            Your content.<br />
-            <span className="bg-gradient-to-r from-[#c9a96e] to-[#e8c97a] bg-clip-text text-transparent">Handled.</span>
+
+          {/* Headline */}
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-heading font-bold tracking-tight leading-[1.05] mb-6 animate-on-scroll" ref={(el) => { observerRefs.current[1] = el; }}>
+            One conversation.<br />
+            <span className="gold-gradient">Everything publishes.</span>
           </h1>
-          <p className="mt-6 text-base sm:text-lg text-[#6b5a5e] max-w-2xl mx-auto leading-relaxed">
-            "Create a 15-second viral video for my Maverick mop soap brand, post every 2 days on TikTok, Instagram, and YouTube — with trending hooks and optimal posting times."<br />
-            <span className="text-[#1a1614] font-medium"> Done. No filming. No editing. No grunt work.</span>
+
+          {/* Subheadline */}
+          <p className="text-base sm:text-lg text-cream/60 max-w-2xl mx-auto leading-relaxed mb-4 animate-on-scroll" ref={(el) => { observerRefs.current[2] = el; }}>
+            "Create an unboxing video for Mellow Sleep gummies, post to TikTok and IG Reels every 2 days."
           </p>
-          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
+          <p className="text-sm text-gold font-medium mb-10 animate-on-scroll" ref={(el) => { observerRefs.current[3] = el; }}>
+            AI generates the script, video, captions, hashtags — and schedules it all. No other app needed.
+          </p>
+
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-12 animate-on-scroll" ref={(el) => { observerRefs.current[4] = el; }}>
             <Link href="/login">
-              <button className="px-8 py-3.5 rounded-xl text-sm font-semibold bg-[#1a1614] text-[#faf7f2] hover:bg-[#2d2824] transition-all shadow-lg shadow-[#1a1614]/10 hover:shadow-[#1a1614]/20 inline-flex items-center gap-2">
-                Start 7-Day Free Trial
+              <button className="px-8 py-3.5 rounded-xl text-sm font-semibold bg-gold text-dark hover:bg-gold-light transition-all shadow-lg shadow-gold/20 hover:shadow-gold/30 inline-flex items-center gap-2 animate-pulse-gold">
+                Start Free Trial
                 <ArrowRight className="w-4 h-4" />
               </button>
             </Link>
             <Link href="/support">
-              <button className="px-8 py-3.5 rounded-xl text-sm font-medium text-[#6b5a5e] border border-gray-200 hover:border-[#c9a96e] hover:text-[#1a1614] transition-all inline-flex items-center gap-2">
+              <button className="px-8 py-3.5 rounded-xl text-sm font-medium text-cream/70 border border-gold/20 hover:border-gold/50 hover:text-cream transition-all inline-flex items-center gap-2">
                 <MessageSquareText className="w-4 h-4" /> Try AI Chat
               </button>
             </Link>
           </div>
-          <div className="mt-6 flex items-center justify-center gap-4 text-xs text-gray-400">
-            <span className="flex items-center gap-1"><Check className="w-3 h-3 text-green-500" /> 7-day free trial</span>
-            <span className="w-1 h-1 rounded-full bg-gray-300" />
-            <span className="flex items-center gap-1"><Check className="w-3 h-3 text-green-500" /> No credit card</span>
-            <span className="w-1 h-1 rounded-full bg-gray-300" />
-            <span className="flex items-center gap-1"><Check className="w-3 h-3 text-green-500" /> AI generates everything</span>
+
+          {/* Trust bar */}
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-cream/40 mb-10 animate-on-scroll" ref={(el) => { observerRefs.current[5] = el; }}>
+            <span className="flex items-center gap-1"><Check className="w-3 h-3 text-gold" /> 7-day free trial</span>
+            <span className="hidden sm:inline w-1 h-1 rounded-full bg-cream/20" />
+            <span className="flex items-center gap-1"><Check className="w-3 h-3 text-gold" /> No credit card</span>
+            <span className="hidden sm:inline w-1 h-1 rounded-full bg-cream/20" />
+            <span className="flex items-center gap-1"><Check className="w-3 h-3 text-gold" /> AI generates everything</span>
           </div>
 
-          {/* Platform bar */}
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-4 sm:gap-6">
-            {platforms.map((p) => (
-              <div key={p.name} className="flex items-center gap-1.5 text-[10px] text-gray-400 uppercase tracking-wider">
-                <p.icon className="w-3.5 h-3.5" />
-                {p.name}
+          {/* Hero Workflow Illustration */}
+          <div className="max-w-3xl mx-auto animate-on-scroll gold-border-glow rounded-2xl" ref={(el) => { observerRefs.current[6] = el; }}>
+            <img src="/hero-workflow.svg" alt="OnePost AI Workflow: One Conversation → AI Generates Everything → One Click to Publish" className="w-full h-auto" />
+          </div>
+
+          {/* Platform icons row */}
+          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 mt-8 animate-on-scroll" ref={(el) => { observerRefs.current[7] = el; }}>
+            {["TikTok", "Instagram", "Facebook", "YouTube", "LinkedIn", "Snapchat", "Pinterest"].map((p) => (
+              <span key={p} className="text-[10px] text-cream/30 uppercase tracking-widest font-medium">{p}</span>
+            ))}
+          </div>
+        </div>
+
+        {/* Scroll indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-float">
+          <span className="text-[10px] text-cream/30 uppercase tracking-widest">Scroll</span>
+          <ChevronDown className="w-4 h-4 text-cream/20" />
+        </div>
+      </section>
+
+      {/* ===== SOCIAL PROOF — COMPETITIVE POSITIONING ===== */}
+      <section className="py-16 px-4 border-y border-gold/5 bg-dark/50">
+        <div className="max-w-5xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+            {stats.map((s, i) => (
+              <div key={s.label} className="animate-on-scroll p-6" ref={(el) => { observerRefs.current[10 + i] = el; }} style={{ transitionDelay: `${i * 100}ms` }}>
+                <p className="text-3xl sm:text-4xl font-heading font-bold gold-gradient">{s.value}</p>
+                <p className="text-xs text-cream/50 mt-2 font-medium tracking-wide uppercase">{s.label}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* HOW IT WORKS */}
-      <section className="py-20 px-4 bg-gradient-to-b from-[#faf7f2] to-[#f5f0ea]/50">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-14">
-            <h2 className="text-4xl font-bold tracking-tight text-[#1a1614]">
-              Tell me what to post.<br />
-              <span className="bg-gradient-to-r from-[#c9a96e] to-[#e8c97a] bg-clip-text text-transparent">I'll schedule it all.</span>
+      {/* ===== CONTENT TYPE SHOWCASE ===== */}
+      <section id="content-types" className="py-24 px-4">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16 animate-on-scroll" ref={(el) => { observerRefs.current[20] = el; }}>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold/5 border border-gold/10 text-[10px] text-gold uppercase tracking-widest mb-4">
+              Content Types
+            </div>
+            <h2 className="text-3xl sm:text-5xl font-heading font-bold tracking-tight mb-4">
+              7 formats.<br className="sm:hidden" />
+              <span className="gold-gradient"> Infinite content.</span>
             </h2>
-            <p className="mt-3 text-sm text-[#6b5a5e] max-w-lg mx-auto">No content? No problem. AI generates everything from a prompt.</p>
+            <p className="text-sm text-cream/50 max-w-lg mx-auto">
+              No filming. No editing. No recording. AI generates every format from a single prompt.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {contentTypes.map((ct, i) => (
+              <div
+                key={ct.label}
+                className="content-card animate-on-scroll group relative bg-dark border border-gold/10 rounded-2xl p-6 hover:border-gold/30 hover:bg-[#1a1a28] transition-all duration-500 cursor-default"
+                ref={(el) => { observerRefs.current[30 + i] = el; }}
+                style={{ transitionDelay: `${i * 75}ms` }}
+              >
+                {/* Subtle background glow on hover */}
+                <div className="absolute inset-0 rounded-2xl bg-[radial-gradient(400px_circle_at_center,rgba(201,169,110,0.04)_0%,transparent_100%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="relative z-10">
+                  <img src={ct.icon} alt={ct.label} className="content-icon w-14 h-14 mb-4 transition-all duration-500" />
+                  <h3 className="font-heading font-semibold text-sm text-cream mb-1 group-hover:text-gold transition-colors duration-300">{ct.label}</h3>
+                  <p className="text-xs text-cream/40 leading-relaxed">{ct.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== HOW IT WORKS ===== */}
+      <section id="how-it-works" className="py-24 px-4 bg-dark/50 border-y border-gold/5">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-16 animate-on-scroll" ref={(el) => { observerRefs.current[50] = el; }}>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold/5 border border-gold/10 text-[10px] text-gold uppercase tracking-widest mb-4">
+              How It Works
+            </div>
+            <h2 className="text-3xl sm:text-5xl font-heading font-bold tracking-tight mb-4">
+              Type it.<br className="sm:hidden" />
+              <span className="gold-gradient"> Forget it.</span>
+            </h2>
+            <p className="text-sm text-cream/50 max-w-lg mx-auto">
+              One message. AI handles everything from creation to publishing.
+            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
-              { step: "01", title: "Type or Talk", desc: '"Create 15-sec viral video for Mellow Sleep, post 3x/week on TikTok & IG Reels."' },
-              { step: "02", title: "AI Does Everything", desc: "Generates script, creates video with trending hooks & text overlays, writes per-platform hashtags & captions." },
-              { step: "03", title: "Auto-Schedules & Posts", desc: "Scheduled at optimal times per platform. Posts 3x/day. Set it and forget it for weeks." },
-            ].map((item) => (
-              <div key={item.step} className="bg-white/80 backdrop-blur-md border border-[#c9a96e]/10 rounded-2xl p-6 text-center hover:shadow-lg hover:shadow-[#c9a96e]/5 transition-all duration-300">
-                <div className="w-10 h-10 rounded-full bg-[#c9a96e]/10 border border-[#c9a96e]/20 flex items-center justify-center mx-auto mb-4">
-                  <span className="text-xs font-bold text-[#c9a96e]">{item.step}</span>
+              { step: "1", title: "Tell It What You Need", desc: "Type or talk — \"Create an unboxing video for my sleep gummies, post to TikTok and IG every 2 days.\" Conversational, no forms.", highlight: "Conversational AI" },
+              { step: "2", title: "AI Generates Everything", desc: "Scripts, videos, images, captions, hashtags, product pages, ad campaigns — all from one prompt. 20+ AI capabilities combined.", highlight: "20+ AI models" },
+              { step: "3", title: "Publishes Everywhere", desc: "One click posts to all 7 platforms at optimal times. Smart scheduling handles the calendar. Set once, runs autonomously.", highlight: "7 platforms" },
+            ].map((item, i) => (
+              <div key={item.step} className="animate-on-scroll relative group" ref={(el) => { observerRefs.current[60 + i] = el; }} style={{ transitionDelay: `${i * 150}ms` }}>
+                <div className="bg-dark border border-gold/10 rounded-2xl p-6 h-full hover:border-gold/30 transition-all duration-500">
+                  <div className="w-10 h-10 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center mb-4 group-hover:bg-gold/20 transition-all duration-300">
+                    <span className="text-sm font-bold text-gold">{item.step}</span>
+                  </div>
+                  <h3 className="font-heading font-semibold text-sm text-cream mb-2">{item.title}</h3>
+                  <p className="text-xs text-cream/50 leading-relaxed mb-3">{item.desc}</p>
+                  <span className="text-[10px] text-gold/60 font-medium uppercase tracking-wider">{item.highlight}</span>
                 </div>
-                <h3 className="font-semibold text-sm text-[#1a1614] mb-2">{item.title}</h3>
-                <p className="text-xs text-[#6b5a5e] leading-relaxed italic">{item.desc}</p>
+                {/* Connector arrow for desktop */}
+                {i < 2 && (
+                  <div className="hidden md:block absolute top-1/2 -right-3 transform -translate-y-1/2 text-gold/30">
+                    <ArrowRight className="w-5 h-5" />
+                  </div>
+                )}
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* FEATURES GRID */}
-      <section className="py-20 px-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-14">
-            <h2 className="text-4xl font-bold tracking-tight text-[#1a1614]">
-              Everything you need.<br />
-              <span className="bg-gradient-to-r from-[#c9a96e] to-[#e8c97a] bg-clip-text text-transparent">Nothing you don't.</span>
+      {/* ===== COMPETITIVE KILL ZONE ===== */}
+      <section className="py-24 px-4">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-16 animate-on-scroll" ref={(el) => { observerRefs.current[70] = el; }}>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold/5 border border-gold/10 text-[10px] text-gold uppercase tracking-widest mb-4">
+              Competitive Edge
+            </div>
+            <h2 className="text-3xl sm:text-5xl font-heading font-bold tracking-tight mb-4">
+              One app.<br className="sm:hidden" />
+              <span className="gold-gradient"> Replaces 20+.</span>
             </h2>
-            <p className="mt-3 text-sm text-[#6b5a5e] max-w-lg mx-auto">16 tools. Infinite content. One subscription.</p>
+            <p className="text-sm text-cream/50 max-w-lg mx-auto">
+              No competitor does everything. Users stitch together 6 apps to do what OnePost does in a single message.
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {features.map((f) => (
-              <div key={f.title} className="bg-white/80 backdrop-blur-md border border-[#c9a96e]/10 rounded-2xl p-5 hover:shadow-lg hover:shadow-[#c9a96e]/5 transition-all duration-300 hover:border-[#c9a96e]/30">
-                <div className="w-9 h-9 rounded-lg bg-[#c9a96e]/10 border border-[#c9a96e]/15 flex items-center justify-center mb-3">
-                  <f.icon className="w-4 h-4 text-[#c9a96e]" />
-                </div>
-                <h3 className="font-semibold text-sm text-[#1a1614] mb-1">{f.title}</h3>
-                <p className="text-xs text-[#6b5a5e] leading-relaxed">{f.description}</p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+            {competitorsReplaced.map((comp, i) => (
+              <div key={comp.name} className="animate-on-scroll bg-dark border border-gold/10 rounded-xl p-4 hover:border-gold/30 transition-all duration-300 group" ref={(el) => { observerRefs.current[80 + i] = el; }} style={{ transitionDelay: `${i * 75}ms` }}>
+                <comp.icon className="w-5 h-5 text-gold/60 mb-2 group-hover:text-gold transition-colors" />
+                <p className="text-xs font-semibold text-cream/80 group-hover:text-cream">{comp.name}</p>
+                <p className="text-[10px] text-cream/40 mt-0.5">{comp.what}</p>
               </div>
             ))}
+          </div>
+
+          <div className="mt-8 text-center animate-on-scroll" ref={(el) => { observerRefs.current[90] = el; }}>
+            <p className="text-sm text-cream/40 italic">
+              ChatGPT + HeyGen + InVideo + Later + Canva + Midjourney —{" "}
+              <span className="gold-gradient font-semibold not-italic">all in one app.</span>
+            </p>
           </div>
         </div>
       </section>
 
-      {/* MISSION CONTROL PREVIEW */}
-      <section className="py-20 px-4 bg-gradient-to-b from-[#faf7f2] to-[#f5f0ea]/50">
+      {/* ===== MISSION CONTROL PREVIEW ===== */}
+      <section className="py-24 px-4 bg-dark/50 border-y border-gold/5">
         <div className="max-w-4xl mx-auto">
-          <div className="bg-[#f5f0ea]/60 backdrop-blur-md border border-[#c9a96e]/10 rounded-2xl p-8 sm:p-10 text-center shadow-xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#c9a96e]/10 text-[#c9a96e] text-xs mb-6">
-              <Wand2 className="w-3 h-3" />
-              Mission Control
-            </div>
-            <div className="bg-[#1a1614]/90 rounded-2xl p-4 sm:p-6 text-left shadow-2xl border border-[#c9a96e]/10">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-2 h-2 rounded-full bg-[#d4a0a0]" />
-                <div className="w-2 h-2 rounded-full bg-[#c9a96e]/50" />
-                <div className="w-2 h-2 rounded-full bg-[#c9a96e]/30" />
-                <span className="text-[10px] text-gray-500 ml-2">onepost-ai ~ mission</span>
+          <div className="animate-on-scroll" ref={(el) => { observerRefs.current[100] = el; }}>
+            <div className="bg-[#0d0d14] border border-gold/10 rounded-2xl p-6 sm:p-8 shadow-2xl gold-border-glow">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-2.5 h-2.5 rounded-full bg-red-400/70" />
+                <div className="w-2.5 h-2.5 rounded-full bg-gold/50" />
+                <div className="w-2.5 h-2.5 rounded-full bg-gold/30" />
+                <span className="text-[10px] text-cream/30 ml-2 font-mono">onepost ~ mission-control</span>
               </div>
-              <p className="text-sm text-[#faf7f2]/80 font-mono mb-3">
-                <span className="text-[#c9a96e]">$</span> Create 15-sec viral video for Maverick mop soap, post every 2 days to TikTok & IG Reels
+              <p className="text-sm text-cream/70 font-mono mb-4">
+                <span className="text-gold">$</span> Create unboxing video for Mellow Sleep gummies, post 3x/week to TikTok & IG at peak times
               </p>
-              <div className="space-y-2 text-xs font-mono">
-                <div className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-[#c9a96e] animate-pulse" /><span className="text-[#faf7f2]/60">Generating viral script with trending hook...</span></div>
-                <div className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-[#c9a96e] animate-pulse" /><span className="text-[#faf7f2]/60">Creating video with text overlays & music...</span></div>
-                <div className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-green-500" /><span className="text-[#faf7f2]/80">Writing per-platform captions & hashtags...</span></div>
-                <div className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-green-500" /><span className="text-[#faf7f2]/80">Analyzing optimal posting times per platform...</span></div>
-                <div className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-green-500" /><span className="text-[#faf7f2]/80">Scheduling 3 posts/week for next 2 weeks...</span></div>
-                <div className="pt-2 border-t border-[#faf7f2]/10"><span className="text-[#c9a96e]">✅ Campaign created & published to 7 platforms. Next post: today 7:30pm EST (TikTok peak time)</span></div>
+              <div className="space-y-2.5 text-xs font-mono">
+                {[
+                  { status: "done", text: "Generated viral script with trending hook (pattern interrupt + curiosity gap)" },
+                  { status: "done", text: "Created 15-sec video — unboxing style, text overlays, trending audio" },
+                  { status: "done", text: "Wrote platform-optimized captions: TikTok (casual), IG (polished)" },
+                  { status: "active", text: "Analyzing optimal posting times — Tues 8pm, Thurs 3pm, Sat 11am" },
+                  { status: "pending", text: "Scheduling 21 posts across 2 platforms for the next 2 weeks..." },
+                ].map((item, i) => (
+                  <div key={i} className="flex items-center gap-2">
+                    <span className={`w-2 h-2 rounded-full flex-shrink-0 ${item.status === "done" ? "bg-gold" : item.status === "active" ? "bg-gold animate-pulse" : "bg-cream/20"}`} />
+                    <span className={item.status === "done" ? "text-cream/60" : item.status === "active" ? "text-cream/80" : "text-cream/30"}>{item.text}</span>
+                  </div>
+                ))}
+                <div className="pt-3 border-t border-gold/10">
+                  <span className="text-gold">✅ Campaign complete. 21 posts scheduled. Next: Tuesday 8:00 PM EST (TikTok peak).</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* FOR CREATORS */}
-      <section className="py-20 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl font-bold tracking-tight text-[#1a1614] mb-4">
-            Built for the creator<br />who's <span className="bg-gradient-to-r from-[#c9a96e] to-[#e8c97a] bg-clip-text text-transparent">ready to scale.</span>
+      {/* ===== PRICING CTA ===== */}
+      <section className="py-24 px-4">
+        <div className="max-w-4xl mx-auto text-center animate-on-scroll" ref={(el) => { observerRefs.current[110] = el; }}>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold/5 border border-gold/10 text-[10px] text-gold uppercase tracking-widest mb-4">
+            Pricing
+          </div>
+          <h2 className="text-3xl sm:text-5xl font-heading font-bold tracking-tight mb-4">
+            From <span className="gold-gradient">$19/month.</span>
           </h2>
-          <p className="text-sm text-[#6b5a5e] max-w-xl mx-auto leading-relaxed">
-            You know your niche. You know your products. You just don't have time to film, edit, caption, hashtag, schedule, and post to 7 platforms every day. That's my job now.
+          <p className="text-sm text-cream/50 mb-8 max-w-md mx-auto">
+            Cheaper than one lunch out. Less than any single tool it replaces.
           </p>
-          <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-3xl mx-auto mb-10">
             {[
-              { label: "Posts/Week", value: "21+" },
-              { label: "Platforms", value: "7" },
-              { label: "Time to Post", value: "<5 min" },
-              { label: "Retainers", value: "$3k-30k" },
-            ].map((s) => (
-              <div key={s.label} className="bg-white/80 backdrop-blur-md border border-[#c9a96e]/10 rounded-2xl p-4">
-                <p className="text-2xl font-bold text-[#c9a96e]">{s.value}</p>
-                <p className="text-[10px] text-[#6b5a5e] mt-0.5">{s.label}</p>
+              { name: "Basic", price: "$19", desc: "AI content generation, 7 platforms, smart scheduling", cta: "Start Free" },
+              { name: "Pro", price: "$49", desc: "Multi-brand, AI avatar, trend analytics, 2-week scheduling", cta: "Start Free", featured: true },
+              { name: "Agency", price: "$99", desc: "10 brands, team collab, white-label, API access", cta: "Start Free" },
+            ].map((plan, i) => (
+              <div key={plan.name} className={`relative rounded-2xl p-6 border transition-all duration-300 ${plan.featured ? "border-gold/40 bg-gold/5 gold-border-glow" : "border-gold/10 bg-dark hover:border-gold/30"}`}>
+                {plan.featured && (
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-gold text-dark text-[10px] font-semibold uppercase tracking-wider">
+                    Most Popular
+                  </div>
+                )}
+                <h3 className="font-heading font-semibold text-sm text-cream mb-1">{plan.name}</h3>
+                <p className="text-3xl font-heading font-bold gold-gradient mb-2">{plan.price}<span className="text-xs text-cream/40 font-body font-normal">/month</span></p>
+                <p className="text-xs text-cream/50 mb-4 leading-relaxed">{plan.desc}</p>
+                <Link href="/login">
+                  <button className={`w-full py-2.5 rounded-xl text-xs font-semibold transition-all ${plan.featured ? "bg-gold text-dark hover:bg-gold-light" : "border border-gold/30 text-gold hover:bg-gold/10"}`}>
+                    {plan.cta}
+                  </button>
+                </Link>
               </div>
             ))}
           </div>
+
+          <p className="text-[10px] text-cream/40">7-day free trial • No credit card • Cancel anytime • 30-day money-back guarantee</p>
         </div>
       </section>
 
-      {/* AXEL AI CROSS-PROMO */}
-      <section className="py-16 px-4">
+      {/* ===== AXEL AI CROSS-PROMO ===== */}
+      <section className="py-16 px-4 bg-dark/50 border-t border-gold/5">
         <div className="max-w-3xl mx-auto">
-          <div className="bg-white/80 backdrop-blur-md border border-[#c9a96e]/10 rounded-2xl p-8 text-center border-[#d4a0a0]/20">
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#c9a96e] to-[#d4a0a0] flex items-center justify-center mx-auto mb-4 shadow-lg shadow-[#c9a96e]/20">
-              <Brain className="w-5 h-5 text-[#1a1614]" />
+          <div className="animate-on-scroll bg-dark border border-gold/10 rounded-2xl p-8 text-center hover:border-gold/30 transition-all duration-500" ref={(el) => { observerRefs.current[120] = el; }}>
+            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-gold to-gold-light flex items-center justify-center mx-auto mb-4 shadow-lg shadow-gold/20">
+              <Brain className="w-5 h-5 text-dark" />
             </div>
-            <h3 className="text-lg font-bold text-[#12121a] mb-2">
-              Meet <span className="text-[#c9a96e]">Axel AI™</span>
+            <h3 className="font-heading font-bold text-lg text-cream mb-2">
+              Meet <span className="gold-gradient">Axel AI™</span>
             </h3>
-            <p className="text-xs text-[#6b5a5e] max-w-md mx-auto leading-relaxed">
-              Your autonomous AI executive assistant. Describe any task — research, email outreach, webpages, data gathering, content, analytics — executes end-to-end. Like having a full-time employee who never sleeps.
+            <p className="text-xs text-cream/50 max-w-md mx-auto leading-relaxed">
+              Your autonomous AI executive assistant. Research, email outreach, data gathering, analytics — executes end-to-end. Like a full-time employee who never sleeps.
             </p>
             <a href="https://axelai-eight.vercel.app" target="_blank" rel="noopener noreferrer">
-              <button className="mt-5 px-5 py-2.5 rounded-xl text-xs font-medium border border-[#c9a96e]/30 text-[#c9a96e] hover:bg-[#c9a96e]/10 transition-all inline-flex items-center gap-1.5">
+              <button className="mt-5 px-5 py-2.5 rounded-xl text-xs font-medium border border-gold/30 text-gold hover:bg-gold/10 transition-all inline-flex items-center gap-1.5">
                 Learn More <ExternalLink className="w-3 h-3" />
               </button>
             </a>
@@ -252,75 +441,65 @@ export default function Home() {
         </div>
       </section>
 
-      {/* PRICING */}
-      <section className="py-20 px-4 bg-gradient-to-b from-[#f5f0ea]/50 to-[#e8e0d4]">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-4xl font-bold tracking-tight text-[#12121a] mb-4 font-[family-name:var(--font-heading)]">
-            Plans for every creator.<br /><span className="text-[#c9a96e]">From $19/month.</span>
+      {/* ===== FINAL CTA ===== */}
+      <section className="py-24 px-4 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(201,169,110,0.08)_0%,transparent_60%)]" />
+        <div className="relative z-10 max-w-2xl mx-auto text-center animate-on-scroll" ref={(el) => { observerRefs.current[130] = el; }}>
+          <h2 className="text-3xl sm:text-5xl font-heading font-bold tracking-tight mb-4">
+            Ready to stop <span className="gold-gradient">juggling 6 apps?</span>
           </h2>
-          <p className="text-sm text-[#6b5a5e] mb-6">30-day money-back guarantee on all plans.</p>
-          <Link href="/pricing">
-            <button className="px-8 py-3.5 rounded-xl text-sm font-semibold bg-[#12121a] text-[#e8e0d4] hover:bg-[#2d2824] transition-all shadow-lg inline-flex items-center gap-2">
-              See Plans & Pricing <ArrowRight className="w-4 h-4" />
+          <p className="text-sm text-cream/50 mb-8 max-w-md mx-auto">
+            One conversation. One app. One click to publish everywhere. Start your free trial today.
+          </p>
+          <Link href="/login">
+            <button className="px-10 py-4 rounded-xl text-sm font-semibold bg-gold text-dark hover:bg-gold-light transition-all shadow-xl shadow-gold/20 hover:shadow-gold/40 inline-flex items-center gap-2 animate-pulse-gold">
+              Start 7-Day Free Trial
+              <ArrowRight className="w-4 h-4" />
             </button>
           </Link>
-          <p className="mt-3 text-[10px] text-[#6b5a5e]">7-day free trial • No credit card • Cancel anytime</p>
         </div>
       </section>
 
-      {/* CROSS-PROMO BAR */}
-      <div className="border-t border-[#c9a96e]/10 py-4 px-4 bg-gradient-to-r from-[#faf7f2] via-[#f5f0ea] to-[#faf7f2]">
-        <div className="max-w-5xl mx-auto flex flex-wrap justify-center md:justify-end gap-x-4 gap-y-1 text-xs">
-          <span className="flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#c9a96e] animate-pulse"></span>
-            Try <a href="https://axelai-eight.vercel.app" target="_blank" className="text-[#c9a96e] hover:text-[#d4b87a] font-bold">Axel AI</a>
-            {' '}- The Axle That Drives Your Business
-          </span>
-          <span>·</span>
-          <a href="https://aurahaven.shop" target="_blank" className="text-[#c9a96e] hover:text-[#d4b87a] font-bold">Shop Aura Haven</a>
-        </div>
-      </div>
-
-      {/* FOOTER */}
-      <footer className="border-t border-[#c9a96e]/10 py-12 px-4">
+      {/* ===== FOOTER ===== */}
+      <footer className="border-t border-gold/10 py-12 px-4">
         <div className="max-w-5xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
             <div>
-              <p className="text-xs font-semibold text-[#1a1614] mb-3">Product</p>
+              <p className="text-xs font-semibold text-cream mb-3">Product</p>
               <div className="space-y-2">
-                <Link href="/pricing" className="block text-[11px] text-[#6b5a5e] hover:text-[#1a1614]">Pricing</Link>
-                <Link href="/login" className="block text-[11px] text-[#6b5a5e] hover:text-[#1a1614]">Login</Link>
-                <Link href="/about" className="block text-[11px] text-[#6b5a5e] hover:text-[#1a1614]">About</Link>
+                <Link href="/pricing" className="block text-[11px] text-cream/40 hover:text-gold transition-colors">Pricing</Link>
+                <Link href="/login" className="block text-[11px] text-cream/40 hover:text-gold transition-colors">Login</Link>
+                <Link href="/about" className="block text-[11px] text-cream/40 hover:text-gold transition-colors">About</Link>
               </div>
             </div>
             <div>
-              <p className="text-xs font-semibold text-[#1a1614] mb-3">Resources</p>
+              <p className="text-xs font-semibold text-cream mb-3">Resources</p>
               <div className="space-y-2">
-                <Link href="/faq" className="block text-[11px] text-[#6b5a5e] hover:text-[#1a1614]">FAQ</Link>
-                <Link href="/support" className="block text-[11px] text-[#6b5a5e] hover:text-[#1a1614]">AI Chat</Link>
-                <Link href="/contact" className="block text-[11px] text-[#6b5a5e] hover:text-[#1a1614]">Contact</Link>
+                <Link href="/faq" className="block text-[11px] text-cream/40 hover:text-gold transition-colors">FAQ</Link>
+                <Link href="/support" className="block text-[11px] text-cream/40 hover:text-gold transition-colors">AI Chat</Link>
+                <Link href="/contact" className="block text-[11px] text-cream/40 hover:text-gold transition-colors">Contact</Link>
               </div>
             </div>
             <div>
-              <p className="text-xs font-semibold text-[#1a1614] mb-3">Company</p>
+              <p className="text-xs font-semibold text-cream mb-3">Company</p>
               <div className="space-y-2">
-                <Link href="/dashboard" className="block text-[11px] text-[#6b5a5e] hover:text-[#1a1614]">Dashboard</Link>
-                <Link href="/dashboard/owner" className="block text-[11px] text-[#6b5a5e] hover:text-[#1a1614]">Founder Access</Link>
-                <Link href="/dashboard/affiliates" className="block text-[11px] text-[#6b5a5e] hover:text-[#1a1614]">Ambassador Program</Link>
+                <Link href="/dashboard" className="block text-[11px] text-cream/40 hover:text-gold transition-colors">Dashboard</Link>
+                <Link href="/dashboard/owner" className="block text-[11px] text-cream/40 hover:text-gold transition-colors">Founder Access</Link>
+                <Link href="/dashboard/affiliates" className="block text-[11px] text-cream/40 hover:text-gold transition-colors">Ambassador Program</Link>
               </div>
             </div>
             <div>
-              <p className="text-xs font-semibold text-[#1a1614] mb-3">Social</p>
+              <p className="text-xs font-semibold text-cream mb-3">Social</p>
               <div className="space-y-2">
-                <a href="https://tiktok.com/@funkycoldmedemaa" target="_blank" className="block text-[11px] text-[#6b5a5e] hover:text-[#1a1614]">TikTok</a>
-                <a href="https://instagram.com/funkycoldmedemaa" target="_blank" className="block text-[11px] text-[#6b5a5e] hover:text-[#1a1614]">Instagram</a>
-                <a href="https://twitter.com/funkycoldmedemaa" target="_blank" className="block text-[11px] text-[#6b5a5e] hover:text-[#1a1614]">Twitter / X</a>
+                <a href="https://tiktok.com/@funkycoldmedemaa" target="_blank" className="block text-[11px] text-cream/40 hover:text-gold transition-colors">TikTok</a>
+                <a href="https://instagram.com/funkycoldmedemaa" target="_blank" className="block text-[11px] text-cream/40 hover:text-gold transition-colors">Instagram</a>
+                <a href="https://twitter.com/funkycoldmedemaa" target="_blank" className="block text-[11px] text-cream/40 hover:text-gold transition-colors">Twitter / X</a>
               </div>
             </div>
           </div>
-          <div className="border-t border-[#c9a96e]/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <p className="text-[10px] text-[#6b5a5e]">© 2026 Aura Haven Tech. All rights reserved.</p>
-            <p className="text-[10px] text-[#6b5a5e]">Built by <span className="text-[#c9a96e]">@funkycoldmedemaa</span></p>
+          <div className="border-t border-gold/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p className="text-[10px] text-cream/30">© 2026 Aura Haven Tech. All rights reserved.</p>
+            <p className="text-[10px] text-cream/30">Built with <span className="text-gold">♥</span> by @funkycoldmedemaa</p>
           </div>
         </div>
       </footer>

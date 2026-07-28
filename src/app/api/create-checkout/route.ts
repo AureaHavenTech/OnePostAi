@@ -1,17 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { withApi } from "@/lib/api-utils";
+import { STRIPE_PRICE_CATALOG, PRICE_ID_TO_KEY } from "@/lib/stripe-catalog";
 import Stripe from "stripe";
-
-// Stripe catalog — single source of truth for valid price IDs
-export const STRIPE_PRICE_CATALOG: Record<string, { priceId: string; label: string; amount: number; currency: string; mode: "payment" | "subscription"; nickname?: string }> = {
-  "onepost_monthly": { priceId: "price_1TkABVDIOEE0E2wQJlzDDNHn", label: "One Post AI Monthly", amount: 29, currency: "USD", mode: "subscription", nickname: "Monthly subscription" },
-  "onepost_lifetime": { priceId: "price_1TkABjDIOEE0E2wQ4jINuBhJ", label: "One Post AI Lifetime", amount: 199, currency: "USD", mode: "payment", nickname: "Lifetime access" },
-};
-
-// Reverse map: priceId → catalogKey (for reverse lookup)
-const PRICE_ID_TO_KEY: Record<string, string> = Object.fromEntries(
-  Object.entries(STRIPE_PRICE_CATALOG).map(([k, v]) => [v.priceId, k])
-);
 
 let stripeClient: Stripe | null = null;
 function getStripe(): Stripe | null {
@@ -71,9 +61,7 @@ export const POST = withApi(
 
     const stripe = getStripe();
     if (!stripe) {
-      // Stripe SDK not configured — return a stub response so the frontend can be developed without STRIPE_SECRET_KEY.
-      // The frontend will still get a valid URL to redirect to (the Stripe payment link for the price).
-      const stubUrl = `https://buy.stripe.com/${planMeta.mode === "subscription" ? "test" : "test"}_${resolvedPriceId.slice(-8)}`;
+      const stubUrl = `https://buy.stripe.com/test_${resolvedPriceId.slice(-8)}`;
       logCheckoutEvent("stub_no_secret", { plan, priceId: resolvedPriceId, email, userId });
       return NextResponse.json({
         success: true,
@@ -116,7 +104,7 @@ export const POST = withApi(
 export const GET = withApi(
   {
     method: "GET",
-    cache: "long", // Catalog rarely changes
+    cache: "long",
   },
   async () => {
     return { catalog: STRIPE_PRICE_CATALOG, validPlanKeys: Object.keys(STRIPE_PRICE_CATALOG) };

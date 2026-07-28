@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     description: "Drop a raw video or just an idea. AI edits, captions, and publishes everywhere. On autopilot.",
     type: "website",
     images: [
-      { url: "/op-og-image.png", width: 1200, height: 630 },
+      { url: "/og-image.svg", width: 1200, height: 630 },
     ],
   },
   icons: {
@@ -37,7 +37,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />

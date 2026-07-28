@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <defs>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#c9a96e"/>
+      <stop offset="40%" stop-color="#d4b87a"/>
+      <stop offset="60%" stop-color="#e8d4a0"/>
+      <stop offset="100%" stop-color="#c9a96e"/>
+    </linearGradient>
+    <linearGradient id="goldGrad2" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#c9a96e"/>
+      <stop offset="100%" stop-color="#d4b87a"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="80" fill="none" stroke="#1e1e2a" stroke-width="1.5"/>
+
+  <!-- Open book -->
+  <path d="M58 95 Q58 65 80 75 L100 85 L120 75 Q142 65 142 95 L100 105 Z" stroke="url(#goldGrad)" stroke-width="2.5" fill="none" stroke-linejoin="round"/>
+  <!-- Left page -->
+  <path d="M58 95 Q58 65 80 75 L100 85 L100 105 Z" stroke="url(#goldGrad2)" stroke-width="1.2" fill="none" opacity="0.3"/>
+  <!-- Right page -->
+  <path d="M142 95 Q142 65 120 75 L100 85 L100 105 Z" stroke="url(#goldGrad2)" stroke-width="1.2" fill="none" opacity="0.3"/>
+
+  <!-- Spine -->
+  <line x1="100" y1="85" x2="100" y2="108" stroke="url(#goldGrad)" stroke-width="1.5"/>
+
+  <!-- Text lines on left page -->
+  <g opacity="0.4">
+    <line x1="68" y1="82" x2="96" y2="88" stroke="#d4b87a" stroke-width="0.8" stroke-linecap="round"/>
+    <line x1="68" y1="88" x2="92" y2="93" stroke="#d4b87a" stroke-width="0.8" stroke-linecap="round"/>
+    <line x1="68" y1="94" x2="88" y2="98" stroke="#d4b87a" stroke-width="0.8" stroke-linecap="round"/>
+  </g>
+
+  <!-- Text lines on right page -->
+  <g opacity="0.4">
+    <line x1="104" y1="88" x2="132" y2="82" stroke="#d4b87a" stroke-width="0.8" stroke-linecap="round"/>
+    <line x1="108" y1="93" x2="132" y2="88" stroke="#d4b87a" stroke-width="0.8" stroke-linecap="round"/>
+    <line x1="112" y1="98" x2="132" y2="94" stroke="#d4b87a" stroke-width="0.8" stroke-linecap="round"/>
+  </g>
+
+  <!-- Narrative arc - crescent story curve above -->
+  <path d="M55 60 Q100 35 145 60" stroke="url(#goldGrad)" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.6"/>
+  <!-- Arc nodes -->
+  <circle cx="55" cy="60" r="2.5" stroke="#c9a96e" stroke-width="1.2" fill="none"/>
+  <circle cx="100" cy="48" r="3" stroke="#e8d4a0" stroke-width="1.2" fill="none" filter="url(#glow)"/>
+  <circle cx="145" cy="60" r="2.5" stroke="#c9a96e" stroke-width="1.2" fill="none"/>
+
+  <!-- Quote marks -->
+  <g opacity="0.5">
+    <text x="52" cy="52" text-anchor="middle" font-family="'Playfair Display', serif" font-size="18" fill="#c9a96e">"</text>
+    <text x="148" cy="44" text-anchor="middle" font-family="'Playfair Display', serif" font-size="18" fill="#c9a96e" transform="rotate(180, 148, 44)">"</text>
+  </g>
+
+  <!-- Decorative dot -->
+  <circle cx="100" cy="35" r="1.5" fill="#c9a96e" opacity="0.4"/>
+</svg>
