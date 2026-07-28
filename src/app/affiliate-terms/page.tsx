@@ -15,15 +15,40 @@ export default function AffiliateTermsPage() {
         <Link href="/login"><Button variant="default" size="sm">Dashboard</Button></Link>
       </header>
       <main className="pt-32 pb-24 px-6 max-w-4xl mx-auto">
-        <div className="mb-12"><h1 className="text-5xl font-extrabold tracking-tight mb-4 text-white" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Affiliate Program Terms</h1><p className="text-slate-400 text-sm">Last updated: July 4, 2026</p></div>
+        <div className="mb-12">
+          <h1 className="text-5xl font-extrabold tracking-tight mb-4 text-white" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Affiliate Program Terms</h1>
+          <p className="text-slate-400 text-sm">Last updated: July 7, 2026</p>
+        </div>
         <div className="space-y-6 text-slate-300 leading-relaxed">
-          <section><h2 className="text-2xl font-bold text-white mb-3" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Commission</h2><p>Earn <strong className="text-white">10%</strong> commission on each customer&apos;s first subscription payment. Monthly payouts after $50 threshold.</p></section>
-          <section><h2 className="text-2xl font-bold text-white mb-3" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Referral Tracking</h2><p>Unique referral links with 30-day cookie duration. Self-referrals prohibited.</p></section>
-          <section><h2 className="text-2xl font-bold text-white mb-3" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Prohibited Practices</h2><ul className="list-disc pl-6 space-y-2"><li>Spam or unsolicited emails</li><li>Misleading ads or impersonation</li><li>Bidding on trademarked keywords</li></ul></section>
+          <section>
+            <h2 className="text-2xl font-bold text-white mb-3" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>1. Program Overview</h2>
+            <p>The OnePost AI Affiliate Program lets you earn 10% commission on referred customers&apos; first subscription payment. Operated by Aura Haven Tech.</p>
+          </section>
+          <section>
+            <h2 className="text-2xl font-bold text-white mb-3" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>2. Commission Details</h2>
+            <p>10% of first payment. $50 minimum payout threshold. Monthly payouts via PayPal or bank transfer. 30-day cookie duration. Affiliates must be 18+ and have an active OnePost AI account.</p>
+          </section>
+          <section>
+            <h2 className="text-2xl font-bold text-white mb-3" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>3. Approved Marketing</h2>
+            <p>Social media posts, blog content, YouTube videos, email to existing subscribers. Prohibited: paid search on branded keywords, spam, coupon/deal sites, self-referrals, fake accounts.</p>
+          </section>
+          <section>
+            <h2 className="text-2xl font-bold text-white mb-3" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>4. Disclosure</h2>
+            <p>You must clearly disclose affiliate relationships in all promotional content as required by FTC guidelines.</p>
+          </section>
+          <section>
+            <h2 className="text-2xl font-bold text-white mb-3" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>5. Contact</h2>
+            <p>Email: <a href="mailto:aurahaventech@gmail.com" className="text-[#c9a96e] hover:text-[#d4b87a]">aurahaventech@gmail.com</a></p>
+          </section>
         </div>
       </main>
       <footer className="border-t border-[#1e1e2a] py-8 px-6 text-center text-sm text-slate-500">
         <p>&copy; 2026 Aura Haven Tech. All rights reserved.</p>
+        <div className="flex justify-center gap-4 mt-2 text-xs">
+          <Link href="/privacy" className="text-[#c9a96e] hover:text-[#d4b87a]">Privacy</Link>
+          <Link href="/terms" className="text-[#c9a96e] hover:text-[#d4b87a]">Terms</Link>
+          <Link href="/" className="text-[#c9a96e] hover:text-[#d4b87a]">Home</Link>
+        </div>
       </footer>
     </div>
   );

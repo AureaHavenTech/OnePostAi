@@ -17,14 +17,43 @@ export default function TermsPage() {
       <main className="pt-32 pb-24 px-6 max-w-4xl mx-auto">
         <div className="mb-12">
           <h1 className="text-5xl font-extrabold tracking-tight mb-4 text-white" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Terms of Service</h1>
-          <p className="text-slate-400 text-sm">Last updated: July 4, 2026</p>
+          <p className="text-slate-400 text-sm">Last updated: July 7, 2026</p>
         </div>
         <div className="space-y-6 text-slate-300 leading-relaxed">
-          <section><h2 className="text-2xl font-bold text-white mb-3" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>1. Acceptance</h2><p>By using OnePost AI, you agree to these terms. OnePost AI is a product of Aura Haven Tech.</p></section>
-          <section><h2 className="text-2xl font-bold text-white mb-3" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>2. Subscriptions</h2><p>Paid subscriptions billed monthly. All plans include a <strong className="text-white">30-day money-back guarantee</strong>.</p></section>
-          <section><h2 className="text-2xl font-bold text-white mb-3" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>3. Intellectual Property</h2><p>OnePost AI&trade;, Axel AI&trade;, and Aura Haven&trade; are trademarks of Aura Haven Tech. You may not copy, reverse engineer, or create derivative works.</p></section>
-          <section><h2 className="text-2xl font-bold text-white mb-3" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>4. Limitation of Liability</h2><p>Service provided &quot;as is.&quot; Liability limited to amount paid in preceding 12 months.</p></section>
-          <section><h2 className="text-2xl font-bold text-white mb-3" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>5. Contact</h2><p><a href="mailto:aurahaventech@gmail.com" className="text-[#c9a96e]">aurahaventech@gmail.com</a></p></section>
+          <section>
+            <h2 className="text-2xl font-bold text-white mb-3" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>1. Acceptance of Terms</h2>
+            <p>By using OnePost AI (&quot;the Service&quot;), you agree to these Terms. OnePost AI is a product of <strong className="text-white">Aura Haven Tech</strong>. If you do not agree, do not use the Service.</p>
+          </section>
+          <section>
+            <h2 className="text-2xl font-bold text-white mb-3" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>2. Service Description</h2>
+            <p>OnePost AI is an AI-powered content creation and social media management platform. Features include AI content generation (captions, hashtags, ad copies, images, videos), cross-platform publishing, content editing with effects and filters, analytics, and scheduling. We reserve the right to modify features with reasonable notice.</p>
+          </section>
+          <section>
+            <h2 className="text-2xl font-bold text-white mb-3" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>3. Account &amp; Subscriptions</h2>
+            <p>You must be 18+ to use the Service. Paid plans ($19/mo Starter, $49/mo Creator, $99/mo Pro) are billed monthly. All plans include a 30-day money-back guarantee. See our <Link href="/refund" className="text-[#c9a96e] hover:text-[#d4b87a]">Refund Policy</Link>. Payments via Stripe.</p>
+          </section>
+          <section>
+            <h2 className="text-2xl font-bold text-white mb-3" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>4. User Responsibilities</h2>
+            <p>You are responsible for: reviewing AI-generated content before publishing, complying with platform terms and applicable laws, maintaining account security, and not using the Service for illegal activities. You retain rights to content you create.</p>
+          </section>
+          <section>
+            <h2 className="text-2xl font-bold text-white mb-3" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>5. Intellectual Property &amp; Trademark Protection</h2>
+            <p><strong className="text-white">OnePost AI&trade;</strong> and <strong className="text-white">Axel AI&trade;</strong> are trademarks of <strong className="text-white">Aura Haven Tech</strong>. All software, branding, logos, trade dress, content, and materials provided through the Service are the exclusive intellectual property of Aura Haven Tech and are protected by copyright, trademark, and other applicable intellectual property laws.</p>
+            <p className="mt-3">No license, express or implied, is granted to use any trademark, service mark, trade name, or logo of Aura Haven Tech without prior written consent. You may not copy, modify, reverse engineer, distribute, sell, or create derivative works of the Service or any part thereof. Unauthorized use of any Aura Haven Tech intellectual property may result in legal action, including but not limited to claims for trademark infringement, copyright infringement, and unfair competition.</p>
+            <p className="mt-3">All content generated by the Service is provided for your internal business use. You retain no ownership or license rights to the underlying AI models, algorithms, or technology. &copy; 2026 Aura Haven Tech. All rights reserved.</p>
+          </section>
+          <section>
+            <h2 className="text-2xl font-bold text-white mb-3" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>6. AI Outputs</h2>
+            <p>AI-generated outputs are provided as assistance tools. OnePost AI&trade; is not responsible for the accuracy or legality of AI outputs. You should review and verify all AI-generated content before publishing, especially for business-critical posts and advertisements.</p>
+          </section>
+          <section>
+            <h2 className="text-2xl font-bold text-white mb-3" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>7. Limitation of Liability</h2>
+            <p>Service provided &quot;as is.&quot; Aura Haven Tech is not liable for damages arising from use. Our total liability is limited to the amount paid in the preceding 12 months.</p>
+          </section>
+          <section>
+            <h2 className="text-2xl font-bold text-white mb-3" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>8. Contact</h2>
+            <p>Email: <a href="mailto:aurahaventech@gmail.com" className="text-[#c9a96e] hover:text-[#d4b87a]">aurahaventech@gmail.com</a></p>
+          </section>
         </div>
       </main>
       <footer className="border-t border-[#1e1e2a] py-8 px-6 text-center text-sm text-slate-500">

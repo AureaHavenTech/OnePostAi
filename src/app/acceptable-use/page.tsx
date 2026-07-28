@@ -15,15 +15,40 @@ export default function AcceptableUsePage() {
         <Link href="/login"><Button variant="default" size="sm">Dashboard</Button></Link>
       </header>
       <main className="pt-32 pb-24 px-6 max-w-4xl mx-auto">
-        <div className="mb-12"><h1 className="text-5xl font-extrabold tracking-tight mb-4 text-white" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Acceptable Use Policy</h1><p className="text-slate-400 text-sm">Last updated: July 4, 2026</p></div>
+        <div className="mb-12">
+          <h1 className="text-5xl font-extrabold tracking-tight mb-4 text-white" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Acceptable Use Policy</h1>
+          <p className="text-slate-400 text-sm">Last updated: July 7, 2026</p>
+        </div>
         <div className="space-y-6 text-slate-300 leading-relaxed">
-          <section><h2 className="text-2xl font-bold text-white mb-3" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Prohibited Content</h2><ul className="list-disc pl-6 space-y-2"><li>Illegal, fraudulent, or harmful content</li><li>Hate speech, harassment, or threats</li><li>Sexually explicit or non-consensual content</li><li>IP-infringing content</li><li>Malware or harmful code</li></ul></section>
-          <section><h2 className="text-2xl font-bold text-white mb-3" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Prohibited Activities</h2><ul className="list-disc pl-6 space-y-2"><li>Circumventing AI safety filters</li><li>Using bots or scrapers</li><li>Creating multiple accounts for trial abuse</li><li>Reverse engineering the platform</li></ul></section>
-          <section><h2 className="text-2xl font-bold text-white mb-3" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Enforcement</h2><p>Violations may result in account termination. Appeals: <a href="mailto:aurahaventech@gmail.com" className="text-[#c9a96e]">aurahaventech@gmail.com</a></p></section>
+          <section>
+            <h2 className="text-2xl font-bold text-white mb-3" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>1. Prohibited Content</h2>
+            <p>You may not use OnePost AI to create or distribute: illegal content, hate speech, harassment, threats, CSAM, explicit sexual content, content promoting self-harm, malware, spam, phishing, deceptive content, or content infringing on intellectual property rights.</p>
+          </section>
+          <section>
+            <h2 className="text-2xl font-bold text-white mb-3" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>2. Prohibited Activities</h2>
+            <p>You may not: reverse engineer the platform, circumvent security measures or AI safety filters, create multiple accounts for trial abuse, resell access without authorization, or use the service for AI model training of competing services.</p>
+          </section>
+          <section>
+            <h2 className="text-2xl font-bold text-white mb-3" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>3. AI-Generated Content</h2>
+            <p>Review all AI outputs before publishing. You are responsible for content published through OnePost AI. Comply with all applicable laws regarding AI-generated content disclosure and platform-specific policies.</p>
+          </section>
+          <section>
+            <h2 className="text-2xl font-bold text-white mb-3" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>4. Enforcement</h2>
+            <p>Violations may result in content removal, account suspension, termination, forfeiture of prepaid fees, and/or reporting to law enforcement.</p>
+          </section>
+          <section>
+            <h2 className="text-2xl font-bold text-white mb-3" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>5. Reporting</h2>
+            <p>Report violations to <a href="mailto:aurahaventech@gmail.com" className="text-[#c9a96e] hover:text-[#d4b87a]">aurahaventech@gmail.com</a>.</p>
+          </section>
         </div>
       </main>
       <footer className="border-t border-[#1e1e2a] py-8 px-6 text-center text-sm text-slate-500">
         <p>&copy; 2026 Aura Haven Tech. All rights reserved.</p>
+        <div className="flex justify-center gap-4 mt-2 text-xs">
+          <Link href="/privacy" className="text-[#c9a96e] hover:text-[#d4b87a]">Privacy</Link>
+          <Link href="/terms" className="text-[#c9a96e] hover:text-[#d4b87a]">Terms</Link>
+          <Link href="/" className="text-[#c9a96e] hover:text-[#d4b87a]">Home</Link>
+        </div>
       </footer>
     </div>
   );
