@@ -6,9 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Check, ArrowLeft, ArrowRight, Sparkles, Shield } from "lucide-react";
 
 const STRIPE_LINKS: Record<string, string> = {
-  basic: "https://buy.stripe.com/aFa5kD5rBe160fbc66cwg0d",
-  pro: "https://buy.stripe.com/7sYdR9g6fbSY5zvc66cwg0e",
-  agency: "https://buy.stripe.com/fZu8wPaLVg9e9PL3zAcwg0f",
+  basic: "https://buy.stripe.com/dRm9AT5rBcX21jf9XYcwg0l",
+  pro: "https://buy.stripe.com/eVqfZhbZ9KQfa51rscwg0m",
+  agency: "https://buy.stripe.com/dRm9AT9HRe164vr9XYcwg0n",
 };
 
 const plans = [
