@@ -101,7 +101,7 @@ export const POST = withApi(
     validate: (b) => {
       if (!b?.postId) return "postId is required";
       if (!b?.platform) return "platform is required";
-      if (!PLATFORMS.includes(String(b.platform))) {
+      if (!(PLATFORMS as readonly string[]).includes(String(b.platform))) {
         return `platform must be one of: ${PLATFORMS.join(", ")}`;
       }
       return true;

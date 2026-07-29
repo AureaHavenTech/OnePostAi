@@ -50,7 +50,7 @@ export const POST = withApi(
             failureCount++;
             continue;
           }
-          if (!PLATFORMS.includes(String(r.platform))) {
+          if (!(PLATFORMS as readonly string[]).includes(String(r.platform))) {
             results.push({ type: "performance", success: false, id: "", persisted: false, error: `invalid platform: ${r.platform}` });
             failureCount++;
             continue;
@@ -104,7 +104,7 @@ export const POST = withApi(
             failureCount++;
             continue;
           }
-          if (!PLATFORMS.includes(String(r.platform))) {
+          if (!(PLATFORMS as readonly string[]).includes(String(r.platform))) {
             results.push({ type: "followers", success: false, id: "", persisted: false, error: `invalid platform: ${r.platform}` });
             failureCount++;
             continue;

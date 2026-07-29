@@ -71,7 +71,7 @@ export const POST = withApi(
     validate: (b) => {
       if (!b?.brandId) return "brandId is required";
       if (!b?.platform) return "platform is required";
-      if (!PLATFORMS.includes(String(b.platform))) {
+      if (!(PLATFORMS as readonly string[]).includes(String(b.platform))) {
         return `platform must be one of: ${PLATFORMS.join(", ")}`;
       }
       if (b?.followers === undefined || b?.followers === null) return "followers is required";
