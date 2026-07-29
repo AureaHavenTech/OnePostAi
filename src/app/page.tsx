@@ -216,7 +216,7 @@ export default function Home() {
       {/* ===== SOCIAL PROOF — COMPETITIVE POSITIONING ===== */}
       <section className="py-16 px-4 border-y border-gold/5 bg-dark/50">
         <div className="max-w-5xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-center">
             {stats.map((s, i) => (
               <div key={s.label} className="animate-on-scroll p-6" ref={(el) => { observerRefs.current[10 + i] = el; }} style={{ transitionDelay: `${i * 100}ms` }}>
                 <p className="text-3xl sm:text-4xl font-heading font-bold gold-gradient">{s.value}</p>
@@ -463,7 +463,7 @@ export default function Home() {
       {/* ===== FOOTER ===== */}
       <footer className="border-t border-gold/10 py-12 px-4">
         <div className="max-w-5xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-10">
             <div>
               <p className="text-xs font-semibold text-cream mb-3">Product</p>
               <div className="space-y-2">
@@ -486,6 +486,18 @@ export default function Home() {
                 <Link href="/dashboard" className="block text-[11px] text-cream/40 hover:text-gold transition-colors">Dashboard</Link>
                 <Link href="/dashboard/owner" className="block text-[11px] text-cream/40 hover:text-gold transition-colors">Founder Access</Link>
                 <Link href="/dashboard/affiliates" className="block text-[11px] text-cream/40 hover:text-gold transition-colors">Ambassador Program</Link>
+              </div>
+            </div>
+            <div>
+              <p className="text-xs font-semibold text-cream mb-3">Legal</p>
+              <div className="space-y-2">
+                <Link href="/terms" className="block text-[11px] text-cream/40 hover:text-gold transition-colors">Terms</Link>
+                <Link href="/privacy" className="block text-[11px] text-cream/40 hover:text-gold transition-colors">Privacy</Link>
+                <Link href="/cookies" className="block text-[11px] text-cream/40 hover:text-gold transition-colors">Cookies</Link>
+                <Link href="/refund" className="block text-[11px] text-cream/40 hover:text-gold transition-colors">Refund</Link>
+                <Link href="/dpa" className="block text-[11px] text-cream/40 hover:text-gold transition-colors">DPA</Link>
+                <Link href="/acceptable-use" className="block text-[11px] text-cream/40 hover:text-gold transition-colors">Acceptable Use</Link>
+                <Link href="/affiliate-terms" className="block text-[11px] text-cream/40 hover:text-gold transition-colors">Affiliate Terms</Link>
               </div>
             </div>
             <div>
