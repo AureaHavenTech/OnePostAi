@@ -249,7 +249,7 @@ export default function DashboardPage() {
           role: "assistant",
           content: response,
           timestamp: Date.now(),
-          pipeline: activePipeline,
+          pipeline: activePipeline ?? undefined,
         };
         setMessages(prev => [...prev, assistantMsg]);
         setStreamedText("");
@@ -257,7 +257,7 @@ export default function DashboardPage() {
         setIsStreaming(false);
 
         // Save to localStorage
-        saveCurrentSession([...messages, userMsg, assistantMsg]);
+        saveCurrentSession([...messages, assistantMsg]);
       }
     }, 40); // ~25 words/sec — feels fluid
   };

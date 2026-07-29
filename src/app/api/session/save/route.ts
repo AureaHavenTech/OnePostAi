@@ -17,7 +17,7 @@ export const POST = withApi(
     cache: "no-store",
     rateLimit: { windowMs: 60_000, max: 120 },
     validate: (b) => {
-      if (b?.sessionType && !VALID_TYPES.includes(String(b.sessionType))) {
+      if (b?.sessionType && !(VALID_TYPES as readonly string[]).includes(String(b.sessionType))) {
         return `sessionType must be one of: ${VALID_TYPES.join(", ")}`;
       }
       return true;

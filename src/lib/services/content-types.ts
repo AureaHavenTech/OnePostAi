@@ -65,6 +65,7 @@ export type ContentTypeInput = {
   brandName: string;
   prompt: string;
   platforms: Platform[];
+  contentType?: ContentTypeId; // inferred from prompt when omitted
   productName?: string;
   productDescription?: string;
   brandVoice?: string;        // e.g. "playful", "luxury", "professional"
@@ -426,10 +427,10 @@ JSON only.` }
 export const CONTENT_TYPES: Record<ContentTypeId, ContentTypeDefinition> = {
   unboxing,
   voiceover,
-  talking_head,
-  ai_twin,
-  product_demo,
-  trending_hook,
+  talking_head: talkingHead,
+  ai_twin: aiTwin,
+  product_demo: productDemo,
+  trending_hook: trendingHook,
   storytelling,
 };
 

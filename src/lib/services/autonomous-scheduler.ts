@@ -301,7 +301,7 @@ export async function fillSchedule(brandId: string, days = 7): Promise<{ generat
   for (let i = 0; i < toGenerate; i++) {
     const result = await generateNextPost(brandId);
     if ("error" in result) {
-      skipped.push(result.error);
+      if (result.error) skipped.push(result.error);
       break;
     }
     posts.push(result);

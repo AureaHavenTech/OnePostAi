@@ -110,7 +110,7 @@ export function createCircuitBreaker(opts: CircuitBreakerOptions): CircuitBreake
       failures++;
       lastFailure = err.message;
 
-      if (state !== CircuitState.OPEN && failures >= failureThreshold) {
+      if ((state as CircuitState) !== CircuitState.OPEN && failures >= failureThreshold) {
         openCircuit(err);
       }
 

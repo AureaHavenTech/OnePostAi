@@ -240,7 +240,7 @@ export async function generateContentWithAI(input: GenerateContentAIInput): Prom
     maxTokens: 1800,
     responseFormat: "json_object",
   });
-  if (!res.ok) return res as AIResult<GenerateContentAIOutput>;
+  if (!res.ok) return res as unknown as AIResult<GenerateContentAIOutput>;
   const data = res.data;
   const scripts: Record<string, string> = {};
   const captions: Record<string, string> = {};
