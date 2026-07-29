@@ -22,7 +22,6 @@ const nextConfig = {
 
   // CSS optimization + selective imports
   experimental: {
-    optimizeCss: true,
     optimizePackageImports: ["lucide-react"],
   },
 
