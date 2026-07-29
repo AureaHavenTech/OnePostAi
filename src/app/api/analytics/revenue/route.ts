@@ -59,13 +59,13 @@ export const POST = withApi(
     rateLimit: { windowMs: 60_000, max: 60 },
     validate: (b) => {
       if (!b?.type) return "type is required";
-      if (!VALID_TYPES.includes(String(b.type))) {
+      if (!(VALID_TYPES as readonly string[]).includes(String(b.type))) {
         return `type must be one of: ${VALID_TYPES.join(", ")}`;
       }
       if (b?.amountUsd === undefined || b?.amountUsd === null) return "amountUsd is required";
       const amt = Number(b.amountUsd);
       if (!Number.isFinite(amt)) return "amountUsd must be a number";
-      if (b?.status && !VALID_STATUS.includes(String(b.status))) {
+      if (b?.status && !(VALID_STATUS as readonly string[]).includes(String(b.status))) {
         return `status must be one of: ${VALID_STATUS.join(", ")}`;
       }
       return true;
