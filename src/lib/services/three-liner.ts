@@ -1,5 +1,8 @@
 // Three Liner™ — Signature content framework
 // Hook | Product/Solution | Brand — zero filler, maximum impact
+// Now powered by OpenAI GPT-4o — falls back to template substitution in dev mode.
+
+import { generateThreeLinerWithAI, isOpenAIConfigured } from "@/lib/openai";
 
 export interface ThreeLinerTemplate {
   name: string;
@@ -65,7 +68,7 @@ export const THREE_LINER_TEMPLATES: Record<string, ThreeLinerTemplate> = {
   },
 };
 
-export function generateThreeLiner(params: {
+function fillTemplate(params: {
   template: string;
   brandName: string;
   brandMotto?: string;
@@ -74,11 +77,19 @@ export function generateThreeLiner(params: {
   keyFeature?: string;
   timeSaved?: string;
   link?: string;
-}): ThreeLinerTemplate & { filled: { hook: string; body: string; brand: string } } {
+}): { hook: string; body: string; brand: string } {
   const template = THREE_LINER_TEMPLATES[params.template] || THREE_LINER_TEMPLATES.hookValueClose;
-  const { brandName, brandMotto = "", painPoint = "content creation", product = brandName, keyFeature = "AI automation", timeSaved = "10+", link = "onepostai.ctonew.app" } = params;
+  const {
+    brandName,
+    brandMotto = "",
+    painPoint = "content creation",
+    product = brandName,
+    keyFeature = "AI automation",
+    timeSaved = "10+",
+    link = "onepostai.ctonew.app",
+  } = params;
 
-  const filled = {
+  return {
     hook: template.structure.hook
       .replace("[pain point]", painPoint)
       .replace("[old way]", painPoint)
@@ -97,6 +108,56 @@ export function generateThreeLiner(params: {
       .replace("[link]", link)
       .replace("[topic]", painPoint),
   };
+}
 
-  return { ...template, filled };
+export async function generateThreeLiner(params: {
+  template: string;
+  brandName: string;
+  brandMotto?: string;
+  painPoint?: string;
+  product?: string;
+  keyFeature?: string;
+  timeSaved?: string;
+  link?: string;
+}): Promise<ThreeLinerTemplate & {
+  filled: { hook: string; body: string; brand: string };
+  aiModel?: string;
+  aiConfigured?: boolean;
+  aiError?: string;
+}> {
+  const template = THREE_LINER_TEMPLATES[params.template] || THREE_LINER_TEMPLATES.hookValueClose;
+
+  // Try real OpenAI generation
+  const ai = await generateThreeLinerWithAI({
+    brandName: params.brandName,
+    template: params.template,
+    painPoint: params.painPoint,
+    product: params.product,
+    keyFeature: params.keyFeature,
+    timeSaved: params.timeSaved,
+    brandMotto: params.brandMotto,
+    link: params.link,
+  });
+
+  if (ai.ok) {
+    return {
+      ...template,
+      filled: {
+        hook: ai.data.hook,
+        body: ai.data.body,
+        brand: ai.data.brand,
+      },
+      aiModel: ai.model,
+      aiConfigured: true,
+    };
+  }
+
+  // Fallback to template substitution
+  return {
+    ...template,
+    filled: fillTemplate(params),
+    aiModel: "template",
+    aiConfigured: isOpenAIConfigured(),
+    aiError: ai.message,
+  };
 }

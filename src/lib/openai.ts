@@ -620,3 +620,69 @@ JSON only.`;
   if (!res.ok) return res as AIResult<CalendarAIOutput>;
   return { ok: true, data: res.data, model: res.model, tokens: res.tokens };
 }
+
+// ---------------------------------------------------------------------------
+// 9) Three-Liner™ generation (for /api/three-liner)
+// ---------------------------------------------------------------------------
+
+export type ThreeLinerAIInput = {
+  brandName: string;
+  template: string;        // template name key (e.g. "problemSolution", "beforeAfter")
+  painPoint?: string;
+  product?: string;
+  keyFeature?: string;
+  timeSaved?: string;
+  brandMotto?: string;
+  link?: string;
+};
+
+export type ThreeLinerAIOutput = {
+  hook: string;
+  body: string;
+  brand: string;
+  templateName: string;
+};
+
+export async function generateThreeLinerWithAI(input: ThreeLinerAIInput): Promise<AIResult<ThreeLinerAIOutput>> {
+  const user = `Write a premium Three-Liner™ for the brand "${input.brandName}".
+
+TEMPLATE STYLE: ${input.template}
+${input.painPoint ? `PAIN POINT / TOPIC: ${input.painPoint}` : ""}
+${input.product ? `PRODUCT: ${input.product}` : ""}
+${input.keyFeature ? `KEY FEATURE: ${input.keyFeature}` : ""}
+${input.timeSaved ? `TIME SAVED CLAIM: ${input.timeSaved}` : ""}
+${input.brandMotto ? `BRAND MOTTO / TAGLINE: ${input.brandMotto}` : ""}
+${input.link ? `LINK: ${input.link}` : ""}
+
+A Three-Liner™ is a 3-line content format:
+- LINE 1 (HOOK): A scroll-stopping opener — 5-10 words, creates urgency or curiosity
+- LINE 2 (BODY): Product / solution / value prop — 8-15 words, punchy, no fluff
+- LINE 3 (BRAND): Brand name + CTA — 5-10 words, confident close
+
+Return JSON:
+{
+  "hook": "the hook line (5-10 words)",
+  "body": "the body line (8-15 words)",
+  "brand": "the brand line with CTA (5-10 words)",
+  "templateName": "${input.template}"
+}
+
+Rules:
+- Zero filler. Each line must earn its place.
+- Voice: premium, modern, confident — no clichés, no "game-changer", no "unlock"
+- The CTA must feel natural, not pushy
+- JSON only, no markdown.`;
+
+  const res = await chatCompletion<ThreeLinerAIOutput>({
+    messages: [
+      { role: "system", content: "You are a world-class short-form copywriter. You write 3-line content that stops the scroll and converts. Every word counts." },
+      { role: "user", content: user },
+    ],
+    model: process.env.OPENAI_CONTENT_MODEL || "gpt-4o-mini",
+    temperature: 0.95,
+    maxTokens: 400,
+    responseFormat: "json_object",
+  });
+  if (!res.ok) return res as AIResult<ThreeLinerAIOutput>;
+  return { ok: true, data: res.data, model: res.model, tokens: res.tokens };
+}
