@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import JsonLd from "@/components/json-ld";
+import ThemeProvider from "@/components/theme-provider";
+import KeyboardShortcuts from "@/components/keyboard-shortcuts";
 
 export const metadata: Metadata = {
   title: "OnePost AI — Post like a pro. Without being one.",
@@ -54,7 +56,10 @@ export default function RootLayout({
         <JsonLd />
       </head>
       <body className="min-h-screen bg-background text-foreground antialiased">
-        {children}
+        <ThemeProvider>
+          <KeyboardShortcuts />
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

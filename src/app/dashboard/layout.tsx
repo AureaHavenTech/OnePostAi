@@ -7,6 +7,7 @@ import { LayoutDashboard, Wand2, Lightbulb, CalendarDays, Briefcase, Settings, L
 import { cn } from "@/lib/utils";
 import { SmartSearch, type SearchResult } from "@/components/smart-search";
 import { Breadcrumbs } from "@/components/breadcrumbs";
+import ThemeToggle from "@/components/theme-toggle";
 
 const SEARCH_RESULTS: SearchResult[] = [
   { label: "Dashboard", href: "/dashboard", category: "Page" },
@@ -121,6 +122,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   Sign Out
                 </div>
               </Link>
+
+              {/* Keyboard shortcuts hint */}
+              <button
+                onClick={() => window.dispatchEvent(new KeyboardEvent("keydown", { key: "?" }))}
+                className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-gray-400 hover:text-dark hover:bg-gold/5 transition-all w-full text-left mt-1"
+                title="Keyboard shortcuts"
+              >
+                <span>⌨</span>
+                <span>Shortcuts</span>
+                <kbd className="ml-auto px-1.5 py-0.5 text-[10px] bg-gold/10 rounded text-gold/60">?</kbd>
+              </button>
             </div>
           )}
         </nav>
@@ -157,8 +169,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <SmartSearch results={SEARCH_RESULTS} placeholder="Search pages, features..." />
             </div>
 
-            {/* Right side spacer for balance */}
-            <div className="w-20 lg:hidden" />
+            {/* Right side: theme toggle + spacer */}
+            <div className="flex items-center gap-2">
+              <ThemeToggle />
+              <div className="w-20 lg:hidden" />
+            </div>
           </div>
         </header>
 
