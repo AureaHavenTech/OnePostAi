@@ -1,59 +1,129 @@
-import { NextResponse } from "next/server";
+// src/app/api/auto-schedule/route.ts
+// AI-powered smart scheduling. Uses backend scheduling engine + OpenAI
+// for intelligent schedule optimization. Falls back to static optimal-time
+// data when OPENAI_API_KEY is not set.
+import { NextRequest, NextResponse } from "next/server";
+import { withApi } from "@/lib/api-utils";
+import { generateSchedule, OPTIMAL_TIMES } from "@/lib/services/backend";
+import { chatCompletion, isOpenAIConfigured } from "@/lib/openai";
 
-export async function POST(req: Request) {
-  try {
-    const body = await req.json();
-    const { posts, scheduleType, platforms, affiliateLinks } = body;
+export const POST = withApi(
+  {
+    method: "POST",
+    cache: "no-store",
+    rateLimit: { windowMs: 60_000, max: 30 },
+  },
+  async (req, body) => {
+    const {
+      posts,
+      scheduleType,
+      platforms,
+      affiliateLinks,
+      brandName = "Your Brand",
+      startDate: startDateStr,
+      durationDays = 14,
+      postsPerDay = 3,
+    } = body;
 
-    // In production:
-    // 1. Validate all content is ready
-    // 2. Queue posts based on optimal posting times per platform
-    // 3. Schedule using social platform APIs
-    // 4. Return publishing schedule
+    const requestedPlatforms: string[] = Array.isArray(platforms) && platforms.length
+      ? platforms
+      : ["tiktok", "instagram", "youtube", "linkedin"];
 
-    const optimalTimes: Record<string, string> = {
-      tiktok: "7-9 PM weekdays, 10-12 PM weekends",
-      instagram: "11 AM - 2 PM weekdays",
-      youtube: "2-4 PM weekdays",
-      linkedin: "8-10 AM weekdays (Tue-Thu best)",
+    const startDate = startDateStr ? new Date(startDateStr) : new Date();
+
+    // Build a text summary of the posts for AI optimization (if available)
+    const postSummary = Array.isArray(posts) && posts.length
+      ? posts.map((p: any, i: number) =>
+          `${i + 1}. "${p?.title || p?.prompt || `Post ${i + 1}`}"` +
+          (p?.platforms ? ` → ${Array.isArray(p.platforms) ? p.platforms.join(", ") : p.platforms}` : "")
+        ).join("\n")
+      : "No specific posts provided";
+
+    // Use backend scheduling engine for foundational schedule
+    const baseSchedule = generateSchedule({
+      brandName,
+      platforms: requestedPlatforms,
+      postsPerDay,
+      startDate,
+      durationDays,
+    });
+
+    // Try AI-powered schedule optimization
+    type ScheduleAnalysis = {
+      recommendations: string[];
+      bestTimeSummary: Record<string, string>;
+      strategy: string;
     };
 
-    const schedule = [
-      {
-        post: posts?.[0]?.title || "Mellow Sleep review",
-        platforms: ["tiktok", "instagram"],
-        scheduledFor: "Today, 7:00 PM",
-        format: "Instagram Reel + TikTok (highest viral potential)",
-        affiliateLink: affiliateLinks?.[0] || null,
-      },
-      {
-        post: posts?.[1]?.title || "Tech unboxing",
-        platforms: ["instagram", "youtube"],
-        scheduledFor: "Tomorrow, 11:00 AM",
-        format: "Instagram Reel + YouTube Shorts",
-        affiliateLink: affiliateLinks?.[1] || null,
-      },
-      {
-        post: posts?.[2]?.title || "Affiliate earnings breakdown",
-        platforms: ["linkedin", "twitter"],
-        scheduledFor: "Wednesday, 9:00 AM",
-        format: "LinkedIn carousel + X thread",
-        affiliateLink: affiliateLinks?.[2] || null,
-      },
-    ];
+    let aiModel = "template";
+    let recommendations: string[] = [];
+    let strategy = `Optimal posting schedule across ${requestedPlatforms.length} platforms — ${postsPerDay} posts/day for ${durationDays} days`;
+    let bestTimeSummary: Record<string, string> = {};
 
-    return NextResponse.json({
-      success: true,
-      message: `Scheduled ${schedule.length} posts across ${platforms?.length || 4} platforms`,
-      schedule,
-      optimalPostingTimes: optimalTimes,
-      note: "Posts will auto-publish at scheduled times. No manual action needed.",
-    });
-  } catch (error) {
-    console.error("Auto-schedule error:", error);
-    return NextResponse.json(
-      { success: false, error: "Failed to schedule posts" },
-      { status: 500 }
-    );
-  }
+    if (isOpenAIConfigured()) {
+      const aiResult = await chatCompletion<ScheduleAnalysis>({
+        messages: [
+          {
+            role: "system",
+            content: "You are a social media scheduling strategist. Analyze posts and platforms, then suggest optimal scheduling strategies. Return JSON only.",
+          },
+          {
+            role: "user",
+            content: `Analyze this content schedule and provide optimization recommendations:
+
+BRAND: ${brandName}
+PLATFORMS: ${requestedPlatforms.join(", ")}
+POSTS PER DAY: ${postsPerDay}
+DURATION: ${durationDays} days starting ${startDate.toISOString().split("T")[0]}
+SCHEDULE TYPE: ${scheduleType || "mixed"}
+
+POSTS TO SCHEDULE:
+${postSummary}
+
+OPTIMAL TIMES PER PLATFORM:
+${Object.entries(OPTIMAL_TIMES).map(([p, times]) => `- ${p}: ${times.join(", ")}`).join("\n")}
+
+Return JSON:
+{
+  "recommendations": ["3-5 specific optimization tips for this schedule"],
+  "bestTimeSummary": { "<platform>": "brief best-time summary" },
+  "strategy": "1-2 sentence overall strategy for this schedule"
 }
+JSON only.`,
+          },
+        ],
+        model: "gpt-4o-mini",
+        temperature: 0.7,
+        maxTokens: 600,
+        responseFormat: "json_object",
+      });
+
+      if (aiResult.ok) {
+        aiModel = aiResult.model;
+        recommendations = aiResult.data.recommendations || [];
+        bestTimeSummary = aiResult.data.bestTimeSummary || {};
+        strategy = aiResult.data.strategy || strategy;
+      }
+    }
+
+    // Build time summary from static data if AI didn't provide one
+    if (Object.keys(bestTimeSummary).length === 0) {
+      for (const p of requestedPlatforms) {
+        const times = OPTIMAL_TIMES[p];
+        bestTimeSummary[p] = times ? `${times.length} windows: ${times.join(", ")}` : "12:00 PM daily";
+      }
+    }
+
+    return {
+      success: true,
+      message: `Scheduled ${baseSchedule.length} posts across ${requestedPlatforms.length} platforms over ${durationDays} days`,
+      schedule: baseSchedule.slice(0, 30), // Return first 30 for display
+      totalPosts: baseSchedule.length,
+      optimalPostingTimes: bestTimeSummary,
+      recommendations,
+      strategy,
+      aiModel,
+      aiConfigured: isOpenAIConfigured(),
+    };
+  }
+);
