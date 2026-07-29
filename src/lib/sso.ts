@@ -1,19 +1,21 @@
 /**
  * Shared SSO — Cross-app single sign-on between OnePost AI and Axel AI.
  *
+ * SERVER-ONLY file (uses Node.js crypto). Client components should import
+ * from @/lib/sso-config instead.
+ *
  * Uses HMAC-signed exchange tokens. Both apps share the same secret
  * (SSO_SHARED_SECRET env var, or a hardcoded fallback).
- *
- * Flow:
- *   1. User logs into App A → session created + SSO token generated
- *   2. App A returns sso_token + sso_urls in the login response
- *   3. Frontend POSTs the token to each sister app's /api/auth/sso
- *   4. Sister app verifies token, creates/finds user, sets session cookie
  *
  * © 2026 Aura Haven Tech. All rights reserved.
  */
 
 import { createHmac } from "crypto";
+import { SSO_APPS, getSisterApps, type AppKey, type SSOPayload } from "@/lib/sso-config";
+
+// Re-export client-safe types and functions
+export { SSO_APPS, getSisterApps };
+export type { AppKey, SSOPayload };
 
 // ---------------------------------------------------------------------------
 // Shared secret — MUST be identical across both apps
@@ -21,38 +23,8 @@ import { createHmac } from "crypto";
 function getSharedSecret(): string {
   return (
     process.env.SSO_SHARED_SECRET ||
-    "aura-haven-tech-sso-secret-2026" // fallback for dev
+    "aura-haven-tech-sso-secret-2026"
   );
-}
-
-// ---------------------------------------------------------------------------
-// App URLs
-// ---------------------------------------------------------------------------
-export const SSO_APPS = {
-  onepostai: {
-    name: "OnePost AI",
-    url: "https://onepostai.vercel.app",
-    ssoEndpoint: "https://onepostai.vercel.app/api/auth/sso",
-  },
-  axelai: {
-    name: "Axel AI",
-    url: "https://axelai-eight.vercel.app",
-    ssoEndpoint: "https://axelai-eight.vercel.app/api/auth/sso",
-  },
-} as const;
-
-export type AppKey = keyof typeof SSO_APPS;
-
-// ---------------------------------------------------------------------------
-// Token types
-// ---------------------------------------------------------------------------
-export interface SSOPayload {
-  userId: string;
-  email: string;
-  name: string;
-  iat: number; // issued at (unix ms)
-  exp: number; // expiration (unix ms)
-  app: AppKey; // which app issued this token
 }
 
 // ---------------------------------------------------------------------------
@@ -124,7 +96,6 @@ export function verifySSOToken(
     }
     usedNonces.add(nonce);
     if (usedNonces.size > NONCE_MAX) {
-      // Clear oldest entries
       const entries = Array.from(usedNonces);
       for (let i = 0; i < entries.length - NONCE_MAX + 100; i++) {
         usedNonces.delete(entries[i]);
@@ -135,23 +106,4 @@ export function verifySSOToken(
   } catch (err: any) {
     return { valid: false, error: err.message || "Token verification failed" };
   }
-}
-
-// ---------------------------------------------------------------------------
-// Get sister app info for a given app
-// ---------------------------------------------------------------------------
-export function getSisterApps(currentApp: AppKey): Array<{
-  key: AppKey;
-  name: string;
-  url: string;
-  ssoEndpoint: string;
-}> {
-  return (Object.keys(SSO_APPS) as AppKey[])
-    .filter((k) => k !== currentApp)
-    .map((k) => ({
-      key: k,
-      name: SSO_APPS[k].name,
-      url: SSO_APPS[k].url,
-      ssoEndpoint: SSO_APPS[k].ssoEndpoint,
-    }));
 }

@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import { CREDIT_COSTS } from "@/lib/services/monetization";
 import SsoBridge from "@/components/sso-bridge";
-import { SSO_APPS, type AppKey, getSisterApps } from "@/lib/sso";
+import { getSisterApps } from "@/lib/sso-config";
 
 type Mode = "upload" | "generate" | "ideas" | "shopify" | "research" | "avatar";
 
