@@ -240,11 +240,12 @@ export async function generateNextPost(brandId: string): Promise<ScheduledPost |
     productDescription: sched.productDescription,
   });
   // Extract the per-platform output
-  const platformOut = ai.platformContent[0] || {
+  const platformContent = ai.platformContent as any[];
+  const platformOut = platformContent[0] || {
     platform,
-    script: ai.platformContent[0]?.script || `${sched.brandName} — ${sched.productName || "content"}`,
-    caption: ai.platformContent[0]?.caption || `${sched.brandName}: ${sched.productName || "Check this out"}`,
-    hashtags: ai.platformContent[0]?.hashtags || [],
+    script: platformContent[0]?.script || `${sched.brandName} — ${sched.productName || "content"}`,
+    caption: platformContent[0]?.caption || `${sched.brandName}: ${sched.productName || "Check this out"}`,
+    hashtags: platformContent[0]?.hashtags || [],
   };
   // Persist the post
   const postId = uid("post");
