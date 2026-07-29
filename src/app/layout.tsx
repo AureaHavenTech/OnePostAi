@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import JsonLd from "@/components/json-ld";
 
 export const metadata: Metadata = {
   title: "OnePost AI — Post like a pro. Without being one.",
@@ -15,9 +16,17 @@ export const metadata: Metadata = {
     title: "OnePost AI — Post like a pro. Without being one.",
     description: "Drop a raw video or just an idea. AI edits, captions, and publishes everywhere. On autopilot.",
     type: "website",
+    url: "https://onepostai.vercel.app",
+    siteName: "OnePost AI",
     images: [
-      { url: "/og-image.svg", width: 1200, height: 630 },
+      { url: "/og-image.svg", width: 1200, height: 630, alt: "OnePost AI — Content that moves" },
     ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "OnePost AI — Post like a pro. Without being one.",
+    description: "Drop a raw video or just an idea. AI edits, captions, and publishes everywhere. On autopilot.",
+    images: ["/og-image.svg"],
   },
   icons: {
     icon: [
@@ -42,6 +51,7 @@ export default function RootLayout({
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <link rel="apple-touch-icon" href="/op-icon-192.svg" />
+        <JsonLd />
       </head>
       <body className="min-h-screen bg-background text-foreground antialiased">
         {children}
