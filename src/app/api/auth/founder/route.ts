@@ -13,6 +13,7 @@ import {
   updateLastLogin,
   hashPassword,
 } from "@/lib/auth";
+import type { AuthUser } from "@/lib/auth";
 import { execSync } from "child_process";
 
 export const runtime = "nodejs";
