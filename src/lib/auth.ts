@@ -2,15 +2,19 @@
 //
 // Provides a NextAuth-equivalent API on top of:
 // - bcryptjs (password hashing)
-// - jose (JWT signing/verifying — works in Node, Edge, and browser)
+// - jose (JWT signing/verifying)
 // - team-db (user + session storage)
 //
 // Implements:
 //   - Credentials provider (email + password)
-//   - Google OAuth (env-gated; requires GOOGLE_CLIENT_ID + GOOGLE_CLIENT_SECRET)
+//   - Google OAuth (env-gated)
 //   - Founder code (AUREA2026) admin login
 //   - JWT session tokens via HttpOnly cookie
-//   - Edge-runtime safe token verification (used in middleware)
+//
+// IMPORTANT: team-db is called via execSync. We wrap the SQL in SINGLE
+// quotes (not double) so bash does not expand `$` in bcrypt hashes
+// (`$2a$10$...`) and `!` in passwords.
+
 import { SignJWT, jwtVerify, type JWTPayload } from "jose";
 import bcrypt from "bcryptjs";
 import { execSync } from "child_process";
@@ -18,8 +22,6 @@ import { execSync } from "child_process";
 const SECRET_RAW =
   process.env.AUTH_SECRET ||
   process.env.NEXTAUTH_SECRET ||
-  // Default is a stable, project-scoped fallback so dev works out of the box.
-  // Production deploys MUST override AUTH_SECRET in Vercel env.
   "onepost-ai-dev-secret-please-override-in-production-min-32-chars";
 const SECRET = new TextEncoder().encode(SECRET_RAW);
 
@@ -43,8 +45,8 @@ export interface AuthUser {
 }
 
 export interface SessionPayload extends JWTPayload {
-  sub: string; // auth_users.id
-  userId: string; // user_management.id
+  sub: string;
+  userId: string;
   email: string;
   name: string;
   role: Role;
@@ -52,10 +54,11 @@ export interface SessionPayload extends JWTPayload {
   authProvider: string;
 }
 
-// ─── team-db helpers (matches the inline pattern used by other services) ───
+// ─── team-db helpers (single-quoted shell arg, $ ! safe) ───
 function teamDbQuery<T = any>(sql: string): T[] {
   try {
-    const out = execSync(`team-db "${sql.replace(/"/g, '\\"')}"`, { encoding: "utf8" });
+    const escaped = sql.replace(/'/g, "'\\''");
+    const out = execSync(`team-db '${escaped}'`, { encoding: "utf8" });
     const parsed = JSON.parse(out);
     return Array.isArray(parsed) ? parsed : [];
   } catch (e) {
@@ -66,7 +69,8 @@ function teamDbQuery<T = any>(sql: string): T[] {
 
 function teamDbExec(sql: string): boolean {
   try {
-    execSync(`team-db "${sql.replace(/"/g, '\\"')}"`, { encoding: "utf8" });
+    const escaped = sql.replace(/'/g, "'\\''");
+    execSync(`team-db '${escaped}'`, { encoding: "utf8" });
     return true;
   } catch (e) {
     console.error("[auth] teamDbExec failed:", String(e).slice(0, 200));
@@ -75,6 +79,8 @@ function teamDbExec(sql: string): boolean {
 }
 
 function esc(v: any): string {
+  // SQL string-literal escape — doubles single quotes. This is the safe
+  // part; the shell-escape happens in teamDbQuery/Exec above.
   return String(v ?? "").replace(/'/g, "''");
 }
 
@@ -92,11 +98,18 @@ export async function hashPassword(plain: string): Promise<string> {
 }
 
 export async function verifyPassword(plain: string, hash: string): Promise<boolean> {
-  return bcrypt.compare(plain, hash);
+  if (!hash) return false;
+  try {
+    return await bcrypt.compare(plain, hash);
+  } catch {
+    return false;
+  }
 }
 
 // ─── JWT helpers (Edge-safe) ──────────────────────────────────────
-export async function signSessionToken(payload: Omit<SessionPayload, "iat" | "exp">): Promise<string> {
+export async function signSessionToken(
+  payload: Omit<SessionPayload, "iat" | "exp">
+): Promise<string> {
   return new SignJWT({ ...payload })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
@@ -158,7 +171,7 @@ export function readSessionCookieFromHeader(cookieHeader: string | null): string
   return null;
 }
 
-// ─── DB: bootstrap schema (called by every auth route) ───────────
+// ─── DB: bootstrap schema ──────────────────────────────────────────
 let _schemaReady = false;
 export function ensureAuthSchema(): void {
   if (_schemaReady) return;
@@ -281,16 +294,15 @@ export async function createUser(input: CreateUserInput): Promise<AuthUser> {
   const authId = uid("auth");
   const userId = uid("user");
   const now = nowIso();
-  const displayName = (input.name?.trim() || email.split("@")[0]).replace(/'/g, "''");
+  const displayName = (input.name?.trim() || email.split("@")[0]);
   const passwordHash = await hashPassword(input.password);
 
-  // Insert into user_management first (FK target)
+  // user_management first (FK target)
   teamDbExec(
     `INSERT OR IGNORE INTO user_management (id, email, name, role, subscription_tier, created_at, last_active)
-     VALUES ('${esc(authId ? userId : userId)}', '${esc(email)}', '${esc(displayName)}', '${esc(input.role || "user")}', '${esc(input.subscriptionTier || "free")}', '${esc(now)}', '${esc(now)}')`
+     VALUES ('${esc(userId)}', '${esc(email)}', '${esc(displayName)}', '${esc(input.role || "user")}', '${esc(input.subscriptionTier || "free")}', '${esc(now)}', '${esc(now)}')`
   );
 
-  // Insert into auth_users
   teamDbExec(
     `INSERT INTO auth_users
        (id, user_id, email, password_hash, auth_provider, provider_user_id, email_verified, created_at, updated_at, last_login_at)
@@ -376,7 +388,7 @@ export function isGoogleOAuthConfigured(): boolean {
   return !!(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET);
 }
 
-// ─── Public user projection (never leaks password hash) ───────────
+// ─── Public user projection ───────────────────────────────────────
 export function toPublicUser(u: AuthUser) {
   return {
     id: u.id,
