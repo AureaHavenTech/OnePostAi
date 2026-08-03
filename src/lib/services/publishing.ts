@@ -539,12 +539,16 @@ export function listScheduled(userId: string): Array<{
 
 export function cancelScheduled(userId: string, id: string): boolean {
   ensureScheduledSchema();
-  const rows = teamDbQuery<{ id: string }>(
-    `SELECT id FROM user_scheduled_posts WHERE id = '${esc(id)}' AND user_id = '${esc(userId)}' LIMIT 1`
+  // Only cancel rows that are still queued/pending — repeats are a 404
+  const rows = teamDbQuery<{ status: string }>(
+    `SELECT status FROM user_scheduled_posts
+     WHERE id = '${esc(id)}' AND user_id = '${esc(userId)}' AND status IN ('queued','pending')
+     LIMIT 1`
   );
   if (rows.length === 0) return false;
   teamDbExec(
-    `UPDATE user_scheduled_posts SET status = 'cancelled' WHERE id = '${esc(id)}' AND user_id = '${esc(userId)}'`
+    `UPDATE user_scheduled_posts SET status = 'cancelled'
+     WHERE id = '${esc(id)}' AND user_id = '${esc(userId)}' AND status IN ('queued','pending')`
   );
   return true;
 }
