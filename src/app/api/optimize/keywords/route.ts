@@ -44,9 +44,7 @@ export const POST = withApi(
         {
           role: "system",
           content: `You are an SEO and social media discovery expert for ${platform} in 2026.
-You find keywords that maximize content discoverability on each platform's algorithm.
-Search volume tiers: High (>100K), Medium (10K-100K), Low (<10K).
-Competition tiers: High, Medium, Low.
+Search volume tiers: High (>100K), Medium (10K-100K), Low (<10K). Competition tiers: High, Medium, Low.
 Return ONLY valid JSON.`,
         },
         {
@@ -60,16 +58,10 @@ CONTENT TYPE: ${contentType} (post|reel|story|ad)
 Return JSON:
 {
   "keywords": [
-    {"word": "keyword phrase", "searchVolume": "High|Medium|Low", "competition": "High|Medium|Low", "relevance": 95}
+    {"word": "keyword", "searchVolume": "High|Medium|Low", "competition": "High|Medium|Low", "relevance": 95}
   ] (8-12 keywords),
-  "longTailPhrases": [
-    "complete long-tail search phrase #1",
-    "complete long-tail search phrase #2"
-  ] (5-8 phrases optimized for ${platform}),
-  "algorithmTips": [
-    "tip 1 for ${platform} algorithm optimization",
-    "tip 2"
-  ] (3-5 actionable tips)
+  "longTailPhrases": ["long-tail phrase"] (5-8),
+  "algorithmTips": ["actionable tip"] (3-5)
 }`,
         },
       ],

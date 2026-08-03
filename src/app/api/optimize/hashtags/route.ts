@@ -54,7 +54,6 @@ export const POST = withApi(
           content: `You are a viral hashtag strategist for ${platform} in 2026. 
 You optimize hashtags for maximum discovery, reach, and engagement.
 For each hashtag, provide a relevance score (0-100) and reach tier (Low/Medium/High/Viral).
-Mix: 2-3 high-reach broad tags, 3-4 mid-tier niche tags, 1-2 trending tags.
 Return ONLY JSON.`,
         },
         {
@@ -68,16 +67,10 @@ GOAL: ${goal} (growth|engagement|conversions|reach)
 
 Return JSON:
 {
-  "primary": [
-    {"tag": "#example", "relevance": 92, "reach": "High"}
-  ] (5-10 hashtags — high-impact, broad reach),
-  "niche": [
-    {"tag": "#nicheTag", "relevance": 95}
-  ] (5-10 hashtags — niche-specific, high relevance),
-  "trending": [
-    {"tag": "#trending", "trendingScore": 88}
-  ] (3-5 hashtags — currently trending on ${platform}),
-  "strategy": "2-3 sentence explanation of the hashtag strategy and why these tags were chosen"
+  "primary": [{"tag": "#example", "relevance": 92, "reach": "High"}] (5-10),
+  "niche": [{"tag": "#nicheTag", "relevance": 95}] (5-10),
+  "trending": [{"tag": "#trending", "trendingScore": 88}] (3-5),
+  "strategy": "2-3 sentence explanation"
 }`,
         },
       ],
