@@ -337,7 +337,7 @@ export default function DashboardPage() {
   return (
     <div className={cn(
       "flex flex-col transition-all duration-300",
-      isFullscreen ? "fixed inset-0 z-50 bg-[#faf7f2]" : "h-[calc(100vh-7rem)]"
+      isFullscreen ? "fixed inset-0 z-50 bg-gradient-luxury" : "h-[calc(100vh-7rem)]"
     )}>
       {/* ── Header ─────────────────────────────────────── */}
       <div className="flex items-center justify-between px-1 pb-3 shrink-0">
@@ -349,7 +349,7 @@ export default function DashboardPage() {
         </div>
         <div className="flex items-center gap-2">
           {/* Credits */}
-          <div className="flex items-center gap-1.5 text-xs text-charcoal/50 bg-white/80 border border-gold/10 rounded-lg px-3 py-1.5">
+          <div className="flex items-center gap-1.5 text-xs text-charcoal/50 bg-dark-card/90 border border-gold/10 rounded-lg px-3 py-1.5">
             <Coins className="w-3.5 h-3.5 text-gold" />
             <span className="font-semibold text-gold">{credits}</span>
           </div>
@@ -375,7 +375,7 @@ export default function DashboardPage() {
       <div className="flex-1 flex gap-4 min-h-0">
         {/* ── History sidebar ──────────────────────────── */}
         {showHistory && (
-          <div className="w-64 shrink-0 bg-white/80 backdrop-blur-md border border-gold/10 rounded-2xl p-4 overflow-y-auto animate-slideUp">
+          <div className="w-64 shrink-0 bg-dark-card/90 backdrop-blur-md border border-gold/10 rounded-2xl p-4 overflow-y-auto animate-slideUp">
             <h3 className="text-sm font-semibold text-dark mb-3 flex items-center gap-2">
               <Clock className="w-4 h-4 text-gold" />
               Chat History
@@ -429,7 +429,7 @@ export default function DashboardPage() {
                   {quickActions.map(qa => (
                     <button key={qa.label}
                       onClick={() => { setInput(qa.prompt); inputRef.current?.focus(); }}
-                      className="flex items-center gap-2 p-3 rounded-xl bg-white/80 border border-gold/10 text-left text-xs text-charcoal/70 hover:border-gold/30 hover:bg-gold/5 transition-all group">
+                      className="flex items-center gap-2 p-3 rounded-xl bg-dark-card/90 border border-gold/10 text-left text-xs text-charcoal/70 hover:border-gold/30 hover:bg-gold/5 transition-all group">
                       <qa.icon className="w-4 h-4 text-gold/60 group-hover:text-gold shrink-0" />
                       <span>{qa.label}</span>
                     </button>
@@ -451,7 +451,7 @@ export default function DashboardPage() {
                   <div className={cn("p-4 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap",
                     msg.role === "user"
                       ? "bg-gold text-dark rounded-br-md"
-                      : "bg-white/80 border border-gold/10 rounded-bl-md text-dark/80")}>
+                      : "bg-dark-card/90 border border-gold/10 rounded-bl-md text-dark/80")}>
                     {msg.content}
                   </div>
                   {/* Copy button */}
@@ -481,7 +481,7 @@ export default function DashboardPage() {
                   <Sparkles className="w-4 h-4 text-dark" />
                 </div>
                 <div className="max-w-[80%]">
-                  <div className="p-4 rounded-2xl bg-white/80 border border-gold/10 rounded-bl-md text-sm text-dark/80 leading-relaxed whitespace-pre-wrap">
+                  <div className="p-4 rounded-2xl bg-dark-card/90 border border-gold/10 rounded-bl-md text-sm text-dark/80 leading-relaxed whitespace-pre-wrap">
                     {streamedText}
                     <span className="inline-block w-1.5 h-4 bg-gold ml-0.5 animate-pulse align-middle" />
                   </div>
@@ -522,7 +522,7 @@ export default function DashboardPage() {
                 <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-gold to-gold-light flex items-center justify-center shadow-md shrink-0 mt-1">
                   <Sparkles className="w-4 h-4 text-dark" />
                 </div>
-                <div className="p-4 rounded-2xl bg-white/80 border border-gold/10 rounded-bl-md">
+                <div className="p-4 rounded-2xl bg-dark-card/90 border border-gold/10 rounded-bl-md">
                   <div className="flex items-center gap-1">
                     <div className="w-2 h-2 rounded-full bg-gold animate-bounce [animation-delay:0ms]" />
                     <div className="w-2 h-2 rounded-full bg-gold animate-bounce [animation-delay:150ms]" />
@@ -535,7 +535,7 @@ export default function DashboardPage() {
 
           {/* ── Input area ─────────────────────────────── */}
           <div className="shrink-0 pt-2">
-            <div className="bg-white/80 backdrop-blur-md border border-gold/20 rounded-2xl p-2 flex items-end gap-2 shadow-lg">
+            <div className="bg-dark-card/90 backdrop-blur-md border border-gold/20 rounded-2xl p-2 flex items-end gap-2 shadow-lg">
               {/* Voice button */}
               <button onClick={toggleVoice}
                 className={cn("p-2.5 rounded-xl transition-all shrink-0",

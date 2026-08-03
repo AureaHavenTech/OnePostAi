@@ -46,7 +46,7 @@ export default function PublishPage() {
       <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl border-b border-[#1e1e2a] px-6 py-3 flex items-center justify-between">
         <Link href="/dashboard" className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#c9a96e] to-[#d4b87a] flex items-center justify-center">
-            <span className="text-sm font-black text-[#12121a]">OP</span>
+            <span className="text-sm font-black text-cream">OP</span>
           </div>
           <span className="font-bold text-white text-sm">Publish</span>
         </Link>
@@ -73,7 +73,7 @@ export default function PublishPage() {
             </div>
           </div>
           <Button onClick={handlePublish} disabled={publishing || !content.trim()}
-            className="w-full py-4 text-sm font-bold bg-gradient-to-r from-[#c9a96e] to-[#d4b87a] text-[#12121a] rounded-xl shadow-lg shadow-[#c9a96e]/20 disabled:opacity-50">
+            className="w-full py-4 text-sm font-bold bg-gradient-to-r from-[#c9a96e] to-[#d4b87a] text-cream rounded-xl shadow-lg shadow-[#c9a96e]/20 disabled:opacity-50">
             {publishing ? <><Loader2 className="h-5 w-5 animate-spin mr-2" /> Publishing...</>
             : published ? <><CheckCircle2 className="h-5 w-5 text-emerald-600 mr-2" /> Published!</>
             : <><Send className="h-5 w-5 mr-2" /> Publish Now</>}

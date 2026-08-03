@@ -10,7 +10,7 @@ export function Skeleton({ className }: { className?: string }) {
 // ── Card skeleton (used for most content cards) ────────
 export function CardSkeleton() {
   return (
-    <div className="rounded-2xl border border-gold/10 bg-white/60 p-5 space-y-4 animate-pulse">
+    <div className="rounded-2xl border border-gold/10 bg-dark-card p-5 space-y-4 animate-pulse">
       <div className="flex items-center gap-3">
         <Skeleton className="w-10 h-10 rounded-xl" />
         <div className="flex-1 space-y-2">
@@ -62,7 +62,7 @@ export function DashboardPageSkeleton() {
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="rounded-xl border border-gold/10 bg-white/60 p-4 space-y-3 animate-pulse">
+          <div key={i} className="rounded-xl border border-gold/10 bg-dark-card p-4 space-y-3 animate-pulse">
             <Skeleton className="h-3 w-16" />
             <Skeleton className="h-6 w-20" />
             <Skeleton className="h-2.5 w-24" />

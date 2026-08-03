@@ -53,7 +53,7 @@ export default function AboutPage() {
               Hi, I'm the creator behind OnePost AI
             </h1>
 
-            <div className="mt-6 max-w-xl mx-auto text-left space-y-4 text-[#6b5a5e] dark:text-[#c4b5b8] text-sm leading-relaxed">
+            <div className="mt-6 max-w-xl mx-auto text-left space-y-4 text-cream/50 dark:text-[#c4b5b8] text-sm leading-relaxed">
               <p>
                 I built this app because I <em>am</em> the target customer. A creator trying to break 
                 into tech UGC content — but overwhelmed by editing apps, camera anxiety, and the 

@@ -73,7 +73,7 @@ export default function SupportPage() {
       <div className="max-w-2xl mx-auto">
         <div className="text-center mb-6">
           <h1 className="text-2xl font-bold text-[#1c1c1e] dark:text-[#f5f0f1]">AI Support</h1>
-          <p className="text-sm text-[#6b5a5e] dark:text-[#8a797d] mt-1">Available 24/7 — ask me anything about OnePost AI</p>
+          <p className="text-sm text-cream/50 dark:text-[#8a797d] mt-1">Available 24/7 — ask me anything about OnePost AI</p>
         </div>
 
         {/* Support Ticket Form */}
@@ -88,7 +88,7 @@ export default function SupportPage() {
               </div>
               <div className="text-left">
                 <p className="font-semibold text-sm text-[#1c1c1e] dark:text-[#f5f0f1]">Submit a Support Ticket</p>
-                <p className="text-xs text-[#6b5a5e] dark:text-[#8a797d]">Report bugs, request features, or ask for help</p>
+                <p className="text-xs text-cream/50 dark:text-[#8a797d]">Report bugs, request features, or ask for help</p>
               </div>
               <span className="ml-auto text-[#c9a84c] text-sm font-medium">Open →</span>
             </button>
@@ -98,11 +98,11 @@ export default function SupportPage() {
                 <h2 className="text-lg font-semibold text-[#1c1c1e] dark:text-[#f5f0f1] flex items-center gap-2">
                   <Ticket className="w-5 h-5 text-[#c9a84c]" /> Submit a Ticket
                 </h2>
-                <button onClick={() => setShowTicketForm(false)} className="text-xs text-[#6b5a5e] hover:text-[#c9a84c] transition-colors">Cancel</button>
+                <button onClick={() => setShowTicketForm(false)} className="text-xs text-cream/50 hover:text-[#c9a84c] transition-colors">Cancel</button>
               </div>
               <form onSubmit={handleTicketSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-xs text-[#6b5a5e] dark:text-[#8a797d] font-medium mb-1">Subject</label>
+                  <label className="block text-xs text-cream/50 dark:text-[#8a797d] font-medium mb-1">Subject</label>
                   <Input
                     type="text"
                     value={ticketSubject}
@@ -113,7 +113,7 @@ export default function SupportPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-[#6b5a5e] dark:text-[#8a797d] font-medium mb-1">Message</label>
+                  <label className="block text-xs text-cream/50 dark:text-[#8a797d] font-medium mb-1">Message</label>
                   <textarea
                     value={ticketMessage}
                     onChange={e => setTicketMessage(e.target.value)}
@@ -124,7 +124,7 @@ export default function SupportPage() {
                   />
                 </div>
                 <div className="flex items-center gap-3">
-                  <label className="text-xs text-[#6b5a5e] dark:text-[#8a797d] font-medium">Priority</label>
+                  <label className="text-xs text-cream/50 dark:text-[#8a797d] font-medium">Priority</label>
                   <select
                     value={ticketPriority}
                     onChange={e => setTicketPriority(e.target.value)}
@@ -159,7 +159,7 @@ export default function SupportPage() {
             </div>
             <div>
               <p className="font-semibold text-sm text-[#1c1c1e] dark:text-[#f5f0f1]">OnePost AI Assistant</p>
-              <p className="text-xs text-[#6b5a5e] dark:text-[#8a797d]">Online • Powered by AI</p>
+              <p className="text-xs text-cream/50 dark:text-[#8a797d]">Online • Powered by AI</p>
             </div>
             <span className="ml-auto flex items-center gap-1 px-2 py-0.5 rounded-full bg-green-500/10 text-green-600 text-[10px] font-medium">
               <span className="w-1.5 h-1.5 rounded-full bg-green-500" /> Active

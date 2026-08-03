@@ -22,7 +22,7 @@ export default function ContactPage() {
         <Link href="/"><Button variant="ghost" size="sm" className="mb-8"><ArrowLeft className="w-4 h-4 mr-2" />Back to Home</Button></Link>
 
         <h1 className="text-3xl font-bold text-[#1c1c1e] dark:text-[#f5f0f1]">Contact Us</h1>
-        <p className="text-sm text-[#6b5a5e] dark:text-[#8a797d] mt-2">Have a question or need help? Send us a message.</p>
+        <p className="text-sm text-cream/50 dark:text-[#8a797d] mt-2">Have a question or need help? Send us a message.</p>
 
         <form onSubmit={handleSubmit} className="mt-8 bg-white dark:bg-[#1c1c1e] border border-[#e0d5d8] dark:border-[#3d3537] rounded-2xl p-6 space-y-4 shadow-sm">
           <div>
