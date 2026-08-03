@@ -2,9 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { ArrowLeft, Mail, Lock, Eye, EyeOff, Sparkles, Check, Crown, KeyRound, ShieldCheck } from "lucide-react";
+import { ArrowLeft, Mail, Lock, Eye, EyeOff, Sparkles, Crown, KeyRound, ShieldCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
@@ -18,68 +16,60 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const navigateAfterLogin = (target: string) => {
-    // Store auth state first
-    try {
-      localStorage.setItem("onepost_auth", JSON.stringify({
-        email: email.trim() || "demo@onepost.ai",
-        role: target.includes("owner") ? "owner" : "user",
-        authenticated: true,
-        timestamp: Date.now(),
-      }));
-    } catch (_) { /* ignore */ }
-
-    // Primary: window.location.href is the most reliable redirect
-    window.location.href = target;
-
-    // Secondary: router.push as fallback (runs first if SPA navigation works)
-    try {
-      router.push(target);
-    } catch (_) {
-      // window.location.href already set above, will execute
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
-    // Simulate brief auth delay for UX feel
-    await new Promise((r) => setTimeout(r, 600));
-
     try {
-      // CEO access code check — works in both modes
-      const enteredCode = showCEO ? accessCode : password;
-      if (enteredCode.toUpperCase().trim() === "AUREA2026") {
-        navigateAfterLogin("/dashboard/owner");
+      // Founder code flow
+      if (showCEO) {
+        const res = await fetch("/api/auth/founder", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ code: accessCode.trim() }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          setError(data.message || "Invalid founder code.");
+          setLoading(false);
+          return;
+        }
+        window.location.href = "/dashboard/owner";
         return;
       }
 
-      // Demo mode: accept any credentials (no password length check)
-      if (!email.trim() && !showCEO) {
-        setError("Please enter your email address");
+      // Login or signup
+      const endpoint = isSignUp ? "/api/auth/signup" : "/api/auth/login";
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim(), password }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.message || "Something went wrong. Please try again.");
         setLoading(false);
         return;
       }
 
-      navigateAfterLogin("/dashboard");
+      // Redirect to dashboard on success
+      window.location.href = "/dashboard";
     } catch (err) {
-      setError("Something went wrong. Please try again.");
-      console.error("Login error:", err);
+      setError("Connection failed. Please try again.");
+      console.error("Auth error:", err);
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#faf7f2] flex flex-col">
+    <div className="min-h-screen bg-[#12121a] flex flex-col">
       {/* Top nav */}
       <div className="p-4">
-        <Link href="/">
-          <Button variant="ghost" size="sm">
-            <ArrowLeft className="w-4 h-4 mr-1.5" />
-            Back to Home
-          </Button>
+        <Link href="/" className="inline-flex items-center gap-1.5 text-xs text-cream/60 hover:text-cream transition-colors">
+          <ArrowLeft className="w-4 h-4" />
+          Back to Home
         </Link>
       </div>
 
@@ -87,72 +77,78 @@ export default function LoginPage() {
         <div className="w-full max-w-md">
           {/* Logo */}
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-gold to-gold-light shadow-lg shadow-gold/20 mb-4">
-              <Sparkles className="w-8 h-8 text-dark" />
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-[#c9a96e] to-[#d4b87a] shadow-lg shadow-[#c9a96e]/20 mb-4">
+              <Sparkles className="w-8 h-8 text-[#12121a]" />
             </div>
-            <h1 className="text-3xl font-bold text-dark font-playfair">
-              {isSignUp ? "Start Your Free Trial" : "Welcome Back"}
+            <h1 className="text-3xl font-bold text-[#e8e0d4]" style={{ fontFamily: "'Playfair Display', serif" }}>
+              {isSignUp ? "Create Your Account" : "Welcome Back"}
             </h1>
-            <p className="text-sm text-charcoal/60 mt-2">
+            <p className="text-sm text-[#e8e0d4]/50 mt-2">
               {showCEO
                 ? "Enter your founder access code"
                 : isSignUp
-                ? "7 days free · No credit card required"
+                ? "Start your 7-day free trial"
                 : "Sign in to your account"}
             </p>
           </div>
 
-          {/* Feature bullets (signup only, non-CEO) */}
-          {isSignUp && !showCEO && (
-            <div className="mb-5 flex flex-wrap justify-center gap-x-4 gap-y-1 text-xs text-[#6b5a5e]">
-              <span className="flex items-center gap-1"><Check className="w-3 h-3 text-green-500" /> AI generates content</span>
-              <span className="flex items-center gap-1"><Check className="w-3 h-3 text-green-500" /> Auto-publish to 7 platforms</span>
-              <span className="flex items-center gap-1"><Check className="w-3 h-3 text-green-500" /> Cancel anytime</span>
-            </div>
-          )}
-
           {/* Form */}
-          <form onSubmit={handleSubmit} className="bg-white/80 backdrop-blur-md border border-[#c9a84c]/10 rounded-2xl p-6 sm:p-8 space-y-4 shadow-sm">
+          <form onSubmit={handleSubmit} className="bg-[#1a1a2e]/80 backdrop-blur-xl border border-[#c9a96e]/10 rounded-2xl p-6 sm:p-8 space-y-4 shadow-lg">
             {error && (
-              <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-red-600 text-xs animate-fadeIn">
+              <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-xs">
                 {error}
               </div>
             )}
 
             {showCEO ? (
               <div className="space-y-1.5">
-                <label className="text-xs text-[#6b5a5e] font-medium" htmlFor="code">
-                  <Crown className="w-3.5 h-3.5 inline mr-1 text-[#c9a84c]" />
+                <label className="text-xs text-[#e8e0d4]/60 font-medium flex items-center gap-1.5" htmlFor="code">
+                  <Crown className="w-3.5 h-3.5 text-[#c9a96e]" />
                   Founder Access Code
                 </label>
-                <Input
+                <input
                   id="code"
                   type="text"
-                  placeholder="Enter your code"
+                  placeholder="Enter your founder code"
                   value={accessCode}
                   onChange={(e) => setAccessCode(e.target.value)}
-                  className="bg-[#f5f0ea] border-gray-200"
+                  className="w-full px-4 py-2.5 rounded-lg bg-[#12121a]/80 border border-[#c9a96e]/20 text-[#e8e0d4] placeholder-[#e8e0d4]/30 focus:outline-none focus:border-[#c9a96e]/60 focus:ring-1 focus:ring-[#c9a96e]/30 transition-all text-sm"
                   autoFocus
                 />
-                <p className="text-[10px] text-[#6b5a5e]/50">
-                  Hint: <code className="bg-[#f5f0ea] px-1 rounded">AUREA2026</code>
+                <p className="text-[10px] text-[#e8e0d4]/30">
+                  Hint: <code className="bg-white/5 px-1.5 py-0.5 rounded text-[#c9a96e]/60">AUREA2026</code>
                 </p>
               </div>
             ) : (
               <>
                 <div className="space-y-1.5">
-                  <label className="text-xs text-[#6b5a5e] font-medium" htmlFor="email">Email</label>
+                  <label className="text-xs text-[#e8e0d4]/60 font-medium" htmlFor="email">Email</label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6b5a5e]" />
-                    <Input id="email" type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} className="pl-10 bg-[#f5f0ea] border-gray-200" autoFocus />
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#e8e0d4]/30" />
+                    <input
+                      id="email"
+                      type="email"
+                      placeholder="you@example.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-[#12121a]/80 border border-[#c9a96e]/20 text-[#e8e0d4] placeholder-[#e8e0d4]/30 focus:outline-none focus:border-[#c9a96e]/60 focus:ring-1 focus:ring-[#c9a96e]/30 transition-all text-sm"
+                      autoFocus
+                    />
                   </div>
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-xs text-[#6b5a5e] font-medium" htmlFor="password">Password</label>
+                  <label className="text-xs text-[#e8e0d4]/60 font-medium" htmlFor="password">Password</label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6b5a5e]" />
-                    <Input id="password" type={showPassword ? "text" : "password"} placeholder="Any password works (demo mode)" value={password} onChange={(e) => setPassword(e.target.value)} className="pl-10 pr-10 bg-[#f5f0ea] border-gray-200" />
-                    <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6b5a5e] hover:text-[#1a1614]">
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#e8e0d4]/30" />
+                    <input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      placeholder={isSignUp ? "Create a password" : "Enter your password"}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="w-full pl-10 pr-10 py-2.5 rounded-lg bg-[#12121a]/80 border border-[#c9a96e]/20 text-[#e8e0d4] placeholder-[#e8e0d4]/30 focus:outline-none focus:border-[#c9a96e]/60 focus:ring-1 focus:ring-[#c9a96e]/30 transition-all text-sm"
+                    />
+                    <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#e8e0d4]/40 hover:text-[#e8e0d4]">
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
                   </div>
@@ -160,39 +156,43 @@ export default function LoginPage() {
               </>
             )}
 
-            <Button type="submit" variant="glow" size="lg" className="w-full text-sm" disabled={loading}>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full py-2.5 rounded-lg bg-[#c9a96e] hover:bg-[#d4b87a] text-[#12121a] font-medium text-sm transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+            >
               {loading ? (
-                <span className="flex items-center gap-2">
+                <span className="flex items-center justify-center gap-2">
                   <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                   </svg>
                   Signing in...
                 </span>
-              ) : showCEO ? "Access Dashboard" : isSignUp ? "Start Free Trial" : "Sign In"}
-            </Button>
+              ) : showCEO ? "Access Dashboard" : isSignUp ? "Create Account" : "Sign In"}
+            </button>
 
-            {/* CEO code hint in regular mode */}
+            {/* Founder hint */}
             {!showCEO && (
-              <div className="flex items-center gap-2 p-2.5 rounded-lg bg-gold/5 border border-gold/10">
-                <ShieldCheck className="w-3.5 h-3.5 text-gold/60 flex-shrink-0" />
-                <p className="text-[10px] text-gold/60">
-                  CEO? Use <span className="font-semibold">AUREA2026</span> as your password
+              <div className="flex items-center gap-2 p-2.5 rounded-lg bg-[#c9a96e]/5 border border-[#c9a96e]/10">
+                <ShieldCheck className="w-3.5 h-3.5 text-[#c9a96e]/60 flex-shrink-0" />
+                <p className="text-[10px] text-[#e8e0d4]/50">
+                  Founder? <button type="button" onClick={() => setShowCEO(true)} className="font-semibold text-[#c9a96e] hover:text-[#d4b87a]">Click here</button> to use your access code
                 </p>
               </div>
             )}
 
-            <div className="text-center text-xs text-[#6b5a5e]">
+            <div className="text-center text-xs text-[#e8e0d4]/40">
               {showCEO ? (
-                <button type="button" onClick={() => setShowCEO(false)} className="text-[#c9a84c] hover:text-[#c9a84c]/80 font-medium">
+                <button type="button" onClick={() => setShowCEO(false)} className="text-[#c9a96e] hover:text-[#d4b87a] font-medium transition-colors">
                   Back to regular login
                 </button>
               ) : (
                 <>
                   {isSignUp ? (
-                    <><span>Already have an account? </span><button type="button" onClick={() => setIsSignUp(false)} className="text-[#c9a84c] hover:text-[#c9a84c]/80 font-medium">Sign in</button></>
+                    <><span>Already have an account? </span><button type="button" onClick={() => setIsSignUp(false)} className="text-[#c9a96e] hover:text-[#d4b87a] font-medium transition-colors">Sign in</button></>
                   ) : (
-                    <><span>Don't have an account? </span><button type="button" onClick={() => setIsSignUp(true)} className="text-[#c9a84c] hover:text-[#c9a84c]/80 font-medium">Start 7-day trial</button></>
+                    <><span>Don't have an account? </span><button type="button" onClick={() => setIsSignUp(true)} className="text-[#c9a96e] hover:text-[#d4b87a] font-medium transition-colors">Create one</button></>
                   )}
                 </>
               )}
@@ -201,23 +201,21 @@ export default function LoginPage() {
 
           {/* CEO Access Toggle */}
           {!showCEO && (
-            <button onClick={() => setShowCEO(true)} className="mt-4 w-full flex items-center justify-center gap-2 text-xs text-[#6b5a5e] hover:text-[#c9a84c] transition-colors py-2">
+            <button onClick={() => setShowCEO(true)} className="mt-4 w-full flex items-center justify-center gap-2 text-xs text-[#e8e0d4]/40 hover:text-[#c9a96e] transition-colors py-2">
               <KeyRound className="w-3.5 h-3.5" />
               Founder Access
             </button>
           )}
 
-          {/* Upgrade to paid */}
-          <div className="mt-6 p-4 bg-white/80 backdrop-blur-md border border-[#c9a84c]/10 rounded-xl text-center">
-            <p className="text-xs text-[#6b5a5e] mb-2">After your 7-day trial, plans start at <span className="font-semibold text-[#12121a]">$19/month</span></p>
+          {/* Upgrade */}
+          <div className="mt-6 p-4 bg-[#1a1a2e]/80 backdrop-blur-xl border border-[#c9a96e]/10 rounded-xl text-center">
+            <p className="text-xs text-[#e8e0d4]/50 mb-2">Plans start at <span className="font-semibold text-[#c9a96e]">$19/month</span></p>
             <a href="https://buy.stripe.com/dRmcN51blcX24vreeecwg08" target="_blank" rel="noopener noreferrer">
-              <Button variant="outline" size="sm" className="text-xs">
+              <button className="px-4 py-1.5 rounded-lg border border-[#c9a96e]/30 text-[#c9a96e] hover:bg-[#c9a96e]/10 text-xs transition-colors">
                 Upgrade Now
-              </Button>
+              </button>
             </a>
           </div>
-
-          <p className="text-center text-[10px] text-[#6b5a5e] mt-4">Demo mode: any credentials work. No real data stored.</p>
         </div>
       </div>
     </div>
