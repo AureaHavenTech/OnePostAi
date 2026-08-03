@@ -35,7 +35,6 @@ export const GET = withApi(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Resolve platform from dynamic route params
     let platform = "tiktok";
     if (ctx?.params) {
       const params = ctx.params instanceof Promise ? await ctx.params : ctx.params;
@@ -53,30 +52,22 @@ export const GET = withApi(
       messages: [
         {
           role: "system",
-          content: `You are a ${platform} trend analyst for August 2026.
-You track real-time trending topics, hashtags, challenges, and content formats.
-Provide accurate, current trend data. Return ONLY valid JSON.`,
+          content: `You are a ${platform} trend analyst for August 2026. Return ONLY valid JSON.`,
         },
         {
           role: "user",
-          content: `List the current trending topics, hashtags, challenges, and content formats on ${platform}:
+          content: `List current trending topics, hashtags, challenges, and content formats on ${platform}:
 
 Return JSON:
 {
   "platform": "${platform}",
   "trendingTopics": [
-    {"name": "topic name", "category": "Entertainment|Education|Lifestyle|Tech|Business", "momentum": "Rising|Peak|Declining", "description": "1 sentence"}
-  ] (6-10 topics),
-  "trendingHashtags": [
-    {"tag": "#trending", "postCount": "e.g. 2.5M posts"}
-  ] (5-8 hashtags),
-  "trendingChallenges": [
-    {"name": "challenge name", "description": "what people do", "participation": "e.g. 500K+ participants"}
-  ] (3-5 challenges, skip if platform doesn't have challenges),
-  "trendingFormats": [
-    {"format": "e.g. Green Screen", "why": "why this format is working right now"}
-  ] (3-5 formats),
-  "summary": "2-3 sentence overview of what's trending on ${platform} right now"
+    {"name": "topic", "category": "Entertainment|Education|Lifestyle|Tech|Business", "momentum": "Rising|Peak|Declining", "description": "1 sentence"}
+  ] (6-10),
+  "trendingHashtags": [{"tag": "#trending", "postCount": "e.g. 2.5M posts"}] (5-8),
+  "trendingChallenges": [{"name": "challenge", "description": "what people do", "participation": "e.g. 500K+"}] (3-5),
+  "trendingFormats": [{"format": "e.g. Green Screen", "why": "why it works"}] (3-5),
+  "summary": "2-3 sentence overview"
 }`,
         },
       ],
