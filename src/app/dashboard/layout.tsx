@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Wand2, Lightbulb, CalendarDays, Briefcase, Settings, LogOut, Menu, X, Sparkles, Gift, Coins, Send, ChevronLeft, ChevronRight } from "lucide-react";
+import { LayoutDashboard, Wand2, Lightbulb, CalendarDays, Briefcase, Settings, LogOut, Menu, X, Sparkles, Gift, Coins, Send, ChevronLeft, ChevronRight, Link2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SmartSearch, type SearchResult } from "@/components/smart-search";
 import { Breadcrumbs } from "@/components/breadcrumbs";
@@ -16,6 +16,7 @@ const SEARCH_RESULTS: SearchResult[] = [
   { label: "Schedule Posts", href: "/dashboard/calendar", category: "Page", keywords: "calendar plan" },
   { label: "Portfolio", href: "/dashboard/portfolio", category: "Page", keywords: "brands" },
   { label: "Publish", href: "/dashboard/publish", category: "Action", keywords: "post share" },
+  { label: "Connections", href: "/dashboard/connections", category: "Page", keywords: "social platforms connect accounts" },
   { label: "Affiliates", href: "/dashboard/affiliates", category: "Page", keywords: "referral earn" },
   { label: "Settings", href: "/dashboard/settings", category: "Page", keywords: "profile account" },
   { label: "Founder Access", href: "/dashboard/owner", category: "Admin", keywords: "ceo admin" },
@@ -32,6 +33,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     { href: "/dashboard/ideas", label: "Ideas", icon: Lightbulb },
     { href: "/dashboard/calendar", label: "Schedule", icon: CalendarDays },
     { href: "/dashboard/portfolio", label: "Portfolio", icon: Briefcase },
+    { href: "/dashboard/connections", label: "Connections", icon: Link2 },
     { href: "/dashboard/publish", label: "Publish", icon: Send },
     { href: "/dashboard/affiliates", label: "Affiliates", icon: Gift },
     { href: "/dashboard/settings", label: "Settings", icon: Settings },
