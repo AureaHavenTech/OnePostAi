@@ -1,4 +1,4 @@
-// POST /api/optimize/full — Combo endpoint: hashtags + captions + keywords + viral score
+// POST /api/optimize/full — Combo: hashtags + captions + keywords + viral score
 // Auth-protected. Powered by GPT-4o.
 
 import { NextRequest, NextResponse } from "next/server";
@@ -55,14 +55,7 @@ export const POST = withApi(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const {
-      content = "",
-      platform = "tiktok",
-      niche = "",
-      goal = "growth",
-      tone = "viral",
-    } = body;
-
+    const { content = "", platform = "tiktok", niche = "", goal = "growth", tone = "viral" } = body;
     if (!content) {
       return NextResponse.json({ error: "content is required" }, { status: 400 });
     }
@@ -72,8 +65,7 @@ export const POST = withApi(
         {
           role: "system",
           content: `You are an elite viral content optimizer for ${platform} in 2026.
-Analyze content and provide a complete optimization package: hashtags, captions, keywords, and virality scoring.
-Be data-driven and specific. Return ONLY valid JSON.`,
+Provide a complete optimization package. Return ONLY valid JSON.`,
         },
         {
           role: "user",
@@ -82,32 +74,31 @@ Be data-driven and specific. Return ONLY valid JSON.`,
 CONTENT: ${content}
 PLATFORM: ${platform}
 NICHE: ${niche}
-GOAL: ${goal} (growth|engagement|conversions|reach)
+GOAL: ${goal}
 TONE: ${tone}
 
 Return JSON:
 {
   "hashtags": {
-    "primary": [{"tag": "#tag", "relevance": 90, "reach": "High"}] (5-8 hashtags),
-    "niche": [{"tag": "#tag", "relevance": 95}] (5-8 niche tags),
-    "trending": [{"tag": "#tag", "trendingScore": 85}] (3-5 trending),
+    "primary": [{"tag": "#tag", "relevance": 90, "reach": "High"}] (5-8),
+    "niche": [{"tag": "#tag", "relevance": 95}] (5-8),
+    "trending": [{"tag": "#tag", "trendingScore": 85}] (3-5),
     "strategy": "hashtag strategy explanation"
   },
   "captions": [
     {"caption": "full caption", "hook": "opening hook", "cta": "call to action", "engagementScore": 88, "whyWorks": "reasoning"}
-  ] (2 caption variations),
+  ] (2 variations),
   "keywords": {
-    "keywords": [{"word": "keyword", "searchVolume": "High", "competition": "Medium", "relevance": 90}] (6-8),
-    "longTailPhrases": ["phrase 1", "phrase 2"] (4-5),
-    "algorithmTips": ["tip 1", "tip 2"] (3-4)
+    "keywords": [{"word": "kw", "searchVolume": "High", "competition": "Medium", "relevance": 90}] (6-8),
+    "longTailPhrases": ["phrase"] (4-5),
+    "algorithmTips": ["tip"] (3-4)
   },
-  "bestPostingTime": "e.g. Tuesday 7PM EST — 1 sentence with reasoning",
+  "bestPostingTime": "e.g. Tuesday 7PM EST — with reasoning",
   "contentScore": 85,
   "viralPotential": 78,
-  "overallStrategy": "2-3 sentence comprehensive strategy tying everything together"
+  "overallStrategy": "2-3 sentence comprehensive strategy"
 }
-
-Scores: contentScore rates the content quality (0-100). viralPotential estimates chance of going viral (0-100). Be honest and realistic.`,
+Scores: contentScore 0-100, viralPotential 0-100. Be honest.`,
         },
       ],
       model: "gpt-4o-mini",

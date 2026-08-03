@@ -66,7 +66,7 @@ Return ONLY valid JSON.`,
           content: `Write 3 caption variations for this content:
 
 CONTENT: ${content}
-PLATFORM: ${platform} (optimize for ${platform}'s format and audience)
+PLATFORM: ${platform}
 TONE: ${tone}
 GOAL: ${goal}
 ${ctaText}
@@ -75,13 +75,13 @@ Return JSON:
 {
   "variations": [
     {
-      "caption": "the full caption text (1-4 lines, platform-optimized length)",
-      "hook": "the first line — must hook in 2 seconds (5-10 words)",
-      "cta": "call-to-action line (or empty string if none)",
+      "caption": "the full caption text",
+      "hook": "5-10 word opening hook",
+      "cta": "call-to-action or empty",
       "engagementScore": 85,
-      "whyWorks": "1 sentence explaining why this caption drives ${goal}"
+      "whyWorks": "why this drives ${goal}"
     }
-  ] (exactly 3 variations)
+  ] (exactly 3)
 }`,
         },
       ],
