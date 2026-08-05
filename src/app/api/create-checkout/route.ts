@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { withApi } from "@/lib/api-utils";
-import { STRIPE_PRICE_CATALOG, PRICE_ID_TO_KEY } from "@/lib/stripe-catalog";
+import { STRIPE_PRICE_CATALOG, PRICE_ID_TO_KEY, isPlaceholderPriceId } from "@/lib/stripe-catalog";
 import Stripe from "stripe";
 
 let stripeClient: Stripe | null = null;
@@ -58,6 +58,24 @@ export const POST = withApi(
     const baseUrl = getBaseUrl(req);
     const finalSuccessUrl = successUrl || `${baseUrl}/dashboard?checkout=success&session_id={CHECKOUT_SESSION_ID}`;
     const finalCancelUrl = cancelUrl || `${baseUrl}/pricing?checkout=cancelled`;
+
+    // If the catalog entry is still a placeholder, return a friendly stub
+    // so the page can show a "Stripe price not yet configured" state instead
+    // of attempting to create a checkout session with a fake priceId.
+    if (isPlaceholderPriceId(resolvedPriceId) || planMeta.placeholder) {
+      const stubUrl = planMeta.paymentLink || `https://buy.stripe.com/test_${resolvedPriceId.slice(-12)}`;
+      logCheckoutEvent("placeholder_price", { plan, priceId: resolvedPriceId, email, userId });
+      return NextResponse.json({
+        success: true,
+        mode: "placeholder",
+        message: `Stripe price for "${plan}" is not yet configured. The owner needs to create the real product in Stripe and replace priceId "${resolvedPriceId}" in src/lib/stripe-catalog.ts. Until then, the CTA jumps to the configured payment link.`,
+        sessionUrl: stubUrl,
+        sessionId: `placeholder_${Date.now()}`,
+        priceId: resolvedPriceId,
+        plan: planMeta,
+        needsConfiguration: true,
+      });
+    }
 
     const stripe = getStripe();
     if (!stripe) {

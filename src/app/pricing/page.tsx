@@ -4,6 +4,11 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Check, ArrowLeft, ArrowRight, Sparkles, Shield, Loader2 } from "lucide-react";
+// Plan keys here MUST exist in src/lib/stripe-catalog.ts. The catalog
+// resolves them to the real Stripe priceId at request time. If the owner
+// hasn't set up a real Stripe product yet, the catalog entry has
+// `placeholder: true` and the API returns a friendly stub instead of 500ing.
+import { STRIPE_PRICE_CATALOG } from "@/lib/stripe-catalog";
 
 interface Plan {
   name: string;
@@ -12,12 +17,17 @@ interface Plan {
   desc: string;
   features: string[];
   cta: string;
-  priceId: string;            // Stripe price ID (from /api/create-checkout catalog)
-  planKey?: string;            // optional semantic plan key (onepost_monthly / onepost_lifetime)
+  // Each plan now has a unique `planKey` that the /api/create-checkout
+  // route resolves to a Stripe price via the catalog in
+  // src/lib/stripe-catalog.ts. Never hard-code a priceId here — change the
+  // catalog entry instead, then every page that references the plan picks
+  // up the new price automatically.
+  planKey: "onepost_basic" | "onepost_pro" | "onepost_lifetime";
+  priceId: string;            // Stripe price ID (looked up from catalog by planKey)
+  paymentLink?: string;       // Optional Stripe payment link (https://buy.stripe.com/...) for instant redirect
   mode: "subscription" | "payment";
   popular: boolean;
 }
-
 const plans: Plan[] = [
   {
     name: "Basic",
@@ -33,8 +43,9 @@ const plans: Plan[] = [
       "7-day free trial",
     ],
     cta: "Start Free Trial",
-    priceId: "price_1TkABVDIOEE0E2wQJlzDDNHn",
-    planKey: "onepost_monthly",
+    planKey: "onepost_basic",
+    priceId: STRIPE_PRICE_CATALOG.onepost_basic.priceId,
+    paymentLink: STRIPE_PRICE_CATALOG.onepost_basic.paymentLink,
     mode: "subscription",
     popular: false,
   },
@@ -52,8 +63,9 @@ const plans: Plan[] = [
       "Priority support",
     ],
     cta: "Start Free Trial",
-    priceId: "price_1TkABVDIOEE0E2wQJlzDDNHn",
-    planKey: "onepost_monthly",
+    planKey: "onepost_pro",
+    priceId: STRIPE_PRICE_CATALOG.onepost_pro.priceId,
+    paymentLink: STRIPE_PRICE_CATALOG.onepost_pro.paymentLink,
     mode: "subscription",
     popular: true,
   },
@@ -71,8 +83,9 @@ const plans: Plan[] = [
       "Dedicated account manager",
     ],
     cta: "Buy Lifetime Access",
-    priceId: "price_1TkABjDIOEE0E2wQ4jINuBhJ",
     planKey: "onepost_lifetime",
+    priceId: STRIPE_PRICE_CATALOG.onepost_lifetime.priceId,
+    paymentLink: STRIPE_PRICE_CATALOG.onepost_lifetime.paymentLink,
     mode: "payment",
     popular: false,
   },
@@ -84,21 +97,27 @@ export default function PricingPage() {
 
   async function startCheckout(plan: Plan) {
     setError(null);
-    setLoadingPlan(plan.priceId);
+    setLoadingPlan(plan.planKey);
     try {
       // Get user info from localStorage if available (set by /login)
       const userEmail = (() => { try { return localStorage.getItem("op_user_email") || undefined; } catch { return undefined; } })();
       const userId = (() => { try { return localStorage.getItem("op_user_id") || undefined; } catch { return undefined; } })();
+      // Send planKey as the primary identifier. The /api/create-checkout
+      // route resolves it to the real priceId via the catalog — never
+      // hard-code a priceId here. The route also returns needsConfiguration
+      // when the catalog entry is still a placeholder, in which case we
+      // jump straight to the configured payment link.
       const res = await fetch("/api/create-checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ priceId: plan.priceId, plan: plan.planKey, email: userEmail, userId }),
+        body: JSON.stringify({ plan: plan.planKey, priceId: plan.priceId, email: userEmail, userId }),
       });
       const data = await res.json();
       if (!res.ok || !data?.success || !data?.sessionUrl) {
         throw new Error(data?.error || `Checkout failed (HTTP ${res.status})`);
       }
-      // Redirect to Stripe Checkout
+      // Redirect to Stripe Checkout (or to the configured payment link when
+      // the priceId is a placeholder the owner hasn't replaced yet).
       window.location.href = data.sessionUrl;
     } catch (e: any) {
       setError(e?.message || "Checkout failed. Please try again.");
@@ -156,11 +175,11 @@ export default function PricingPage() {
               <Button
                 variant={plan.popular ? "glow" : "outline"}
                 size="lg"
-                disabled={loadingPlan === plan.priceId}
+                disabled={loadingPlan === plan.planKey}
                 onClick={() => startCheckout(plan)}
                 className={`w-full mt-6 ${plan.popular ? '' : 'border-[#c9a96e]/30 text-[#12121a] hover:bg-[#c9a96e]/10'}`}
               >
-                {loadingPlan === plan.priceId ? (
+                {loadingPlan === plan.planKey ? (
                   <><Loader2 className="ml-1.5 w-4 h-4 animate-spin" /> Redirecting…</>
                 ) : (
                   <>{plan.cta} <ArrowRight className="ml-1.5 w-4 h-4" /></>
