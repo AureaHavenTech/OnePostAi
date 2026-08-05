@@ -1,13 +1,11 @@
 "use client";
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import {
   Sparkles, Loader2, Zap, Send, Mic, MicOff, Maximize2, Minimize2,
-  Trash2, Copy, Check, Coins, Clock, ChevronDown, History, MessageSquare,
-  Film, Image, ShoppingCart, Search, TrendingUp, User,
+  Trash2, Copy, Coins, Clock, History, MessageSquare,
+  Film, Image, ShoppingCart, Search, TrendingUp, User, AlertTriangle, RefreshCw,
 } from "lucide-react";
 
 // ── Types ──────────────────────────────────────────────────
@@ -32,6 +30,13 @@ interface ChatSession {
   createdAt: number;
   updatedAt: number;
 }
+
+// SSE event types from /api/chat/stream
+interface SSEStatus { type: "status"; message: string; }
+interface SSEChunk { type: "chunk"; content: string; }
+interface SSEDone { type: "done"; }
+interface SSEError { type: "error"; message: string; }
+type SSEEvent = SSEStatus | SSEChunk | SSEDone | SSEError;
 
 // ── Pipeline template ─────────────────────────────────────
 function detectPipeline(input: string): PipelineStep[] | null {
@@ -75,21 +80,6 @@ function detectPipeline(input: string): PipelineStep[] | null {
   return null;
 }
 
-// ── AI response generator (simulated streaming) ───────────
-function generateResponse(input: string): string {
-  const lower = input.toLowerCase();
-  if (lower.includes("unboxing") || lower.includes("video")) {
-    return "I'll create that unboxing video for you! Here's what I've got:\n\n🎬 **Unboxing Video — 15 seconds**\n\n**Hook:** \"POV: You finally found sleep gummies that actually work 🌙\"\n\n**Script:**\n• 0-3s: Close-up of package, slow reveal\n• 3-8s: Open box, show gummies with natural lighting\n• 8-12s: Pour into hand, show texture\n• 12-15s: Smile to camera, text overlay: \"Your best sleep starts here\"\n\n**Caption:** Your new bedtime ritual starts here 🌙✨ Melatonin-free, 100% natural. #MellowSleep #SleepWell #CleanIngredients\n\n**Music:** Lo-fi chill beat (trending on TikTok)\n\nReady to post to TikTok and Instagram Reels! Want me to schedule it?";
-  }
-  if (lower.includes("shopify") || lower.includes("product page")) {
-    return "Here's your optimized Shopify product page:\n\n🛒 **Product: Premium LED Light Therapy Mask**\n\n**SEO Title:** Buy LED Light Therapy Mask Online | Best Beauty Tech 2026\n\n**Description:**\nExperience spa-grade light therapy at home. Our LED mask uses 3 wavelengths to target acne, wrinkles, and uneven tone — all in 10 minutes a day.\n\n✨ **Features:**\n• 3 light modes (Red, Blue, Orange)\n• FDA-cleared, dermatologist-tested\n• Wireless & rechargeable\n• 30-day money-back guarantee\n\n**Price:** $89.00 (72% margin)\n\n**Keywords:** LED face mask, light therapy, skincare device, beauty tech\n\nWant me to generate product images too?";
-  }
-  if (lower.includes("research") || lower.includes("trend")) {
-    return "I scanned the latest trends. Here are the top products with highest viral potential:\n\n📊 **Top 5 Trending Products — Beauty Tech**\n\n1. 🔥 **LED Light Therapy Mask** — $89, 72% margin, Low competition\n2. 📈 **Smart Hair Brush** — $129, 65% margin, Low competition\n3. 🔥 **Microcurrent Face Device** — $199, 75% margin, Low competition\n4. 📈 **Portable Facial Steamer** — $49, 70% margin, Medium competition\n5. 🔥 **Lash Growth Serum Kit** — $44, 82% margin, High competition\n\n🏆 **Best Pick:** LED Light Therapy Mask — viral on TikTok, low shipping cost, high repeat purchase rate.\n\nWant me to create Shopify pages for any of these?";
-  }
-  return `Got it! I understand you want to create content around: "${input}". Let me help you with that. What specific type of content would you like — a video, social post, product page, or something else? I can generate optimized content for all 7 platforms. Just tell me what you need! ✨`;
-}
-
 // ── Save/load chat history ────────────────────────────────
 const STORAGE_KEY = "onepost_chat_sessions";
 
@@ -102,17 +92,18 @@ function loadSessions(): ChatSession[] {
 
 function saveSessions(sessions: ChatSession[]) {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(sessions.slice(0, 20))); // cap at 20
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(sessions.slice(0, 20)));
   } catch { /* quota exceeded */ }
 }
 
 // ── Component ──────────────────────────────────────────────
 export default function DashboardPage() {
-  // Chat state
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
   const [streamedText, setStreamedText] = useState("");
+  const [thinkingText, setThinkingText] = useState(""); // status message from SSE
+  const [streamError, setStreamError] = useState(""); // error from SSE
   const [activePipeline, setActivePipeline] = useState<PipelineStep[] | null>(null);
 
   // Voice
@@ -131,6 +122,7 @@ export default function DashboardPage() {
   const [credits] = useState(50);
   const chatRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const abortRef = useRef<AbortController | null>(null);
 
   // ── Load history on mount ───────────────────────────────
   useEffect(() => {
@@ -148,7 +140,7 @@ export default function DashboardPage() {
     if (chatRef.current) {
       chatRef.current.scrollTop = chatRef.current.scrollHeight;
     }
-  }, [messages, streamedText, activePipeline]);
+  }, [messages, streamedText, activePipeline, thinkingText]);
 
   // ── Voice recognition ───────────────────────────────────
   const toggleVoice = useCallback(() => {
@@ -185,6 +177,131 @@ export default function DashboardPage() {
     setIsListening(true);
   }, [isListening]);
 
+  // ── SSE Stream from /api/chat/stream ────────────────────
+  const startSSEStream = async (userMessage: string, pipeline: PipelineStep[] | null) => {
+    // Build history excluding the streaming placeholder
+    const history = messages.map((m) => ({
+      role: m.role as "user" | "assistant",
+      content: m.content,
+    }));
+
+    const abort = new AbortController();
+    abortRef.current = abort;
+
+    let fullResponse = "";
+
+    try {
+      const res = await fetch("/api/chat/stream", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: userMessage, history }),
+        signal: abort.signal,
+      });
+
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || `Server error (${res.status})`);
+      }
+
+      const reader = res.body?.getReader();
+      if (!reader) throw new Error("No response stream available.");
+
+      const decoder = new TextDecoder();
+      let buffer = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n");
+        buffer = lines.pop() || ""; // keep incomplete line in buffer
+
+        for (const line of lines) {
+          if (!line.startsWith("data: ")) continue;
+          const jsonStr = line.slice(6).trim();
+          if (jsonStr === "[DONE]") continue;
+
+          try {
+            const event: SSEEvent = JSON.parse(jsonStr);
+            switch (event.type) {
+              case "status":
+                setThinkingText(event.message);
+                break;
+              case "chunk":
+                setThinkingText(""); // clear thinking once content arrives
+                fullResponse += event.content;
+                setStreamedText(fullResponse);
+                break;
+              case "done":
+                // Finalize the message
+                const assistantMsg: Message = {
+                  id: (Date.now() + 1).toString(),
+                  role: "assistant",
+                  content: fullResponse,
+                  timestamp: Date.now(),
+                  pipeline: pipeline ?? undefined,
+                };
+                setMessages((prev) => [...prev, assistantMsg]);
+                setStreamedText("");
+                setThinkingText("");
+                setActivePipeline(null);
+                setIsStreaming(false);
+                setStreamError("");
+                saveCurrentSession([...messages, assistantMsg]);
+                return;
+              case "error":
+                throw new Error(event.message || "Streaming error occurred.");
+            }
+          } catch (parseErr: any) {
+            // If it's our own thrown error from "error" type, rethrow
+            if (parseErr.message !== "Unexpected end of JSON input" &&
+                parseErr.message !== "Unexpected token" &&
+                !parseErr.message.includes("JSON")) {
+              throw parseErr;
+            }
+            // Otherwise skip malformed lines
+          }
+        }
+      }
+
+      // If stream ends without "done" event, finalize with whatever we have
+      if (fullResponse) {
+        const msg: Message = {
+          id: (Date.now() + 1).toString(),
+          role: "assistant",
+          content: fullResponse,
+          timestamp: Date.now(),
+          pipeline: pipeline ?? undefined,
+        };
+        setMessages((prev) => [...prev, msg]);
+        saveCurrentSession([...messages, msg]);
+      }
+    } catch (err: any) {
+      if (err.name === "AbortError") return; // user cancelled
+      console.error("[chat/stream] error:", err);
+      setStreamError(err.message || "Connection lost. Please try again.");
+      // If we have a partial response, show it
+      if (fullResponse) {
+        const msg: Message = {
+          id: (Date.now() + 1).toString(),
+          role: "assistant",
+          content: fullResponse + "\n\n⚠️ _Response was cut short._",
+          timestamp: Date.now(),
+          pipeline: pipeline ?? undefined,
+        };
+        setMessages((prev) => [...prev, msg]);
+        saveCurrentSession([...messages, msg]);
+      }
+    } finally {
+      setStreamedText("");
+      setThinkingText("");
+      setActivePipeline(null);
+      setIsStreaming(false);
+      abortRef.current = null;
+    }
+  };
+
   // ── Send message ────────────────────────────────────────
   const sendMessage = useCallback(() => {
     const trimmed = input.trim();
@@ -199,76 +316,53 @@ export default function DashboardPage() {
 
     const pipeline = detectPipeline(trimmed);
 
-    setMessages(prev => [...prev, userMsg]);
+    setMessages((prev) => [...prev, userMsg]);
     setInput("");
     setIsStreaming(true);
     setStreamedText("");
+    setThinkingText("");
+    setStreamError("");
     setActivePipeline(pipeline);
 
-    // If pipeline detected, animate it first
+    const updatedMessages = [...messages, userMsg];
+
+    // If pipeline detected, animate it first, then start streaming
     if (pipeline) {
       let stepIdx = 0;
       const pipelineInterval = setInterval(() => {
         stepIdx++;
-        setActivePipeline(prev =>
+        setActivePipeline((prev) =>
           prev
             ? prev.map((s, i) => ({
                 ...s,
-                status: i < stepIdx ? ("done" as const) : i === stepIdx ? ("running" as const) : ("pending" as const),
+                status:
+                  i < stepIdx
+                    ? ("done" as const)
+                    : i === stepIdx
+                    ? ("running" as const)
+                    : ("pending" as const),
               }))
             : null
         );
 
         if (stepIdx >= pipeline.length) {
           clearInterval(pipelineInterval);
-          // Start streaming response after pipeline completes
-          setTimeout(() => startStreaming(trimmed), 300);
+          setTimeout(() => startSSEStream(trimmed, pipeline), 300);
         }
       }, 800);
     } else {
-      // No pipeline, stream immediately
-      setTimeout(() => startStreaming(trimmed), 400);
+      // No pipeline — stream immediately
+      setTimeout(() => startSSEStream(trimmed, null), 200);
     }
-  }, [input, isStreaming]);
-
-  // ── Stream response word-by-word ────────────────────────
-  const startStreaming = (userInput: string) => {
-    const response = generateResponse(userInput);
-    const words = response.split(" ");
-    let wordIdx = 0;
-
-    const streamInterval = setInterval(() => {
-      wordIdx++;
-      if (wordIdx <= words.length) {
-        setStreamedText(words.slice(0, wordIdx).join(" "));
-      } else {
-        clearInterval(streamInterval);
-        // Finalize message
-        const assistantMsg: Message = {
-          id: (Date.now() + 1).toString(),
-          role: "assistant",
-          content: response,
-          timestamp: Date.now(),
-          pipeline: activePipeline ?? undefined,
-        };
-        setMessages(prev => [...prev, assistantMsg]);
-        setStreamedText("");
-        setActivePipeline(null);
-        setIsStreaming(false);
-
-        // Save to localStorage
-        saveCurrentSession([...messages, assistantMsg]);
-      }
-    }, 40); // ~25 words/sec — feels fluid
-  };
+  }, [input, isStreaming, messages]);
 
   // ── Save session ────────────────────────────────────────
   const saveCurrentSession = (msgs: Message[]) => {
     const all = loadSessions();
-    const existingIdx = all.findIndex(s => s.id === currentSessionId);
+    const existingIdx = all.findIndex((s) => s.id === currentSessionId);
     const session: ChatSession = {
       id: currentSessionId || Date.now().toString(),
-      title: msgs.find(m => m.role === "user")?.content.slice(0, 40) || "New Chat",
+      title: msgs.find((m) => m.role === "user")?.content.slice(0, 40) || "New Chat",
       messages: msgs,
       createdAt: existingIdx >= 0 ? all[existingIdx].createdAt : Date.now(),
       updatedAt: Date.now(),
@@ -287,10 +381,15 @@ export default function DashboardPage() {
 
   // ── New chat ────────────────────────────────────────────
   const newChat = () => {
+    // Cancel any in-flight stream
+    abortRef.current?.abort();
     setMessages([]);
     setCurrentSessionId(null);
     setActivePipeline(null);
     setStreamedText("");
+    setThinkingText("");
+    setStreamError("");
+    setIsStreaming(false);
     setShowHistory(false);
     inputRef.current?.focus();
   };
@@ -305,7 +404,7 @@ export default function DashboardPage() {
   // ── Delete session ──────────────────────────────────────
   const deleteSession = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    const all = loadSessions().filter(s => s.id !== id);
+    const all = loadSessions().filter((s) => s.id !== id);
     saveSessions(all);
     setSessions(all);
     if (currentSessionId === id) {
@@ -335,38 +434,48 @@ export default function DashboardPage() {
   ];
 
   return (
-    <div className={cn(
-      "flex flex-col transition-all duration-300",
-      isFullscreen ? "fixed inset-0 z-50 bg-[#faf7f2]" : "h-[calc(100vh-7rem)]"
-    )}>
+    <div
+      className={cn(
+        "flex flex-col transition-all duration-300",
+        isFullscreen ? "fixed inset-0 z-50 bg-gradient-luxury" : "h-[calc(100vh-7rem)]"
+      )}
+    >
       {/* ── Header ─────────────────────────────────────── */}
       <div className="flex items-center justify-between px-1 pb-3 shrink-0">
         <div className="flex items-center gap-3">
-          <h1 className="text-xl font-bold text-dark font-playfair">AI Chat</h1>
-          <span className="text-[10px] text-charcoal/40 bg-gold/10 px-2 py-0.5 rounded-full border border-gold/10">
+          <h1 className="text-xl font-bold text-cream font-heading">AI Chat</h1>
+          <span className="text-[10px] text-gold/60 bg-gold/10 px-2 py-0.5 rounded-full border border-gold/10">
             Unfiltered · Streaming
           </span>
         </div>
         <div className="flex items-center gap-2">
           {/* Credits */}
-          <div className="flex items-center gap-1.5 text-xs text-charcoal/50 bg-white/80 border border-gold/10 rounded-lg px-3 py-1.5">
+          <div className="flex items-center gap-1.5 text-xs text-cream/50 bg-dark-card/80 border border-gold/10 rounded-lg px-3 py-1.5">
             <Coins className="w-3.5 h-3.5 text-gold" />
             <span className="font-semibold text-gold">{credits}</span>
           </div>
           {/* History */}
-          <button onClick={() => setShowHistory(!showHistory)}
-            className={cn("p-2 rounded-lg transition-all text-xs flex items-center gap-1",
-              showHistory ? "bg-gold/10 text-gold" : "text-charcoal/50 hover:text-charcoal/70")}>
+          <button
+            onClick={() => setShowHistory(!showHistory)}
+            className={cn(
+              "p-2 rounded-lg transition-all text-xs flex items-center gap-1",
+              showHistory ? "bg-gold/10 text-gold" : "text-cream/40 hover:text-cream"
+            )}
+          >
             <History className="w-4 h-4" />
           </button>
           {/* New chat */}
-          <button onClick={newChat}
-            className="p-2 rounded-lg text-charcoal/50 hover:text-charcoal/70 transition-all">
+          <button
+            onClick={newChat}
+            className="p-2 rounded-lg text-cream/40 hover:text-cream transition-all"
+          >
             <MessageSquare className="w-4 h-4" />
           </button>
           {/* Fullscreen */}
-          <button onClick={() => setIsFullscreen(!isFullscreen)}
-            className="p-2 rounded-lg text-charcoal/50 hover:text-charcoal/70 transition-all">
+          <button
+            onClick={() => setIsFullscreen(!isFullscreen)}
+            className="p-2 rounded-lg text-cream/40 hover:text-cream transition-all"
+          >
             {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
           </button>
         </div>
@@ -375,34 +484,41 @@ export default function DashboardPage() {
       <div className="flex-1 flex gap-4 min-h-0">
         {/* ── History sidebar ──────────────────────────── */}
         {showHistory && (
-          <div className="w-64 shrink-0 bg-white/80 backdrop-blur-md border border-gold/10 rounded-2xl p-4 overflow-y-auto animate-slideUp">
-            <h3 className="text-sm font-semibold text-dark mb-3 flex items-center gap-2">
+          <div className="w-64 shrink-0 glass-card p-4 overflow-y-auto animate-slideUp">
+            <h3 className="text-sm font-semibold text-cream mb-3 flex items-center gap-2">
               <Clock className="w-4 h-4 text-gold" />
               Chat History
             </h3>
             {sessions.length === 0 ? (
-              <p className="text-xs text-charcoal/50">No conversations yet</p>
+              <p className="text-xs text-cream/40">No conversations yet</p>
             ) : (
               <div className="space-y-1">
-                {[...sessions].reverse().map(s => (
-                  <div key={s.id}
+                {[...sessions].reverse().map((s) => (
+                  <div
+                    key={s.id}
                     onClick={() => loadSession(s)}
                     className={cn(
                       "group flex items-center justify-between p-2 rounded-lg cursor-pointer text-xs transition-all",
                       s.id === currentSessionId
                         ? "bg-gold/10 text-gold font-medium"
-                        : "text-charcoal/60 hover:bg-gold/5"
-                    )}>
+                        : "text-cream/50 hover:bg-gold/5"
+                    )}
+                  >
                     <span className="truncate flex-1">{s.title}</span>
-                    <button onClick={(e) => deleteSession(s.id, e)}
-                      className="opacity-0 group-hover:opacity-100 p-1 hover:text-red-500 transition-all">
+                    <button
+                      onClick={(e) => deleteSession(s.id, e)}
+                      className="opacity-0 group-hover:opacity-100 p-1 hover:text-red-500 transition-all"
+                    >
                       <Trash2 className="w-3 h-3" />
                     </button>
                   </div>
                 ))}
               </div>
             )}
-            <button onClick={newChat} className="mt-3 w-full text-xs text-gold hover:text-gold/80 font-medium py-2 border border-gold/20 rounded-lg">
+            <button
+              onClick={newChat}
+              className="mt-3 w-full text-xs text-gold hover:text-gold-light font-medium py-2 border border-gold/20 rounded-lg transition-colors"
+            >
               + New Chat
             </button>
           </div>
@@ -417,20 +533,25 @@ export default function DashboardPage() {
                 <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-gold to-gold-light flex items-center justify-center shadow-lg shadow-gold/20 mb-6">
                   <Sparkles className="w-10 h-10 text-dark" />
                 </div>
-                <h2 className="text-2xl font-bold text-dark font-playfair mb-2">
+                <h2 className="text-2xl font-bold text-cream font-heading mb-2">
                   Hey, I'm OnePost AI ✨
                 </h2>
-                <p className="text-charcoal/50 text-sm max-w-md mb-6">
+                <p className="text-cream/40 text-sm max-w-md mb-6">
                   I create content, research trends, build product pages, and publish everywhere.
                   Just talk to me like a human — no filters, no limits.
                 </p>
                 {/* Quick actions */}
                 <div className="grid grid-cols-2 gap-2 max-w-lg w-full">
-                  {quickActions.map(qa => (
-                    <button key={qa.label}
-                      onClick={() => { setInput(qa.prompt); inputRef.current?.focus(); }}
-                      className="flex items-center gap-2 p-3 rounded-xl bg-white/80 border border-gold/10 text-left text-xs text-charcoal/70 hover:border-gold/30 hover:bg-gold/5 transition-all group">
-                      <qa.icon className="w-4 h-4 text-gold/60 group-hover:text-gold shrink-0" />
+                  {quickActions.map((qa) => (
+                    <button
+                      key={qa.label}
+                      onClick={() => {
+                        setInput(qa.prompt);
+                        inputRef.current?.focus();
+                      }}
+                      className="flex items-center gap-2 p-3 rounded-xl glass-card text-left text-xs text-cream/60 hover:border-gold/30 hover:text-cream transition-all group"
+                    >
+                      <qa.icon className="w-4 h-4 text-gold/40 group-hover:text-gold shrink-0" />
                       <span>{qa.label}</span>
                     </button>
                   ))}
@@ -438,50 +559,96 @@ export default function DashboardPage() {
               </div>
             )}
 
-            {messages.map(msg => (
-              <div key={msg.id} className={cn("flex gap-3 animate-fadeIn",
-                msg.role === "user" ? "justify-end" : "justify-start")}>
+            {/* Error banner */}
+            {streamError && (
+              <div className="flex items-center gap-2 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-xs">
+                <AlertTriangle className="w-4 h-4 flex-shrink-0" />
+                <span>{streamError}</span>
+                <button
+                  onClick={() => setStreamError("")}
+                  className="ml-auto text-red-400/60 hover:text-red-400"
+                >
+                  &times;
+                </button>
+              </div>
+            )}
+
+            {messages.map((msg) => (
+              <div
+                key={msg.id}
+                className={cn(
+                  "flex gap-3 animate-fadeIn",
+                  msg.role === "user" ? "justify-end" : "justify-start"
+                )}
+              >
                 {msg.role === "assistant" && (
                   <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-gold to-gold-light flex items-center justify-center shadow-md shrink-0 mt-1">
                     <Sparkles className="w-4 h-4 text-dark" />
                   </div>
                 )}
-                <div className={cn("max-w-[80%] group relative",
-                  msg.role === "user" ? "order-first" : "")}>
-                  <div className={cn("p-4 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap",
-                    msg.role === "user"
-                      ? "bg-gold text-dark rounded-br-md"
-                      : "bg-white/80 border border-gold/10 rounded-bl-md text-dark/80")}>
+                <div className={cn("max-w-[80%] group relative", msg.role === "user" ? "order-first" : "")}>
+                  <div
+                    className={cn(
+                      "p-4 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap",
+                      msg.role === "user"
+                        ? "bg-gold text-dark rounded-br-md"
+                        : "glass-card rounded-bl-md text-cream/90"
+                    )}
+                  >
                     {msg.content}
                   </div>
                   {/* Copy button */}
                   {msg.role === "assistant" && (
-                    <button onClick={() => copyMessage(msg.content)}
-                      className="absolute -bottom-6 left-2 opacity-0 group-hover:opacity-100 text-[10px] text-charcoal/40 hover:text-gold flex items-center gap-1 transition-all">
+                    <button
+                      onClick={() => copyMessage(msg.content)}
+                      className="absolute -bottom-6 left-2 opacity-0 group-hover:opacity-100 text-[10px] text-cream/30 hover:text-gold flex items-center gap-1 transition-all"
+                    >
                       <Copy className="w-3 h-3" /> Copy
                     </button>
                   )}
                   {/* Timestamp */}
-                  <span className="text-[10px] text-charcoal/30 mt-1 block px-1">
-                    {new Date(msg.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                  <span className="text-[10px] text-cream/20 mt-1 block px-1">
+                    {new Date(msg.timestamp).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
                   </span>
                 </div>
                 {msg.role === "user" && (
-                  <div className="w-8 h-8 rounded-xl bg-dark/10 flex items-center justify-center shrink-0 mt-1">
-                    <span className="text-sm font-semibold text-dark/60">U</span>
+                  <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center shrink-0 mt-1">
+                    <span className="text-sm font-semibold text-cream/60">U</span>
                   </div>
                 )}
               </div>
             ))}
 
-            {/* Streaming response */}
+            {/* Thinking indicator — SSE "status" events */}
+            {isStreaming && thinkingText && !streamedText && (
+              <div className="flex gap-3 animate-fadeIn">
+                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-gold to-gold-light flex items-center justify-center shadow-md shrink-0 mt-1">
+                  <Sparkles className="w-4 h-4 text-dark" />
+                </div>
+                <div className="glass-card p-4 rounded-2xl rounded-bl-md">
+                  <div className="flex items-center gap-2">
+                    <div className="flex gap-1">
+                      <div className="w-2 h-2 rounded-full bg-gold animate-bounce [animation-delay:0ms]" />
+                      <div className="w-2 h-2 rounded-full bg-gold animate-bounce [animation-delay:150ms]" />
+                      <div className="w-2 h-2 rounded-full bg-gold animate-bounce [animation-delay:300ms]" />
+                    </div>
+                    <span className="text-xs text-cream/40">{thinkingText}</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Streaming response (real SSE chunks) */}
             {isStreaming && streamedText && (
               <div className="flex gap-3 animate-fadeIn">
                 <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-gold to-gold-light flex items-center justify-center shadow-md shrink-0 mt-1">
                   <Sparkles className="w-4 h-4 text-dark" />
                 </div>
                 <div className="max-w-[80%]">
-                  <div className="p-4 rounded-2xl bg-white/80 border border-gold/10 rounded-bl-md text-sm text-dark/80 leading-relaxed whitespace-pre-wrap">
+                  <div className="glass-card p-4 rounded-2xl rounded-bl-md text-sm text-cream/90 leading-relaxed whitespace-pre-wrap">
                     {streamedText}
                     <span className="inline-block w-1.5 h-4 bg-gold ml-0.5 animate-pulse align-middle" />
                   </div>
@@ -492,41 +659,33 @@ export default function DashboardPage() {
             {/* Pipeline visualization */}
             {activePipeline && (
               <div className="ml-11 max-w-[75%] animate-fadeIn">
-                <div className="p-4 rounded-2xl bg-indigo-50/80 border border-indigo-200/30 rounded-bl-md">
-                  <p className="text-xs font-medium text-indigo-600 mb-3">⚡ Executing pipeline...</p>
+                <div className="glass-card p-4 rounded-2xl rounded-bl-md border-gold/20">
+                  <p className="text-xs font-medium text-gold mb-3">⚡ Executing pipeline...</p>
                   <div className="space-y-1.5">
                     {activePipeline.map((step, i) => (
-                      <div key={i} className={cn("flex items-center gap-2 text-xs p-1.5 rounded-lg transition-all duration-300",
-                        step.status === "running" ? "bg-indigo-100/50 text-indigo-700" :
-                        step.status === "done" ? "text-charcoal/50" : "text-charcoal/30")}>
+                      <div
+                        key={i}
+                        className={cn(
+                          "flex items-center gap-2 text-xs p-1.5 rounded-lg transition-all duration-300",
+                          step.status === "running"
+                            ? "bg-gold/10 text-gold"
+                            : step.status === "done"
+                            ? "text-cream/30"
+                            : "text-cream/20"
+                        )}
+                      >
                         <span className="w-5 h-5 rounded-full flex items-center justify-center text-sm">
                           {step.icon}
                         </span>
                         <span className="flex-1">{step.label}</span>
                         {step.status === "running" && (
-                          <Loader2 className="w-3 h-3 text-indigo-500 animate-spin" />
+                          <Loader2 className="w-3 h-3 text-gold animate-spin" />
                         )}
                         {step.status === "done" && (
-                          <Check className="w-3 h-3 text-emerald-500" />
+                          <Check className="w-3 h-3 text-emerald-400" />
                         )}
                       </div>
                     ))}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Initial "thinking" state */}
-            {isStreaming && !streamedText && !activePipeline && (
-              <div className="flex gap-3">
-                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-gold to-gold-light flex items-center justify-center shadow-md shrink-0 mt-1">
-                  <Sparkles className="w-4 h-4 text-dark" />
-                </div>
-                <div className="p-4 rounded-2xl bg-white/80 border border-gold/10 rounded-bl-md">
-                  <div className="flex items-center gap-1">
-                    <div className="w-2 h-2 rounded-full bg-gold animate-bounce [animation-delay:0ms]" />
-                    <div className="w-2 h-2 rounded-full bg-gold animate-bounce [animation-delay:150ms]" />
-                    <div className="w-2 h-2 rounded-full bg-gold animate-bounce [animation-delay:300ms]" />
                   </div>
                 </div>
               </div>
@@ -535,13 +694,17 @@ export default function DashboardPage() {
 
           {/* ── Input area ─────────────────────────────── */}
           <div className="shrink-0 pt-2">
-            <div className="bg-white/80 backdrop-blur-md border border-gold/20 rounded-2xl p-2 flex items-end gap-2 shadow-lg">
+            <div className="glass-card border-gold/20 rounded-2xl p-2 flex items-end gap-2 shadow-lg">
               {/* Voice button */}
-              <button onClick={toggleVoice}
-                className={cn("p-2.5 rounded-xl transition-all shrink-0",
+              <button
+                onClick={toggleVoice}
+                className={cn(
+                  "p-2.5 rounded-xl transition-all shrink-0",
                   isListening
                     ? "bg-red-500 text-white animate-pulse"
-                    : "text-charcoal/40 hover:text-gold hover:bg-gold/5")}>
+                    : "text-cream/30 hover:text-gold hover:bg-gold/5"
+                )}
+              >
                 {isListening ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
               </button>
 
@@ -552,18 +715,22 @@ export default function DashboardPage() {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder={isListening ? "Listening..." : "Talk to me like a human — no filters, no limits..."}
-                className="flex-1 bg-transparent border-none outline-none resize-none text-sm text-dark placeholder:text-charcoal/30 py-2 min-h-[40px] max-h-[120px]"
+                className="flex-1 bg-transparent border-none outline-none resize-none text-sm text-cream placeholder:text-cream/20 py-2 min-h-[40px] max-h-[120px]"
                 rows={1}
                 disabled={isStreaming}
               />
 
               {/* Send button */}
-              <button onClick={sendMessage}
+              <button
+                onClick={sendMessage}
                 disabled={!input.trim() || isStreaming}
-                className={cn("p-2.5 rounded-xl transition-all shrink-0",
+                className={cn(
+                  "p-2.5 rounded-xl transition-all shrink-0",
                   input.trim() && !isStreaming
                     ? "bg-gradient-to-r from-gold to-gold-light text-dark shadow-md shadow-gold/20 hover:shadow-gold/40"
-                    : "text-charcoal/20 bg-gray-100 cursor-not-allowed")}>
+                    : "text-cream/10 bg-white/5 cursor-not-allowed"
+                )}
+              >
                 {isStreaming ? (
                   <Loader2 className="w-5 h-5 animate-spin" />
                 ) : (
@@ -571,7 +738,7 @@ export default function DashboardPage() {
                 )}
               </button>
             </div>
-            <p className="text-[10px] text-charcoal/30 text-center mt-2">
+            <p className="text-[10px] text-cream/20 text-center mt-2">
               Press Enter to send · Shift+Enter for new line · 🎤 Voice input supported
             </p>
           </div>
