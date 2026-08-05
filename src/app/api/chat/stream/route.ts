@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
         await breakers.openai.call(() =>
           withRetry(async () => {
             const aiStream = await client.chat.completions.create({
-              model: process.env.OPENAI_CHAT_MODEL || "gpt-4o-mini",
+              model: process.env.OPENAI_CHAT_MODEL || "gpt-4o",
               messages: messages as any,
               temperature: 0.7,
               max_tokens: 400,

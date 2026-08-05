@@ -68,7 +68,7 @@ export type AIResult<T> =
 
 export type ChatOptions = {
   messages: ChatMessage[];
-  model?: string;            // default: gpt-4o-mini (cheap) — override with gpt-4o for premium
+  model?: string;            // default: gpt-4o — override with gpt-4o-mini to save cost
   temperature?: number;      // default: 0.85 for creative, 0.4 for structured
   maxTokens?: number;        // default: 1024
   responseFormat?: "json_object" | "text";
@@ -85,7 +85,7 @@ export async function chatCompletion<T = any>(opts: ChatOptions): Promise<AIResu
     };
   }
   const client = getOpenAIClient();
-  const model = opts.model || process.env.OPENAI_MODEL || "gpt-4o-mini";
+  const model = opts.model || process.env.OPENAI_MODEL || "gpt-4o";
   const timeoutMs = opts.timeoutMs ?? 25000;
 
   // Wrap the OpenAI call with circuit breaker + retry
@@ -235,7 +235,7 @@ export async function generateContentWithAI(input: GenerateContentAIInput): Prom
   const messages = buildContentMessages(input);
   const res = await chatCompletion<{ platforms: Record<string, { script: string; caption: string; hashtags: string[] }> }>({
     messages,
-    model: process.env.OPENAI_CONTENT_MODEL || "gpt-4o-mini",
+    model: process.env.OPENAI_CONTENT_MODEL || "gpt-4o",
     temperature: 0.9,
     maxTokens: 1800,
     responseFormat: "json_object",
@@ -281,7 +281,7 @@ export async function chatWithAI(input: ChatAIInput): Promise<AIResult<string>> 
   ];
   const res = await chatCompletion<{ text: string } | string>({
     messages,
-    model: process.env.OPENAI_CHAT_MODEL || "gpt-4o-mini",
+    model: process.env.OPENAI_CHAT_MODEL || "gpt-4o",
     temperature: 0.7,
     maxTokens: 400,
     responseFormat: "text",
@@ -323,7 +323,7 @@ JSON only, no markdown.`;
       { role: "system", content: SCRIPT_GENERATOR_SYSTEM },
       { role: "user", content: user },
     ],
-    model: process.env.OPENAI_CONTENT_MODEL || "gpt-4o-mini",
+    model: process.env.OPENAI_CONTENT_MODEL || "gpt-4o",
     temperature: 0.95,
     maxTokens: 1500,
     responseFormat: "json_object",
@@ -388,7 +388,7 @@ JSON only.`;
       { role: "system", content: SCRIPT_GENERATOR_SYSTEM },
       { role: "user", content: user },
     ],
-    model: process.env.OPENAI_CAMPAIGN_MODEL || "gpt-4o-mini",
+    model: process.env.OPENAI_CAMPAIGN_MODEL || "gpt-4o",
     temperature: 0.85,
     maxTokens: 2500,
     responseFormat: "json_object",
@@ -445,7 +445,7 @@ JSON only.`;
       { role: "system", content: SCRIPT_GENERATOR_SYSTEM },
       { role: "user", content: user },
     ],
-    model: process.env.OPENAI_VIDEO_MODEL || "gpt-4o-mini",
+    model: process.env.OPENAI_VIDEO_MODEL || "gpt-4o",
     temperature: 0.9,
     maxTokens: 1500,
     responseFormat: "json_object",
@@ -486,7 +486,7 @@ JSON only.`;
       { role: "system", content: "You are an SEO strategist specializing in social media and short-form video discovery." },
       { role: "user", content: user },
     ],
-    model: process.env.OPENAI_CONTENT_MODEL || "gpt-4o-mini",
+    model: process.env.OPENAI_CONTENT_MODEL || "gpt-4o",
     temperature: 0.7,
     maxTokens: 800,
     responseFormat: "json_object",
@@ -533,7 +533,7 @@ JSON only. CTAs must be 1-2 sentences, written in the brand's voice.`;
       { role: "system", content: "You are a direct-response copywriter who writes CTAs that feel natural, never pushy or salesy." },
       { role: "user", content: user },
     ],
-    model: process.env.OPENAI_CONTENT_MODEL || "gpt-4o-mini",
+    model: process.env.OPENAI_CONTENT_MODEL || "gpt-4o",
     temperature: 0.9,
     maxTokens: 600,
     responseFormat: "json_object",
@@ -612,7 +612,7 @@ JSON only.`;
       { role: "system", content: SCRIPT_GENERATOR_SYSTEM },
       { role: "user", content: user },
     ],
-    model: process.env.OPENAI_CONTENT_MODEL || "gpt-4o-mini",
+    model: process.env.OPENAI_CONTENT_MODEL || "gpt-4o",
     temperature: 0.9,
     maxTokens: 3000,
     responseFormat: "json_object",
@@ -678,7 +678,7 @@ Rules:
       { role: "system", content: "You are a world-class short-form copywriter. You write 3-line content that stops the scroll and converts. Every word counts." },
       { role: "user", content: user },
     ],
-    model: process.env.OPENAI_CONTENT_MODEL || "gpt-4o-mini",
+    model: process.env.OPENAI_CONTENT_MODEL || "gpt-4o",
     temperature: 0.95,
     maxTokens: 400,
     responseFormat: "json_object",
