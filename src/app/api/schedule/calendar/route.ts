@@ -91,7 +91,11 @@ export const GET = withApi(
   },
   async (req: NextRequest) => {
     // Auth: prefer authenticated user; fall back to 'user' (matches the rest
-    // of the dashboard, which is single-user in dev).
+    // of the dashboard, which is single-user in dev). Errors during auth
+    // resolution are non-fatal — the calendar still works for
+    // unauthenticated read-only previews. The `cookies()` API in the Edge
+    // runtime reads from the incoming request headers synchronously; we
+    // wrap it in try/catch so a missing cookie header doesn't 500 the route.
     let userId = "user";
     try {
       const auth = await requireAuthedUserIdAsync(req);
