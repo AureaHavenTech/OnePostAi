@@ -284,7 +284,7 @@ export default function Home() {
             {[
               { step: "1", title: "Tell It What You Need", desc: "Type or talk — \"Create an unboxing video for my sleep gummies, post to TikTok and IG every 2 days.\" Conversational, no forms.", highlight: "Conversational AI" },
               { step: "2", title: "AI Generates Everything", desc: "Scripts, videos, images, captions, hashtags, product pages, ad campaigns — all from one prompt. 20+ AI capabilities combined.", highlight: "20+ AI models" },
-              { step: "3", title: "Publishes Everywhere", desc: "One click posts to all 7 platforms at optimal times. Smart scheduling handles the calendar. Set once, runs autonomously.", highlight: "7 platforms" },
+              { step: "3", title: "Publishes Everywhere", desc: "One click posts to your connected platforms at optimal times. Smart scheduling handles the calendar. Set once, it runs automatically.", highlight: "Multi-platform" },
             ].map((item, i) => (
               <div key={item.step} className="animate-on-scroll relative group" ref={(el) => { observerRefs.current[60 + i] = el; }} style={{ transitionDelay: `${i * 150}ms` }}>
                 <div className="bg-dark border border-gold/10 rounded-2xl p-6 h-full hover:border-gold/30 transition-all duration-500">
@@ -430,7 +430,7 @@ export default function Home() {
               Meet <span className="gold-gradient">Axel AI™</span>
             </h3>
             <p className="text-xs text-cream/50 max-w-md mx-auto leading-relaxed">
-              Your autonomous AI executive assistant. Research, email outreach, data gathering, analytics — executes end-to-end. Like a full-time employee who never sleeps.
+              Your intelligent AI business assistant. Organize tasks, draft content, plan your business, manage your calendar — handles the heavy lifting 24/7.
             </p>
             <a href="https://axelai-eight.vercel.app" target="_blank" rel="noopener noreferrer">
               <button className="mt-5 px-5 py-2.5 rounded-xl text-xs font-medium border border-gold/30 text-gold hover:bg-gold/10 transition-all inline-flex items-center gap-1.5">
