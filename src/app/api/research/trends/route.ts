@@ -66,14 +66,17 @@ Return a JSON object with this exact structure:
 
 Generate 3-5 items per array. Be specific and realistic.`;
 
-    const result = await chatCompletion([
-      { role: "system", content: "You are an expert social media trend analyst. Return only valid JSON." },
-      { role: "user", content: prompt },
-    ], { temperature: 0.8, maxTokens: 800 });
-
-    const trends = JSON.parse(result.content || "{}");
-
-    return NextResponse.json({
+    const result = await chatCompletion<Record<string, unknown>>({
+        messages: [
+          { role: "system", content: "You are an expert social media trend analyst. Return only valid JSON." },
+          { role: "user", content: prompt },
+        ],
+        temperature: 0.8,
+        maxTokens: 800,
+        responseFormat: "json_object",
+      });
+      const trends = result.ok ? result.data : {};
+return NextResponse.json({
       success: true,
       aiConfigured: true,
       ...trends,

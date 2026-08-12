@@ -76,12 +76,24 @@ Return a JSON object with:
   "oneLineTakeaway": "single sentence strategic insight"
 }`;
 
-    const result = await chatCompletion([
-      { role: "system", content: "You are a competitive content strategist. Return only valid JSON." },
-      { role: "user", content: prompt },
-    ], { temperature: 0.6, maxTokens: 700 });
+    const result = await chatCompletion<Record<string, unknown>>({
+      messages: [
+        { role: "system", content: "You are a competitive content strategist. Return only valid JSON." },
+        { role: "user", content: prompt },
+      ],
+      temperature: 0.6,
+      maxTokens: 700,
+      responseFormat: "json_object",
+    });
 
-    const analysis = JSON.parse(result.content || "{}");
+    if (!result.ok) {
+      return NextResponse.json(
+        { success: false, aiConfigured: false, error: result.message },
+        { status: 500 }
+      );
+    }
+
+    const analysis = result.data;
 
     return NextResponse.json({
       success: true,

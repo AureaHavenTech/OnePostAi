@@ -57,14 +57,16 @@ Return a JSON array of 8-10 sounds:
 
 Generate realistic, specific entries. Focus on currently trending sounds.`;
 
-    const result = await chatCompletion([
-      { role: "system", content: "You are a social media audio trend expert. Return only valid JSON arrays." },
-      { role: "user", content: prompt },
-    ], { temperature: 0.8, maxTokens: 600 });
-
-    const sounds = JSON.parse(result.content || "[]");
-
-    return NextResponse.json({
+    const result = await chatCompletion<string>({
+        messages: [
+          { role: "system", content: "You are a social media audio trend expert. Return only valid JSON arrays." },
+          { role: "user", content: prompt },
+        ],
+        temperature: 0.8,
+        maxTokens: 600,
+      });
+      const sounds = JSON.parse(result.ok ? result.data : "[]");
+return NextResponse.json({
       success: true,
       aiConfigured: true,
       platform,

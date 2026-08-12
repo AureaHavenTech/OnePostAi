@@ -116,13 +116,17 @@ Return JSON:
   "hookIdeas": ["hook1", ...] — 3 viral hook ideas
 }`;
 
-        const result = await chatCompletion([
+        const result = await chatCompletion<Record<string, unknown>>({
+        messages: [
           { role: "system", content: "You are an e-commerce content strategist. Return only valid JSON." },
           { role: "user", content: prompt },
-        ], { temperature: 0.7, maxTokens: 500 });
-
-        aiSuggestions = JSON.parse(result.content || "{}");
-      } catch { /* AI is optional */ }
+        ],
+        temperature: 0.7,
+        maxTokens: 500,
+        responseFormat: "json_object",
+      });
+      if (result.ok) aiSuggestions = result.data;
+} catch { /* AI is optional */ }
     }
 
     return NextResponse.json({

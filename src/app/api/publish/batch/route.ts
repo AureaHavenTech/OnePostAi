@@ -2,7 +2,7 @@
 // Publishes to multiple platforms in parallel using Promise.allSettled so
 // a single platform failure doesn't poison the whole batch.
 import { NextResponse } from "next/server";
-import { requireAuthedUserIdAsync, isValidPlatformId } from "@/lib/services/social-connections";
+import { requireAuthedUserIdAsync, isValidPlatformId, type PlatformId } from "@/lib/services/social-connections";
 import {
   publishToPlatform,
   recordPublishedPost,
@@ -39,11 +39,13 @@ export async function POST(req: Request) {
     );
   }
 
+  const validPlatforms: PlatformId[] = platforms.filter(isValidPlatformId);
+
   const cpp = body?.contentPerPlatform || {};
   const scheduledAt = body?.scheduledAt;
 
   // Build per-platform publish requests
-  const jobs = platforms.map((p) => {
+  const jobs = validPlatforms.map((p) => {
     const c = cpp[p] || cpp["default"] || {
       caption: cpp?.caption || "",
       mediaUrls: cpp?.mediaUrls,
@@ -76,10 +78,10 @@ export async function POST(req: Request) {
       const r = s.value;
       if (r.success) {
         const record = recordPublishedPost(auth.userId, r, job.publishReq.content);
-        return { platform: job.platform, ...r, record };
+        return { ...r, record };
       } else {
         recordFailedPost(auth.userId, job.platform, job.publishReq.content, r.error || "failed");
-        return { platform: job.platform, ...r };
+        return { ...r };
       }
     } else {
       const errMsg = (s.reason as any)?.message || "unknown";
