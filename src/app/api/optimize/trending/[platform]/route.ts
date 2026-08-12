@@ -29,17 +29,15 @@ export const GET = withApi(
     cache: "short",
     rateLimit: { windowMs: 60_000, max: 30 },
   },
-  async (req: NextRequest, _body: any, ctx: { params?: Promise<{ platform: string }> }) => {
+  async (req: NextRequest, _body: any) => {
     const session = await requireAuth(req);
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    let platform = "tiktok";
-    if (ctx?.params) {
-      const params = ctx.params instanceof Promise ? await ctx.params : ctx.params;
-      platform = (params as any).platform?.toLowerCase() || "tiktok";
-    }
+    // Extract platform from URL path (withApi wrapper doesn't forward Next.js params context)
+    const segments = req.nextUrl.pathname.split("/");
+    const platform = (segments[segments.length - 1] || "tiktok").toLowerCase();
 
     if (!VALID_PLATFORMS.includes(platform)) {
       return NextResponse.json(
