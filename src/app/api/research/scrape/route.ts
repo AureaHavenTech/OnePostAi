@@ -124,16 +124,16 @@ Return a JSON object with:
 - repurposeAs: suggested social media format (reel, carousel, story, post)`;
 
         const result = await chatCompletion<Record<string, unknown>>({
-        messages: [
-          { role: "system", content: "You analyze web content and return structured JSON insights." },
-          { role: "user", content: prompt },
-        ],
-        temperature: 0.5,
-        maxTokens: 500,
-        responseFormat: "json_object",
-      });
-      if (result.ok) aiAnalysis = result.data;
-} catch {
+          messages: [
+            { role: "system", content: "You analyze web content and return structured JSON insights." },
+            { role: "user", content: prompt },
+          ],
+          temperature: 0.5,
+          maxTokens: 500,
+          responseFormat: "json_object",
+        });
+        if (result.ok) aiAnalysis = result.data;
+      } catch {
         // AI analysis is optional — don't fail the whole request
       }
     }

@@ -65,7 +65,7 @@ Return JSON:
 }`,
         },
       ],
-      model: "gpt-4o-mini",
+      model: "gpt-4o",
       temperature: 0.7,
       maxTokens: 800,
       responseFormat: "json_object",

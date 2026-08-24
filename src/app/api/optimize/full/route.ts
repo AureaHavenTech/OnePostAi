@@ -101,7 +101,7 @@ Return JSON:
 Scores: contentScore 0-100, viralPotential 0-100. Be honest.`,
         },
       ],
-      model: "gpt-4o-mini",
+      model: "gpt-4o",
       temperature: 0.85,
       maxTokens: 1800,
       responseFormat: "json_object",
