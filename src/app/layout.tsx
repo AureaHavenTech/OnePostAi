@@ -21,21 +21,23 @@ export const metadata: Metadata = {
     url: "https://onepostai.vercel.app",
     siteName: "OnePost AI",
     images: [
-      { url: "/og-image.svg", width: 1200, height: 630, alt: "OnePost AI — Content that moves" },
+      { url: "/op-og-image.jpg", width: 1200, height: 630, alt: "OnePost AI — Content that moves" },
     ],
   },
   twitter: {
     card: "summary_large_image",
     title: "OnePost AI — Post like a pro. Without being one.",
     description: "Drop a raw video or just an idea. AI edits, captions, and publishes everywhere. On autopilot.",
-    images: ["/og-image.svg"],
+    images: ["/op-og-image.jpg"],
   },
   icons: {
     icon: [
+      { url: "/favicon.ico", sizes: "32x32", type: "image/x-icon" },
+      { url: "/favicon-32.png", sizes: "32x32", type: "image/png" },
       { url: "/op-icon-192.svg", sizes: "192x192", type: "image/svg+xml" },
     ],
     apple: [
-      { url: "/op-icon-192.svg", sizes: "192x192", type: "image/svg+xml" },
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
     ],
   },
 };
@@ -53,7 +55,6 @@ export default function RootLayout({
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="theme-color" content="#12121a" />
-        <link rel="apple-touch-icon" href="/op-icon-192.svg" />
         <JsonLd />
       </head>
       <body className="min-h-screen bg-background text-foreground antialiased">
