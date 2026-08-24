@@ -87,7 +87,7 @@ export function decryptToken(blob: string): string {
   }
 }
 
-// ─── Platform metadata (the 7 supported platforms) ──────────────
+// ─── Platform metadata (the 8 supported platforms) ──────────────
 export type PlatformId =
   | "tiktok"
   | "instagram"
@@ -95,7 +95,8 @@ export type PlatformId =
   | "youtube"
   | "linkedin"
   | "snapchat"
-  | "pinterest";
+  | "pinterest"
+  | "twitter";
 
 export interface PlatformMeta {
   id: PlatformId;
@@ -151,6 +152,12 @@ export const PLATFORMS: PlatformMeta[] = [
     charLimit: 500, videoMaxSec: 60, aspectRatio: "1:1, 2:3, 1:2",
     scopes: ["pins:read", "pins:write"],
     docs: "https://developers.pinterest.com/api/v5/",
+  },
+  {
+    id: "twitter", name: "X (Twitter)", icon: "🐦", color: "#000000",
+    charLimit: 280, videoMaxSec: 140, aspectRatio: "16:9, 1:1",
+    scopes: ["tweet.read", "tweet.write", "users.read", "offline.access"],
+    docs: "https://developer.x.com/en/docs/x-api",
   },
 ];
 

@@ -339,6 +339,17 @@ async function publishPinterest(userId: string, req: PublishRequest): Promise<Pu
   return mockPublish("pinterest", req, publishedAt, "pi_mock");
 }
 
+async function publishTwitter(userId: string, req: PublishRequest): Promise<PublishResult> {
+  const publishedAt = nowIso();
+  const token = req.platformConfig?.accessToken || getDecryptedAccessToken(userId, "twitter");
+  if (!token) {
+    return { success: false, platform: "twitter", publishedAt, error: "X/Twitter access token not found.", code: "NO_TOKEN", mode: "mock" };
+  }
+  // Twitter/X API: POST /2/tweets
+  // Enforce 280-char limit (truncation happens in safeReq already)
+  return mockPublish("twitter", req, publishedAt, "tw_mock");
+}
+
 // ─── Per-platform dispatcher ───────────────────────────────────
 export async function publishToPlatform(
   userId: string,
@@ -366,6 +377,7 @@ export async function publishToPlatform(
     case "linkedin": return publishLinkedIn(userId, safeReq);
     case "snapchat": return publishSnapchat(userId, safeReq);
     case "pinterest": return publishPinterest(userId, safeReq);
+    case "twitter": return publishTwitter(userId, safeReq);
     default: return { success: false, platform: req.platform, publishedAt: nowIso(), error: "Unhandled platform" };
   }
 }
