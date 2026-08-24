@@ -26,7 +26,6 @@
         "./src/*"
       ]
     },
-    "downlevelIteration": true,
     "target": "es2017"
   },
   "include": [

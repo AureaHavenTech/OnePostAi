@@ -142,7 +142,7 @@ export default function Home() {
       </header>
 
       {/* ===== HERO ===== */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center pt-20 pb-16 px-4 overflow-hidden">
+      <section aria-label="Hero" className="relative min-h-screen flex flex-col items-center justify-center pt-20 pb-16 px-4 overflow-hidden">
         {/* Ambient background effects */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(201,169,110,0.06)_0%,transparent_70%)]" />
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gold/5 rounded-full blur-3xl animate-pulse" />
@@ -214,7 +214,7 @@ export default function Home() {
       </section>
 
       {/* ===== SOCIAL PROOF — COMPETITIVE POSITIONING ===== */}
-      <section className="py-16 px-4 border-y border-gold/5 bg-dark/50">
+      <section aria-label="Stats" className="py-16 px-4 border-y border-gold/5 bg-dark/50">
         <div className="max-w-5xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-center">
             {stats.map((s, i) => (
@@ -228,7 +228,7 @@ export default function Home() {
       </section>
 
       {/* ===== CONTENT TYPE SHOWCASE ===== */}
-      <section id="content-types" className="py-24 px-4">
+      <section aria-label="Content types" id="content-types" className="py-24 px-4">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16 animate-on-scroll" ref={(el) => { observerRefs.current[20] = el; }}>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold/5 border border-gold/10 text-[10px] text-gold uppercase tracking-widest mb-4">
@@ -265,7 +265,7 @@ export default function Home() {
       </section>
 
       {/* ===== HOW IT WORKS ===== */}
-      <section id="how-it-works" className="py-24 px-4 bg-dark/50 border-y border-gold/5">
+      <section aria-label="How it works" id="how-it-works" className="py-24 px-4 bg-dark/50 border-y border-gold/5">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16 animate-on-scroll" ref={(el) => { observerRefs.current[50] = el; }}>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold/5 border border-gold/10 text-[10px] text-gold uppercase tracking-widest mb-4">
@@ -284,7 +284,7 @@ export default function Home() {
             {[
               { step: "1", title: "Tell It What You Need", desc: "Type or talk — \"Create an unboxing video for my sleep gummies, post to TikTok and IG every 2 days.\" Conversational, no forms.", highlight: "Conversational AI" },
               { step: "2", title: "AI Generates Everything", desc: "Scripts, videos, images, captions, hashtags, product pages, ad campaigns — all from one prompt. 20+ AI capabilities combined.", highlight: "20+ AI models" },
-              { step: "3", title: "Publishes Everywhere", desc: "One click posts to your connected platforms at optimal times. Smart scheduling handles the calendar. Set once, it runs automatically.", highlight: "Multi-platform" },
+              { step: "3", title: "Posts to Your Platforms", desc: "One click publishes to your connected platforms at optimal times. Smart scheduling handles the calendar — set once, it runs automatically.", highlight: "Multi-platform" },
             ].map((item, i) => (
               <div key={item.step} className="animate-on-scroll relative group" ref={(el) => { observerRefs.current[60 + i] = el; }} style={{ transitionDelay: `${i * 150}ms` }}>
                 <div className="bg-dark border border-gold/10 rounded-2xl p-6 h-full hover:border-gold/30 transition-all duration-500">
@@ -308,7 +308,7 @@ export default function Home() {
       </section>
 
       {/* ===== COMPETITIVE KILL ZONE ===== */}
-      <section className="py-24 px-4">
+      <section aria-label="Apps replaced" className="py-24 px-4">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16 animate-on-scroll" ref={(el) => { observerRefs.current[70] = el; }}>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold/5 border border-gold/10 text-[10px] text-gold uppercase tracking-widest mb-4">
@@ -343,7 +343,7 @@ export default function Home() {
       </section>
 
       {/* ===== MISSION CONTROL PREVIEW ===== */}
-      <section className="py-24 px-4 bg-dark/50 border-y border-gold/5">
+      <section aria-label="Who it's for" className="py-24 px-4 bg-dark/50 border-y border-gold/5">
         <div className="max-w-4xl mx-auto">
           <div className="animate-on-scroll" ref={(el) => { observerRefs.current[100] = el; }}>
             <div className="bg-[#0d0d14] border border-gold/10 rounded-2xl p-6 sm:p-8 shadow-2xl gold-border-glow">
@@ -379,7 +379,7 @@ export default function Home() {
       </section>
 
       {/* ===== PRICING CTA ===== */}
-      <section className="py-24 px-4">
+      <section aria-label="Pricing" className="py-24 px-4">
         <div className="max-w-4xl mx-auto text-center animate-on-scroll" ref={(el) => { observerRefs.current[110] = el; }}>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold/5 border border-gold/10 text-[10px] text-gold uppercase tracking-widest mb-4">
             Pricing
@@ -420,7 +420,7 @@ export default function Home() {
       </section>
 
       {/* ===== AXEL AI CROSS-PROMO ===== */}
-      <section className="py-16 px-4 bg-dark/50 border-t border-gold/5">
+      <section aria-label="Axel AI cross-sell" className="py-16 px-4 bg-dark/50 border-t border-gold/5">
         <div className="max-w-3xl mx-auto">
           <div className="animate-on-scroll bg-dark border border-gold/10 rounded-2xl p-8 text-center hover:border-gold/30 transition-all duration-500" ref={(el) => { observerRefs.current[120] = el; }}>
             <div className="w-12 h-12 rounded-full bg-gradient-to-br from-gold to-gold-light flex items-center justify-center mx-auto mb-4 shadow-lg shadow-gold/20">
@@ -442,7 +442,7 @@ export default function Home() {
       </section>
 
       {/* ===== FINAL CTA ===== */}
-      <section className="py-24 px-4 relative overflow-hidden">
+      <section aria-label="Final CTA" className="py-24 px-4 relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(201,169,110,0.08)_0%,transparent_60%)]" />
         <div className="relative z-10 max-w-2xl mx-auto text-center animate-on-scroll" ref={(el) => { observerRefs.current[130] = el; }}>
           <h2 className="text-3xl sm:text-5xl font-heading font-bold tracking-tight mb-4">
