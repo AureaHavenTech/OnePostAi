@@ -6,6 +6,7 @@ import {
   Sparkles, Loader2, Zap, Send, Mic, MicOff, Maximize2, Minimize2,
   Trash2, Copy, Coins, Clock, History, MessageSquare,
   Film, Image, ShoppingCart, Search, TrendingUp, User, AlertTriangle, RefreshCw,
+  Check,
 } from "lucide-react";
 
 // ── Types ──────────────────────────────────────────────────
