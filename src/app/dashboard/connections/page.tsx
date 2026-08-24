@@ -34,6 +34,7 @@ const PLATFORM_COLORS: Record<string, string> = {
   linkedin: "#0A66C2",
   snapchat: "#FFFC00",
   pinterest: "#E60023",
+  twitter: "#000000",
 };
 
 function platformBorderColor(platform: string): string {
