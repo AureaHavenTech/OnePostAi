@@ -93,7 +93,7 @@ export default function LoginPage() {
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="bg-[#1a1a2e]/80 backdrop-blur-xl border border-[#c9a96e]/10 rounded-2xl p-6 sm:p-8 space-y-4 shadow-lg">
+          <form onSubmit={handleSubmit} aria-label="Sign in to OnePost AI" className="bg-[#1a1a2e]/80 backdrop-blur-xl border border-[#c9a96e]/10 rounded-2xl p-6 sm:p-8 space-y-4 shadow-lg">
             {error && (
               <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-xs">
                 {error}

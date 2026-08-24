@@ -55,6 +55,17 @@ export default function RootLayout({
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="theme-color" content="#12121a" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                  navigator.serviceWorker.register('/sw.js').catch(function(){});
+                });
+              }
+            `,
+          }}
+        />
         <JsonLd />
       </head>
       <body className="min-h-screen bg-background text-foreground antialiased">
