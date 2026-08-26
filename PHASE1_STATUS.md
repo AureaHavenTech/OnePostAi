@@ -116,3 +116,22 @@ Full Play Console + review steps are documented in `android/README.md`.
 - Launcher PNGs verified by decoding: 192px truecolor, center pixel
   (201,169,110) gold, corner (18,18,26) dark. Same generator used for all
   densities.
+---
+
+## 6. UPDATE — CI build to produce an actual APK
+
+Added `.github/workflows/build-android.yml` (commit `b7caf96`) on
+`feature/capacitor-android`. This is the concrete way to get an **actual APK**
+with zero reliance on the local machine (which has no Java/Android SDK):
+
+- **Trigger:** manual (`Actions → Build One Post AI Android → Run workflow`) or
+  on push to `main` / `feature/capacitor-android`.
+- **What it does:** checks out, installs Node deps (Capacitor), generates the
+  Android Gradle project via `npx cap add android`, runs `npx cap sync android`,
+  then `./gradlew assembleDebug` on ubuntu-latest (JDK 17 + Android SDK).
+- **Output:** a **debug APK** uploaded as a downloadable artifact
+  (`onepostai-debug-apk`).
+
+This is a real, installable APK of the One Post AI native shell — enough to put
+on a phone now. A **signed release AAB** for the Play Store still requires the
+owner's keystore + Play Console access (see android/README.md).
