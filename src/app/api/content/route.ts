@@ -132,7 +132,7 @@ export const GET = withApi(
     let userId = "user";
     try {
       const auth = await requireAuthedUserIdAsync(req);
-      if (auth?.userId) userId = auth.userId;
+      if (auth && "userId" in auth && auth.userId) userId = auth.userId;
     } catch (e) {
       // swallow — public/dashboard-preview mode
     }
