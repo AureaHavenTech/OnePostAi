@@ -28,18 +28,26 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const [isOwner, setIsOwner] = useState(false);
+  const [isGuest, setIsGuest] = useState(false);
 
   // Determine the current user's role so owner-only links are hidden
   // for regular users (middleware redirects /dashboard/owner anyway).
+  // No session = guest: they keep full access to the dashboard shell, but
+  // see the "Create free account" bar until they sign up.
   useEffect(() => {
     let cancelled = false;
     fetch("/api/auth/me")
       .then((r) => (r.ok ? r.json() : { user: null }))
       .then((data) => {
-        if (!cancelled) setIsOwner(data?.user?.role === "owner");
+        if (cancelled) return;
+        setIsOwner(data?.user?.role === "owner");
+        setIsGuest(!data?.user);
       })
       .catch(() => {
-        if (!cancelled) setIsOwner(false);
+        if (!cancelled) {
+          setIsOwner(false);
+          setIsGuest(false);
+        }
       });
     return () => {
       cancelled = true;
@@ -201,6 +209,34 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </div>
           </div>
         </header>
+
+        {/* Guest bar — persistent while there is no session. */}
+        {isGuest && (
+          <div className="sticky top-14 z-20 border-b border-gold/30 bg-dark">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-2 px-4 sm:px-6 py-2.5">
+              <Sparkles className="w-3.5 h-3.5 text-gold shrink-0" />
+              <p className="flex-1 min-w-0 text-[11px] sm:text-xs leading-snug text-cream/90">
+                <span className="font-medium text-cream">You&apos;re exploring as a guest.</span>{" "}
+                You get one free generation — create a free account to save your work,
+                schedule posts, and publish to all 8 platforms.
+              </p>
+              <div className="flex items-center gap-3 shrink-0">
+                <Link
+                  href="/login?signup=1"
+                  className="rounded-full bg-gold px-3.5 py-1.5 text-[11px] font-semibold text-dark transition-colors hover:bg-gold-light"
+                >
+                  Create free account
+                </Link>
+                <Link
+                  href="/login"
+                  className="text-[11px] text-cream/70 underline underline-offset-2 transition-colors hover:text-cream"
+                >
+                  Sign in
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Breadcrumbs */}
         <div className="px-4 sm:px-6">
