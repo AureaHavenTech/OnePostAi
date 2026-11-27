@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LayoutDashboard, Wand2, Lightbulb, CalendarDays, Briefcase, Settings, LogOut, Menu, X, Sparkles, Gift, Coins, Send, ChevronLeft, ChevronRight, Link2 } from "lucide-react";
@@ -27,6 +27,24 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
+  const [isOwner, setIsOwner] = useState(false);
+
+  // Determine the current user's role so owner-only links are hidden
+  // for regular users (middleware redirects /dashboard/owner anyway).
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/auth/me")
+      .then((r) => (r.ok ? r.json() : { user: null }))
+      .then((data) => {
+        if (!cancelled) setIsOwner(data?.user?.role === "owner");
+      })
+      .catch(() => {
+        if (!cancelled) setIsOwner(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const navItems = [
     { href: "/dashboard", label: "Create", icon: Wand2 },
@@ -107,17 +125,19 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 <span className="ml-auto font-semibold text-gold">50</span>
               </div>
 
-              <Link href="/dashboard/owner" onClick={() => setSidebarOpen(false)}>
-                <div className={cn(
-                  "flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs transition-all",
-                  pathname === "/dashboard/owner"
-                    ? "bg-gold/10 text-gold font-medium"
-                    : "text-gray-400 hover:text-dark hover:bg-gold/5"
-                )}>
-                  <Sparkles className="w-4 h-4" />
-                  Founder Access
-                </div>
-              </Link>
+              {isOwner && (
+                <Link href="/dashboard/owner" onClick={() => setSidebarOpen(false)}>
+                  <div className={cn(
+                    "flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs transition-all",
+                    pathname === "/dashboard/owner"
+                      ? "bg-gold/10 text-gold font-medium"
+                      : "text-gray-400 hover:text-dark hover:bg-gold/5"
+                  )}>
+                    <Sparkles className="w-4 h-4" />
+                    Founder Access
+                  </div>
+                </Link>
+              )}
               <Link href="/" onClick={() => setSidebarOpen(false)}>
                 <div className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs text-gray-400 hover:text-dark hover:bg-gold/5 transition-all">
                   <LogOut className="w-4 h-4" />
@@ -168,7 +188,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
             {/* Smart Search */}
             <div className="flex-1 max-w-md mx-auto px-2 lg:px-0">
-              <SmartSearch results={SEARCH_RESULTS} placeholder="Search pages, features..." />
+              <SmartSearch
+                results={isOwner ? SEARCH_RESULTS : SEARCH_RESULTS.filter((r) => r.category !== "Admin")}
+                placeholder="Search pages, features..."
+              />
             </div>
 
             {/* Right side: theme toggle + spacer */}

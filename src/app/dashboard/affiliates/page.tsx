@@ -27,7 +27,7 @@ export default function AffiliatesPage() {
             <h1 className="text-xl font-bold text-dark">Ambassador Program</h1>
             <p className="text-xs text-gray-400 mt-0.5">10% lifetime commission on every referral</p>
           </div>
-          <Link href="/dashboard/owner">
+          <Link href="/dashboard">
             <Button variant="ghost" size="sm">← Back</Button>
           </Link>
         </div>
